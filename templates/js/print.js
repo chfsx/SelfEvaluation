@@ -6,6 +6,8 @@ printFeedback = function () {
         $("body").width(this.originalBodyWidht);
         console.log("On After Print");
     };
+   //make sure mainbar-slates not too big
+  $(".il-maincontrols-mainbar").css("width", "80px");
 
     $.when($("body").width(800)).then(
         function () {
@@ -17,6 +19,7 @@ printFeedback = function () {
                         console.log("On After One");
 
                     }, 1)
+                  $(".il-maincontrols-mainbar").css("width", "");// normal size again
                 }, 500)
         }
     );
