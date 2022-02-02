@@ -286,13 +286,13 @@ class FeedbackChartGUI
         $chart = new LeftRightChart($block_id . "_feedback_left_right_chart");
         $data = $chart->getDataInstance();
         $ticks = [];
-        $x = 99999;
+        $x = 1;
         foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
             $value = Data::_getInstanceForQuestionId($this->db, $dataset->getId(), $qst->getId())->getValue();
             $data->addPoint($value, $x);
             $ticks[$x] = $qst->getTitle() ? $qst->getTitle() : $this->plugin->txt
-                ('question') . ' ' . $qst->getId();
-            $x--;
+                ('question') . ' ' . $x;
+            $x++;
 
         }
 
