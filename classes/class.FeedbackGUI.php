@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+declare(strict_types=1);
+
 
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlockInterface;
 use ilub\plugin\SelfEvaluation\Block\Virtual\VirtualOverallBlock;
@@ -11,56 +13,20 @@ use ilub\plugin\SelfEvaluation\Feedback\FeedbackTableGUI;
 
 class FeedbackGUI
 {
-    /**
-     * @var ilPropertyFormGUI
-     */
-    protected $form;
-    /**
-     * @var ilTemplate
-     */
-    protected $overview;
-    /**
-     * @var int
-     */
-    protected $total;
-    /**
-     * @var QuestionBlockInterface
-     */
-    protected $block;
-    /**
-     * @var Feedback
-     */
-    protected $feedback;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
-    /**
-     * @var ilGlobalTemplateInterface
-     */
-    protected $tpl;
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilObjSelfEvaluationGUI
-     */
-    protected $parent;
-    /**
-     * @var ilToolbarGUI
-     */
-    protected $toolbar;
-    /**
-     * @var ilAccessHandler
-     */
-    protected $access;
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+    protected ilPropertyFormGUI $form;
+    protected ilTemplate $overview;
+    protected int $total;
+    protected QuestionBlockInterface $block;
+    protected Feedback $feedback;
+    protected ilDBInterface $db;
+    protected ilGlobalTemplateInterface $tpl;
+    protected ilCtrl $ctrl;
+    protected ilObjSelfEvaluationGUI$parent;
+    protected ilToolbarGUI $toolbar;
+    protected ilAccessHandler $access;
+    protected ilSelfEvaluationPlugin $plugin;
 
-    function __construct(
+    public function __construct(
         ilDBInterface $db,
         ilObjSelfEvaluationGUI $parent,
         ilGlobalTemplateInterface $tpl,
@@ -81,7 +47,7 @@ class FeedbackGUI
     public function executeCommand()
     {
         if ($_GET['parent_overall']) {
-            $this->block = new VirtualOverallBlock($this->parent->object->getId(),$this->plugin);
+            $this->block = new VirtualOverallBlock($this->parent->object->getId(), $this->plugin);
         } else {
             $this->block = new QuestionBlock($this->db, (int)$_GET['block_id']);
         }
@@ -89,7 +55,7 @@ class FeedbackGUI
         if ($_GET['feedback_id']) {
             $this->feedback = new Feedback($this->db, (int)$_GET['feedback_id']);
         } else {
-            $this->feedback = Feedback::_getNewInstanceByParentId($this->db,$this->getBlock()->getId());
+            $this->feedback = Feedback::_getNewInstanceByParentId($this->db, $this->getBlock()->getId());
         }
         if ($_GET['parent_overall']) {
             $this->feedback->setParentTypeOverall(true);
@@ -126,8 +92,13 @@ class FeedbackGUI
             case 'deleteFeedback':
             case 'deleteFeedbacks':
             case 'deleteObject':
-                if (!$this->access->checkAccess("read", $cmd, $this->parent->object->getRefId(), $this->plugin->getId(),
-                    $this->parent->object->getId())) {
+                if (!$this->access->checkAccess(
+                    "read",
+                    $cmd,
+                    $this->parent->object->getRefId(),
+                    $this->plugin->getId(),
+                    $this->parent->object->getId()
+                )) {
                     throw new \ilObjectException($this->plugin->txt("permission_denied"));
                 }
                 $this->$cmd();
@@ -143,22 +114,34 @@ class FeedbackGUI
 
     protected function listObjects()
     {
-        $this->toolbar->addButton('&lt;&lt; ' . $this->plugin->txt('back_to_blocks'),
-            $this->ctrl->getLinkTargetByClass('ListBlocksGUI', 'showContent'));
+        $this->toolbar->addButton(
+            '&lt;&lt; ' . $this->plugin->txt('back_to_blocks'),
+            $this->ctrl->getLinkTargetByClass('ListBlocksGUI', 'showContent')
+        );
         $this->toolbar->addButton($this->plugin->txt('add_new_feedback'), $this->ctrl->getLinkTarget($this, 'addNew'));
 
         $ov = $this->getOverview();
-        $table = new FeedbackTableGUI($this->db, $this,$this->plugin,'listObjects', $this->block);
+        $table = new FeedbackTableGUI($this->db, $this, $this->plugin, 'listObjects', $this->block);
         $this->tpl->setContent($ov->get() . '<br><br>' . $table->getHTML());
     }
 
     protected function addNew()
     {
         $this->initForm();
-        $this->feedback->setStartValue(Feedback::_getNextMinValueForParentId($this->db,$this->block->getId(),
-            $_GET['start_value'] ? $_GET['start_value'] : 0, 0, $this->feedback->isParentTypeOverall()));
-        $this->feedback->setEndValue(Feedback::_getNextMaxValueForParentId($this->db,$this->block->getId(),
-            $this->feedback->getStartValue(), 0, $this->feedback->isParentTypeOverall()));
+        $this->feedback->setStartValue(Feedback::_getNextMinValueForParentId(
+            $this->db,
+            $this->block->getId(),
+            $_GET['start_value'] ? $_GET['start_value'] : 0,
+            0,
+            $this->feedback->isParentTypeOverall()
+        ));
+        $this->feedback->setEndValue(Feedback::_getNextMaxValueForParentId(
+            $this->db,
+            $this->block->getId(),
+            $this->feedback->getStartValue(),
+            0,
+            $this->feedback->isParentTypeOverall()
+        ));
         $this->setValues();
         $this->tpl->setContent($this->form->getHTML());
     }
@@ -168,12 +151,22 @@ class FeedbackGUI
         header('Cache-Control: no-cache, must-revalidate');
         header('Content-type: application/json');
         $ignore = ($_GET['feedback_id'] ? $_GET['feedback_id'] : 0);
-        $start = Feedback::_getNextMinValueForParentId($this->db,$this->block->getId(),
-            $_GET['start_value'] ? $_GET['start_value'] : 0, $ignore, $this->feedback->isParentTypeOverall());
-        $end = Feedback::_getNextMaxValueForParentId($this->db,$this->block->getID(), $start, $ignore,
-            $this->feedback->isParentTypeOverall());
+        $start = Feedback::_getNextMinValueForParentId(
+            $this->db,
+            $this->block->getId(),
+            $_GET['start_value'] ? $_GET['start_value'] : 0,
+            $ignore,
+            $this->feedback->isParentTypeOverall()
+        );
+        $end = Feedback::_getNextMaxValueForParentId(
+            $this->db,
+            $this->block->getID(),
+            $start,
+            $ignore,
+            $this->feedback->isParentTypeOverall()
+        );
 
-        $state = (($_GET['from'] < $start) OR ($_GET['to'] > $end)) ? false : true;
+        $state = (($_GET['from'] < $start) or ($_GET['to'] > $end)) ? false : true;
         echo json_encode([
             'check' => $state,
             'start_value' => $_GET['start_value'],
@@ -208,11 +201,18 @@ class FeedbackGUI
             $option_auto->setInfo($this->plugin->txt("option_auto_info"));
 
             $option_slider = new ilRadioOption($this->plugin->txt("option_slider"), 'option_slider');
-            $sl = new SliderInputGUI($this->tpl, $this->plugin, $this->plugin->txt('slider'), 'slider', 0, 100,
-                $this->ctrl->getLinkTarget($this, 'checkNextValue'));
+            $sl = new SliderInputGUI(
+                $this->tpl,
+                $this->plugin,
+                $this->plugin->txt('slider'),
+                'slider',
+                0,
+                100,
+                $this->ctrl->getLinkTarget($this, 'checkNextValue')
+            );
             $option_slider->addSubItem($sl);
 
-            if (Feedback::_isComplete($this->db,$this->block->getId(), $this->feedback->isParentTypeOverall())) {
+            if (Feedback::_isComplete($this->db, $this->block->getId(), $this->feedback->isParentTypeOverall())) {
                 $option_slider->setDisabled(true);
             }
 
@@ -223,8 +223,15 @@ class FeedbackGUI
 
             $this->form->addItem($radio_options);
         } else {
-            $sl = new SliderInputGUI($this->tpl, $this->plugin,$this->plugin->txt('slider'), 'slider', 0, 100,
-                $this->ctrl->getLinkTarget($this, 'checkNextValue'));
+            $sl = new SliderInputGUI(
+                $this->tpl,
+                $this->plugin,
+                $this->plugin->txt('slider'),
+                'slider',
+                0,
+                100,
+                $this->ctrl->getLinkTarget($this, 'checkNextValue')
+            );
             $this->form->addItem($sl);
         }
 
@@ -237,13 +244,19 @@ class FeedbackGUI
     {
         $this->initForm();
         if ($this->form->checkInput()) {
-            $obj = Feedback::_getNewInstanceByParentId($this->db,$this->block->getId(),
-                $this->feedback->isParentTypeOverall());
+            $obj = Feedback::_getNewInstanceByParentId(
+                $this->db,
+                $this->block->getId(),
+                $this->feedback->isParentTypeOverall()
+            );
             $obj->setTitle($this->form->getInput('title'));
             $obj->setDescription($this->form->getInput('description'));
             if ($this->form->getInput('feedback_range_type') == 'option_auto') {
-                $range = Feedback::_rearangeFeedbackLinear($this->db,$this->block->getId(),
-                    $this->feedback->isParentTypeOverall());
+                $range = Feedback::_rearangeFeedbackLinear(
+                    $this->db,
+                    $this->block->getId(),
+                    $this->feedback->isParentTypeOverall()
+                );
                 $obj->setStartValue(100 - $range);
                 $obj->setEndValue(100);
             } else {
@@ -254,7 +267,7 @@ class FeedbackGUI
 
             $obj->setFeedbackText($this->form->getInput('feedback_text'));
             $obj->create();
-            ilUtil::sendSuccess($this->plugin->txt('msg_feedback_created'));
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_created'));
             $this->cancel();
         }
         $this->form->setValuesByPost();
@@ -269,7 +282,7 @@ class FeedbackGUI
         $values['end_value'] = $this->feedback->getEndValue();
         $values['feedback_text'] = $this->feedback->getFeedbackText();
         $values['slider'] = [$this->feedback->getStartValue(), $this->feedback->getEndValue()];
-        if (Feedback::_isComplete($this->db,$this->block->getId(), $this->feedback->isParentTypeOverall())) {
+        if (Feedback::_isComplete($this->db, $this->block->getId(), $this->feedback->isParentTypeOverall())) {
             $values['feedback_range_type'] = 'option_auto';
         } else {
             $values['feedback_range_type'] = 'option_slider';
@@ -295,7 +308,7 @@ class FeedbackGUI
             $this->feedback->setEndValue($slider[1]);
             $this->feedback->setFeedbackText($this->form->getInput('feedback_text'));
             $this->feedback->update();
-            ilUtil::sendSuccess($this->plugin->txt('msg_feedback_created'));
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_created'));
             $this->cancel();
         }
         $this->form->setValuesByPost();
@@ -310,8 +323,8 @@ class FeedbackGUI
     protected function deleteFeedbacks()
     {
         $ids = $_POST["id"];
-        if(!is_array($ids)){
-            ilUtil::sendFailure($this->plugin->txt('msg_no_feedback_selected'));
+        if(!is_array($ids)) {
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('msg_no_feedback_selected'));
             $this->listObjects();
             return;
         }
@@ -320,14 +333,14 @@ class FeedbackGUI
 
     protected function deleteFeedbacksConfirmation(array $ids = [])
     {
-        ilUtil::sendQuestion($this->plugin->txt('qst_delete_feedback'));
+        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_QUESTION, $this->plugin->txt('qst_delete_feedback'));
         $conf = new ilConfirmationGUI();
         $conf->setFormAction($this->ctrl->getFormAction($this));
         $conf->setCancel($this->plugin->txt('cancel'), 'cancel');
         $conf->setConfirm($this->plugin->txt('delete_feedback'), 'deleteObject');
         foreach ($ids as $id) {
             $obj = new Feedback($this->db, $id);
-            $conf->addItem('id[]', $obj->getId(), $obj->getTitle());
+            $conf->addItem('id[]', (string) $obj->getId(), $obj->getTitle());
 
         }
         $this->tpl->setContent($conf->getHTML());
@@ -335,25 +348,34 @@ class FeedbackGUI
 
     protected function deleteObject()
     {
-        ilUtil::sendSuccess($this->plugin->txt('msg_feedback_deleted'), true);
+        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_deleted'), true);
 
         $ids = $_POST["id"];
         foreach ($ids as $id) {
-            $obj = new Feedback($this->db,$id);
+            $obj = new Feedback($this->db, $id);
             $obj->delete();
         }
         $this->cancel();
     }
 
-    protected function getOverview() : ilTemplate
+    protected function getOverview(): ilTemplate
     {
         $this->overview = $this->plugin->getTemplate('default/Feedback/tpl.feedback_overview.html');
 
         $this->getMeasurement();
-        $min = Feedback::_getNextMinValueForParentId($this->db,$this->block->getId(), 0, 0,
-            $this->feedback->isParentTypeOverall());
-        $feedbacks = Feedback::_getAllInstancesForParentId($this->db,$this->block->getId(), false,
-            $this->feedback->isParentTypeOverall());
+        $min = Feedback::_getNextMinValueForParentId(
+            $this->db,
+            $this->block->getId(),
+            0,
+            0,
+            $this->feedback->isParentTypeOverall()
+        );
+        $feedbacks = Feedback::_getAllInstancesForParentId(
+            $this->db,
+            $this->block->getId(),
+            false,
+            $this->feedback->isParentTypeOverall()
+        );
 
         if (count($feedbacks) == 0) {
             $this->parseOverviewBlock('blank', 100, 0);
@@ -361,14 +383,19 @@ class FeedbackGUI
         }
 
         foreach ($feedbacks as $fb) {
-            if ($min !== false AND $min <= $fb->getStartValue() &&  !($min == 100) && ($fb->getStartValue()-$min != 0)) {
+            if ($min !== false and $min <= $fb->getStartValue() &&  !($min == 100) && ($fb->getStartValue() - $min != 0)) {
                 $this->parseOverviewBlock('blank', $fb->getStartValue() - $min, $min);
             }
             $this->parseOverviewBlock('fb', $fb->getEndValue() - $fb->getStartValue(), $fb->getId(), $fb->getTitle());
-            $min = Feedback::_getNextMinValueForParentId($this->db,$this->block->getId(), $fb->getEndValue(), 0,
-                $this->feedback->isParentTypeOverall());
+            $min = Feedback::_getNextMinValueForParentId(
+                $this->db,
+                $this->block->getId(),
+                $fb->getEndValue(),
+                0,
+                $this->feedback->isParentTypeOverall()
+            );
         }
-        if ( !($min == 100) AND is_object($fb)) {
+        if (!($min == 100) and is_object($fb)) {
             $this->parseOverviewBlock('blank', 100 - $min, $min);
         }
 
@@ -419,7 +446,7 @@ class FeedbackGUI
     /**
      * @return QuestionBlockInterface
      */
-    public function getBlock() : QuestionBlockInterface
+    public function getBlock(): QuestionBlockInterface
     {
         return $this->block;
     }

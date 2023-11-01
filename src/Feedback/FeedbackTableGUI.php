@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Feedback;
 
 use ilTable2GUI;
@@ -10,7 +13,6 @@ use FeedbackGUI;
 
 class FeedbackTableGUI extends ilTable2GUI
 {
-
     /**
      * @var ilRepositoryObjectPlugin;
      */
@@ -21,7 +23,7 @@ class FeedbackTableGUI extends ilTable2GUI
      */
     protected $db;
 
-    function __construct(
+    public function __construct(
         ilDBInterface $db,
         FeedbackGUI $a_parent_obj,
         ilRepositoryObjectPlugin $plugin,
@@ -49,20 +51,24 @@ class FeedbackTableGUI extends ilTable2GUI
         $this->addMultiCommand("deleteFeedbacks", $this->plugin->txt("delete_feedback"));
 
         $this->setRowTemplate($this->plugin->getDirectory() . '/templates/default/Feedback/tpl.template_feedback_row.html');
-        $this->setData(Feedback::_getAllInstancesForParentId($this->db,$a_parent_obj->getBlock()->getId(), true,
-            $is_ovarall));
+        $this->setData(Feedback::_getAllInstancesForParentId(
+            $this->db,
+            $a_parent_obj->getBlock()->getId(),
+            true,
+            $is_ovarall
+        ));
     }
 
-    public function fillRow($a_set)
+    public function fillRow($a_set): void
     {
-        $obj = new Feedback($this->db,$a_set['id']);
+        $obj = new Feedback($this->db, $a_set['id']);
         $this->tpl->setVariable("ID", $obj->getId());
         $this->tpl->setVariable('TITLE', $obj->getTitle());
         $this->tpl->setVariable('BODY', strip_tags($obj->getFeedbackText()));
         $start_sign = "> ";
-        if($obj->getStartValue() == "0"){
+        if($obj->getStartValue() == "0") {
             $start_sign = "> ";
-        }else if($obj->getStartValue() == "100"){
+        } elseif($obj->getStartValue() == "100") {
             $start_sign = "= ";
         }
         $this->tpl->setVariable('START', $start_sign . $obj->getStartValue() . '%');
@@ -71,13 +77,18 @@ class FeedbackTableGUI extends ilTable2GUI
         $ac = new ilAdvancedSelectionListGUI();
         $this->ctrl->setParameter($this->parent_obj, 'feedback_id', $obj->getId());
         $ac->setId('fb_' . $obj->getId());
-        $ac->addItem($this->plugin->txt('edit_feedback'), 'edit_feedback',
-            $this->ctrl->getLinkTarget($this->parent_obj, 'editFeedback'));
-        $ac->addItem($this->plugin->txt('delete_feedback'), 'delete_feedback',
-            $this->ctrl->getLinkTarget($this->parent_obj, 'deleteFeedback'));
+        $ac->addItem(
+            $this->plugin->txt('edit_feedback'),
+            'edit_feedback',
+            $this->ctrl->getLinkTarget($this->parent_obj, 'editFeedback')
+        );
+        $ac->addItem(
+            $this->plugin->txt('delete_feedback'),
+            'delete_feedback',
+            $this->ctrl->getLinkTarget($this->parent_obj, 'deleteFeedback')
+        );
         $ac->setListTitle($this->plugin->txt('actions'));
         //
         $this->tpl->setVariable('ACTIONS', $ac->getHTML());
     }
 }
-

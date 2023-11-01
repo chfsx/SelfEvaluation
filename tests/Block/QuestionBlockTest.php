@@ -1,9 +1,10 @@
 <?php
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
-use \ilub\plugin\SelfEvaluation\Block\Block;
-use \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
+use ilub\plugin\SelfEvaluation\Block\Block;
+use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 
 class QuestionBlockTest extends TestCase
 {
@@ -17,7 +18,7 @@ class QuestionBlockTest extends TestCase
      */
     protected $db;
 
-    public function setUp():void
+    public function setUp(): void
     {
         $this->db = \Mockery::mock("\ilDBInterface");
         $this->block = new QuestionBlock($this->db);
@@ -42,15 +43,14 @@ class QuestionBlockTest extends TestCase
 
     public function testGetArrayForDBOnEmpty()
     {
-        self::assertEquals(['id' => ['integer', 0],
+        self::assertEquals(
+            ['id' => ['integer', 0],
                             'abbreviation' => ['text', ""],
                             'title' => ['text', ""],
                             'description' => ['text', ""],
                             'position' => ['integer', 99],
                             'parent_id' => ['integer', 0]],
-                            $this->block->getArrayForDb());
+            $this->block->getArrayForDb()
+        );
     }
 }
-
-
-

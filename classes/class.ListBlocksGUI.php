@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+declare(strict_types=1);
 
 use ilub\plugin\SelfEvaluation\Block\BlockTableGUI;
 use ilub\plugin\SelfEvaluation\Block\BlockFactory;
 
 class ListBlocksGUI
 {
-
     /**
      * @var ilCtrl
      */
@@ -60,7 +60,7 @@ class ListBlocksGUI
         $this->performCommand();
     }
 
-    function performCommand()
+    public function performCommand()
     {
         $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
 
@@ -68,8 +68,13 @@ class ListBlocksGUI
             case 'showContent':
             case 'saveSorting':
             case 'editOverall':
-                if (!$this->access->checkAccess("write", $cmd, $this->parent->object->getRefId(), $this->plugin->getId(),
-                    $this->parent->object->getId())) {
+                if (!$this->access->checkAccess(
+                    "write",
+                    $cmd,
+                    $this->parent->object->getRefId(),
+                    $this->plugin->getId(),
+                    $this->parent->object->getId()
+                )) {
                     throw new ilObjectException($this->plugin->txt("permission_denied"));
                 }
                 $this->$cmd();
@@ -77,7 +82,7 @@ class ListBlocksGUI
         }
     }
 
-    public function getStandardCommand() : string
+    public function getStandardCommand(): string
     {
         return 'showContent';
     }
@@ -90,16 +95,22 @@ class ListBlocksGUI
 
 
         $this->ctrl->setParameterByClass(QuestionBlockGUI::class, 'block_id', null);
-        $this->toolbar->addButton($this->txt('add_new_question_block'),
-            $this->ctrl->getLinkTargetByClass(QuestionBlockGUI::class, 'addBlock'));
+        $this->toolbar->addButton(
+            $this->txt('add_new_question_block'),
+            $this->ctrl->getLinkTargetByClass(QuestionBlockGUI::class, 'addBlock')
+        );
 
         $this->ctrl->setParameterByClass(MetaBlockGUI::class, 'block_id', null);
-        $this->toolbar->addButton($this->txt('add_new_meta_block'),
-            $this->ctrl->getLinkTargetByClass(MetaBlockGUI::class, 'addBlock'));
+        $this->toolbar->addButton(
+            $this->txt('add_new_meta_block'),
+            $this->ctrl->getLinkTargetByClass(MetaBlockGUI::class, 'addBlock')
+        );
 
         $this->ctrl->setParameterByClass(FeedbackGUI::class, 'parent_overall', 1);
-        $this->toolbar->addButton($this->txt('edit_overal_feedback'),
-            $this->ctrl->getLinkTargetByClass(FeedbackGUI::class, 'listObjects'));
+        $this->toolbar->addButton(
+            $this->txt('edit_overal_feedback'),
+            $this->ctrl->getLinkTargetByClass(FeedbackGUI::class, 'listObjects')
+        );
         $this->ctrl->setParameterByClass(FeedbackGUI::class, 'parent_overall', 0);
 
         $factory = new BlockFactory($this->db, $this->getSelfEvalId());
@@ -127,7 +138,7 @@ class ListBlocksGUI
             }
         }
 
-        ilUtil::sendSuccess($this->txt('sorting_saved'), true);
+        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->txt('sorting_saved'), true);
         $this->ctrl->redirect($this, 'showContent');
     }
 
@@ -136,7 +147,7 @@ class ListBlocksGUI
         $this->tpl->setContent("hello World");
     }
 
-    protected function getSelfEvalId() : int
+    protected function getSelfEvalId(): int
     {
         return $this->parent->object->getId();
     }

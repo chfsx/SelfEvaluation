@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper;
 
 use ilFormSectionHeaderGUI;
@@ -6,7 +9,7 @@ use ilTemplate;
 
 class FormSectionHeaderGUIFixed extends ilFormSectionHeaderGUI
 {
-    function insert($a_tpl = null)
+    public function insert($a_tpl = null): void
     {
         /**
          * @var ilTemplate $a_tpl
@@ -21,7 +24,7 @@ class FormSectionHeaderGUIFixed extends ilFormSectionHeaderGUI
         $a_tpl->parseCurrentBlock();
     }
 
-    public function getRequired() : bool
+    public function getRequired(): bool
     {
         return true;
     }

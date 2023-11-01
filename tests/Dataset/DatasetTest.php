@@ -1,13 +1,14 @@
 <?php
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 include_once "DatasetHelperTrait.php";
 
 use PHPUnit\Framework\TestCase;
-use \ilub\plugin\SelfEvaluation\Dataset\Dataset;
+use ilub\plugin\SelfEvaluation\Dataset\Dataset;
 use ilub\plugin\SelfEvaluation\Dataset\Data;
-use \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
-use \ilub\plugin\SelfEvaluation\Question\Matrix\Question;
+use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
+use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
 
 class DatasetTest extends TestCase
 {
@@ -22,7 +23,7 @@ class DatasetTest extends TestCase
      */
     protected $db;
 
-    public function setUp():void
+    public function setUp(): void
     {
         $this->db = \Mockery::mock("\ilDBInterface");
         $this->dataset = new Dataset($this->db);
@@ -194,8 +195,10 @@ class DatasetTest extends TestCase
         $answer = new Data($this->db);
         $answer->setValue(0);
         $this->dataset->setQuestionsDataForBlocks([$block1->getId() => [$question1->getId() => $answer]]);
-        self::assertEquals([$question1->getId() => $answer],
-            $this->dataset->getQuestionsDataPerBlock($block1->getId()));
+        self::assertEquals(
+            [$question1->getId() => $answer],
+            $this->dataset->getQuestionsDataPerBlock($block1->getId())
+        );
     }
 
     public function testGetPercentageForBlockOnEmptyDataSet()
@@ -288,6 +291,3 @@ class DatasetTest extends TestCase
         self::assertEquals([$this->getBlock1(), $this->getBlock1Percentage()], $this->dataset->getMaxPercentageBlockAndMax());
     }
 }
-
-
-

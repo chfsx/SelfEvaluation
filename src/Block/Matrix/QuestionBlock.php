@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block\Matrix;
 
 use ilub\plugin\SelfEvaluation\Block\Block;
@@ -17,7 +20,7 @@ class QuestionBlock extends Block implements QuestionBlockInterface
      */
     protected $abbreviation = '';
 
-    public function cloneTo(int $parent_id) : self
+    public function cloneTo(int $parent_id): self
     {
         $clone = new self($this->db);
         $clone->setParentId($parent_id);
@@ -40,14 +43,14 @@ class QuestionBlock extends Block implements QuestionBlockInterface
         return $clone;
     }
 
-    public function toXml(SimpleXMLElement $xml) : SimpleXMLElement
+    public function toXml(SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("questionBlock");
-        $child_xml->addAttribute("parentId", $this->getParentId());
+        $child_xml->addAttribute("parentId", (string) $this->getParentId());
         $child_xml->addAttribute("title", $this->getTitle());
         $child_xml->addAttribute("abbreviation", $this->getAbbreviation());
         $child_xml->addAttribute("description", $this->getDescription());
-        $child_xml->addAttribute("position", $this->getPosition());
+        $child_xml->addAttribute("position", (string) $this->getPosition());
 
         $questions = Question::_getAllInstancesForParentId($this->db, $this->getId());
 
@@ -55,7 +58,8 @@ class QuestionBlock extends Block implements QuestionBlockInterface
             $child_xml = $question->toXml($child_xml);
         }
 
-        $feedbacks = Feedback::_getAllInstancesForParentId($this->db, $this->getId());;
+        $feedbacks = Feedback::_getAllInstancesForParentId($this->db, $this->getId());
+        ;
         foreach ($feedbacks as $feedback) {
             $child_xml = $feedback->toXml($child_xml);
         }
@@ -63,14 +67,14 @@ class QuestionBlock extends Block implements QuestionBlockInterface
         return $xml;
     }
 
-    static function fromXml(ilDBInterface $db,int $parent_id, SimpleXMLElement $xml) : SimpleXMLElement
+    public static function fromXml(ilDBInterface $db, int $parent_id, SimpleXMLElement $xml): SimpleXMLElement
     {
         $attributes = $xml->attributes();
         $block = new self($db);
         $block->setParentId($parent_id);
-        $block->setTitle($attributes["title"]);
-        $block->setAbbreviation($attributes["abbreviation"]);
-        $block->setDescription($attributes["description"]);
+        $block->setTitle($attributes["title"]->__toString());
+        $block->setAbbreviation($attributes["abbreviation"]->__toString());
+        $block->setDescription($attributes["description"]->__toString());
         $block->setPosition((int)$attributes["position"]);
         $block->create();
 
@@ -85,7 +89,7 @@ class QuestionBlock extends Block implements QuestionBlockInterface
         return $xml;
     }
 
-    protected function getNonDbFields() : array
+    protected function getNonDbFields(): array
     {
         return array_merge(parent::getNonDbFields(), ['scale']);
     }
@@ -95,20 +99,20 @@ class QuestionBlock extends Block implements QuestionBlockInterface
         $this->abbreviation = $abbreviation;
     }
 
-    public function getAbbreviation() : string
+    public function getAbbreviation(): string
     {
         return $this->abbreviation;
     }
 
-    public function getLabel() : string
+    public function getLabel(): string
     {
-        if($this->getAbbreviation() != ''){
+        if($this->getAbbreviation() != '') {
             return $this->getAbbreviation();
         }
         return $this->getTitle();
     }
 
-    public static function _getTableName() : string
+    public static function _getTableName(): string
     {
         return 'rep_robj_xsev_block';
     }
@@ -116,22 +120,21 @@ class QuestionBlock extends Block implements QuestionBlockInterface
     /**
      * @return Question[]
      */
-    public function getQuestions() : array
+    public function getQuestions(): array
     {
-        return (Question::_getAllInstancesForParentId($this->db,$this->getId()));
+        return (Question::_getAllInstancesForParentId($this->db, $this->getId()));
     }
 
     /**
      * @return Feedback[]
      */
-    public function getFeedbacks() : array
+    public function getFeedbacks(): array
     {
-        return (Feedback::_getAllInstancesForParentId($this->db,$this->getId()));
+        return (Feedback::_getAllInstancesForParentId($this->db, $this->getId()));
     }
 
-    public function getBlockTableRow(ilDBInterface $db,ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin) : BlockTableRow
+    public function getBlockTableRow(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin): BlockTableRow
     {
-        return new QuestionBlockTableRow($db, $ilCtrl,$plugin,$this);
+        return new QuestionBlockTableRow($db, $ilCtrl, $plugin, $this);
     }
 }
-

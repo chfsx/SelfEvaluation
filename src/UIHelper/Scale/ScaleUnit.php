@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper\Scale;
 
 use ilDBInterface;
@@ -10,7 +13,7 @@ class ScaleUnit implements hasDBFields
 {
     use ArrayForDB;
 
-    const TABLE_NAME = 'rep_robj_xsev_scale_u';
+    public const TABLE_NAME = 'rep_robj_xsev_scale_u';
     /**
      * @var int
      */
@@ -36,7 +39,7 @@ class ScaleUnit implements hasDBFields
      */
     protected $db;
 
-    function __construct(ilDBInterface $db, $id = 0)
+    public function __construct(ilDBInterface $db, $id = 0)
     {
         $this->db = $db;
 
@@ -46,7 +49,7 @@ class ScaleUnit implements hasDBFields
         }
     }
 
-    public function cloneTo(int $parent_id) : self
+    public function cloneTo(int $parent_id): self
     {
         $clone = new self($this->db);
         $clone->setParentId($parent_id);
@@ -58,22 +61,22 @@ class ScaleUnit implements hasDBFields
     }
 
 
-    public function toXml(int $parent_id, SimpleXMLElement $xml) : SimpleXMLElement
+    public function toXml(int $parent_id, SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("scaleUnit");
-        $child_xml->addAttribute("parentId", $parent_id);
+        $child_xml->addAttribute("parentId", (string) $parent_id);
         $child_xml->addAttribute("title", $this->getTitle());
-        $child_xml->addAttribute("value", $this->getValue());
-        $child_xml->addAttribute("position", $this->getPosition());
+        $child_xml->addAttribute("value", (string) $this->getValue());
+        $child_xml->addAttribute("position", (string) $this->getPosition());
         return $xml;
     }
 
-    public static function fromXml(ilDBInterface $db, int $parent_id, SimpleXMLElement $xml) : SimpleXMLElement
+    public static function fromXml(ilDBInterface $db, int $parent_id, SimpleXMLElement $xml): SimpleXMLElement
     {
         $attributes = $xml->attributes();
         $unit = new self($db);
         $unit->setParentId($parent_id);
-        $unit->setTitle($attributes["title"]);
+        $unit->setTitle($attributes["title"]->__ToString());
         $unit->setValue((int)$attributes["value"]);
         $unit->setPosition((int)$attributes["position"]);
         $unit->create();
@@ -85,11 +88,11 @@ class ScaleUnit implements hasDBFields
         $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
             . $this->db->quote($this->getId(), 'integer'));
 
-        $this->setObjectValuesFromRecord($this,$this->db->fetchObject($set));
+        $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
 
-    final function initDB()
+    final public function initDB()
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->db->createTable(self::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -98,7 +101,7 @@ class ScaleUnit implements hasDBFields
         }
     }
 
-    final function updateDB()
+    final public function updateDB()
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->initDB();
@@ -145,7 +148,7 @@ class ScaleUnit implements hasDBFields
      * @param int           $parent_id
      * @return self[]
      */
-    public static function _getAllInstancesByParentId(ilDBInterface $db, int $parent_id) : array
+    public static function _getAllInstancesByParentId(ilDBInterface $db, int $parent_id): array
     {
         $return = [];
         $set = $db->query('SELECT * FROM '.self::TABLE_NAME.' '.' WHERE parent_id = '.$parent_id.' ORDER BY position ASC');
@@ -161,7 +164,7 @@ class ScaleUnit implements hasDBFields
         $this->id = $id;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -171,7 +174,7 @@ class ScaleUnit implements hasDBFields
         $this->parent_id = $parent_id;
     }
 
-    public function getParentId() : int
+    public function getParentId(): int
     {
         return $this->parent_id;
     }
@@ -181,7 +184,7 @@ class ScaleUnit implements hasDBFields
         $this->title = $title;
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -191,7 +194,7 @@ class ScaleUnit implements hasDBFields
         $this->value = $value;
     }
 
-    public function getValue() : int
+    public function getValue(): int
     {
         return $this->value;
     }
@@ -201,9 +204,8 @@ class ScaleUnit implements hasDBFields
         $this->position = $position;
     }
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }
 }
-

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Question\Meta\Type;
 
 use ilSelfEvaluationPlugin;
@@ -10,20 +12,19 @@ use ilub\plugin\SelfEvaluation\UIHelper\MatrixFieldInputGUI;
 
 class MetaTypeMatrix extends MetaQuestionType
 {
+    public const TYPE_ID = 4;
 
-    const TYPE_ID = 4;
-
-    public function getId() : int
+    public function getId(): int
     {
         return self::TYPE_ID;
     }
 
-    public function getTypeName() : string
+    public function getTypeName(): string
     {
         return 'MatrixQuestion';
     }
 
-    public function getValueDefinitionInputGUI(ilSelfEvaluationPlugin $plugin, MetaTypeOption $option) : MetaTypeOption
+    public function getValueDefinitionInputGUI(ilSelfEvaluationPlugin $plugin, MetaTypeOption $option): MetaTypeOption
     {
 
         $ty_se_mu = new ilTextWizardInputGUI($plugin->txt("matrix_scale"), 'scale_' . $this->getId());
@@ -52,11 +53,11 @@ class MetaTypeMatrix extends MetaQuestionType
         $question_values = self::getQuestionsFromArray($values);
 
         foreach ($item->getSubItems() as $sub_item) {
-            if ($sub_item instanceof ilTextWizardInputGUI AND
+            if ($sub_item instanceof ilTextWizardInputGUI and
                 $sub_item->getPostVar() == 'scale_' . $this->getId()) {
                 $sub_item->setValue($scale_values);
             } else {
-                if ($sub_item instanceof ilTextWizardInputGUI AND
+                if ($sub_item instanceof ilTextWizardInputGUI and
                     $sub_item->getPostVar() == 'question_' . $this->getId()) {
                     $sub_item->setValue($question_values);
                 }
@@ -64,7 +65,7 @@ class MetaTypeMatrix extends MetaQuestionType
         }
     }
 
-    public static function getQuestionsFromArray($data) : array
+    public static function getQuestionsFromArray($data): array
     {
         $questions = [];
 
@@ -76,7 +77,7 @@ class MetaTypeMatrix extends MetaQuestionType
         return $questions;
     }
 
-    public static function getScaleFromArray($data) : array
+    public static function getScaleFromArray($data): array
     {
         $scale = [];
 
@@ -88,7 +89,7 @@ class MetaTypeMatrix extends MetaQuestionType
         return $scale;
     }
 
-    public function getValues(ilPropertyFormGUI $form) : array
+    public function getValues(ilPropertyFormGUI $form): array
     {
         /**
          * @var array $scale
@@ -109,7 +110,7 @@ class MetaTypeMatrix extends MetaQuestionType
         return array_merge($scale, $questions);
     }
 
-    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin,string $title, string $postvar, array $values)
+    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values)
     {
         $scale_values = self::getScaleFromArray($values);
         $question_values = self::getQuestionsFromArray($values);
@@ -121,8 +122,11 @@ class MetaTypeMatrix extends MetaQuestionType
         $matrix_items[] = $header;
 
         foreach ($question_values as $key => $question_value) {
-            $input_item = new MatrixFieldInputGUI($plugin, $question_value,
-                "" . $postvar . "[" . $key . "]");
+            $input_item = new MatrixFieldInputGUI(
+                $plugin,
+                $question_value,
+                "" . $postvar . "[" . $key . "]"
+            );
             $input_item->setScale($scale_values);
             $matrix_items[] = $input_item;
         }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Dataset;
 
 use ilub\plugin\SelfEvaluation\DatabaseHelper\ArrayForDB;
@@ -15,9 +18,9 @@ class Data implements hasDBFields
 {
     use ArrayForDB;
 
-    const TABLE_NAME = 'rep_robj_xsev_d';
-    const QUESTION_TYPE = 'qst';
-    const META_QUESTION_TYPE = 'mqst';
+    public const TABLE_NAME = 'rep_robj_xsev_d';
+    public const QUESTION_TYPE = 'qst';
+    public const META_QUESTION_TYPE = 'mqst';
     /**
      * @var int
      */
@@ -49,7 +52,7 @@ class Data implements hasDBFields
     protected $db;
 
 
-    function __construct(ilDBInterface $db, int $id = 0)
+    public function __construct(ilDBInterface $db, int $id = 0)
     {
         $this->id = $id;
         $this->db = $db;
@@ -67,7 +70,7 @@ class Data implements hasDBFields
         }
     }
 
-    final function initDB()
+    final public function initDB()
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->db->createTable(self::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -88,7 +91,7 @@ class Data implements hasDBFields
         $this->db->insert(self::TABLE_NAME, $this->getArrayForDb());
     }
 
-    public function delete() : int
+    public function delete(): int
     {
         return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = '
             . $this->db->quote($this->getId(), 'integer'));
@@ -145,7 +148,7 @@ class Data implements hasDBFields
         int $dataset_id,
         int $question_id,
         string $question_type = Data::QUESTION_TYPE
-    ) : Data{
+    ): Data {
 
         $stmt = $db->prepare('SELECT * FROM ' . self::TABLE_NAME .
             ' WHERE dataset_id = ? AND question_id = ? AND question_type = ?;', ['integer', 'integer', 'text']);
@@ -170,7 +173,7 @@ class Data implements hasDBFields
         $this->id = $id;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -180,7 +183,7 @@ class Data implements hasDBFields
         $this->dataset_id = $dataset_id;
     }
 
-    public function getDatasetId() : int
+    public function getDatasetId(): int
     {
         return $this->dataset_id;
     }
@@ -190,7 +193,7 @@ class Data implements hasDBFields
         $this->question_id = $question_id;
     }
 
-    public function getQuestionId() : int
+    public function getQuestionId(): int
     {
         return $this->question_id;
     }
@@ -200,7 +203,7 @@ class Data implements hasDBFields
         $this->question_type = $question_type;
     }
 
-    public function getQuestionType() : string
+    public function getQuestionType(): string
     {
         return $this->question_type;
     }
@@ -212,7 +215,7 @@ class Data implements hasDBFields
 
     public function getValue()
     {
-        if(is_string($this->value)){
+        if(is_string($this->value)) {
             $unserialized = unserialize($this->value);
             if ($unserialized !== false) {
                 return $unserialized;
@@ -227,7 +230,7 @@ class Data implements hasDBFields
         $this->creation_date = $creation_date;
     }
 
-    public function getCreationDate() : int
+    public function getCreationDate(): int
     {
         return $this->creation_date;
     }

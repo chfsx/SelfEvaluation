@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block\Matrix;
 
 use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
@@ -17,11 +20,11 @@ class QuestionBlockTableRow extends BlockTableRow
      */
     protected $db;
 
-    public function __construct(ilDBInterface $db,ilCtrl $ilCtrl,ilSelfEvaluationPlugin $plugin,QuestionBlock $block)
+    public function __construct(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin, QuestionBlock $block)
     {
         $this->db = $db;
 
-        parent::__construct($ilCtrl,$plugin, $block);
+        parent::__construct($ilCtrl, $plugin, $block);
 
         $questions = Question::_getAllInstancesForParentId($this->db, $block->getId());
         $this->setQuestionCount(count($questions));
@@ -52,7 +55,7 @@ class QuestionBlockTableRow extends BlockTableRow
         $this->ctrl->setParameterByClass('FeedbackGUI', 'block_id', $this->getBlockId());
     }
 
-    protected function getQuestionAction() : BlockTableAction
+    protected function getQuestionAction(): BlockTableAction
     {
         $title = $this->plugin->txt('edit_questions');
         $link = $this->ctrl->getLinkTargetByClass('QuestionGUI', 'showContent');
@@ -61,7 +64,7 @@ class QuestionBlockTableRow extends BlockTableRow
         return new BlockTableAction($title, $cmd, $link);
     }
 
-    protected function getFeedbackAction() : BlockTableAction
+    protected function getFeedbackAction(): BlockTableAction
     {
         $title = $this->plugin->txt('edit_feedback');
         $link = $this->ctrl->getLinkTargetByClass('FeedbackGUI', 'listObjects');

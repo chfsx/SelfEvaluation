@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+declare(strict_types=1);
 
 use ilub\plugin\SelfEvaluation\Block\Block;
 use ilub\plugin\SelfEvaluation\Dataset\Dataset;
@@ -63,7 +64,7 @@ class PlayerGUI
      */
     protected $dataset;
 
-    function __construct(
+    public function __construct(
         ilDBInterface $db,
         ilObjSelfEvaluationGUI $parent,
         ilGlobalTemplateInterface $tpl,
@@ -82,16 +83,16 @@ class PlayerGUI
     public function executeCommand()
     {
         if (!$_GET['uid']) {
-            ilUtil::sendFailure($this->plugin->txt('uid_not_given'), true);
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('uid_not_given'), true);
             $this->ctrl->redirect($this->parent);
         } else {
             $this->identity = new Identity($this->db, $_GET['uid']);
         }
 
-        if($_GET['dataset_id']){
-            $this->dataset = new Dataset($this->db,$_GET['dataset_id']);
-            $this->ctrl->setParameter($this,"dataset_id",$this->dataset->getId());
-        }else{
+        if($_GET['dataset_id']) {
+            $this->dataset = new Dataset($this->db, $_GET['dataset_id']);
+            $this->ctrl->setParameter($this, "dataset_id", $this->dataset->getId());
+        } else {
             $this->dataset = new Dataset($this->db);
         }
 
@@ -108,7 +109,7 @@ class PlayerGUI
         return 'showContent';
     }
 
-    function performCommand()
+    public function performCommand()
     {
         $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
 
@@ -142,7 +143,7 @@ class PlayerGUI
             $content->setCurrentBlock('button');
             $this->dataset = Dataset::_getInstanceByIdentifierId($this->db, $this->identity->getId());
             if ($this->dataset && !$this->dataset->isComplete()) {
-                $this->ctrl->setParameter($this,"dataset_id",$this->dataset->getId());
+                $this->ctrl->setParameter($this, "dataset_id", $this->dataset->getId());
                 $content->setVariable('START_BUTTON', $this->plugin->txt('resume_button'));
                 $content->setVariable('START_HREF', $this->ctrl->getLinkTarget($this, 'resumeEvaluation'));
             } else {
@@ -151,7 +152,7 @@ class PlayerGUI
             }
             $content->parseCurrentBlock();
         } else {
-            ilUtil::sendInfo($this->plugin->txt('not_active'));
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_INFO, $this->plugin->txt('not_active'));
         }
         $this->tpl->setContent($content->get());
     }
@@ -161,7 +162,7 @@ class PlayerGUI
         $this->dataset->setIdentifierId($this->identity->getId());
         $this->dataset->setCreationDate(time());
         $this->dataset->update();
-        $this->ctrl->setParameter($this,"dataset_id",$this->dataset->getId());
+        $this->ctrl->setParameter($this, "dataset_id", $this->dataset->getId());
         $this->ctrl->redirect($this, 'doEvaluationStep');
     }
 
@@ -199,7 +200,7 @@ class PlayerGUI
             $this->dataset->updateValuesByPost($_POST);
             $this->dataset->setComplete(true);
             $this->dataset->update();
-            $this->redirectToResults( $this->dataset );
+            $this->redirectToResults($this->dataset);
         }
         $this->form->setValuesByPost();
         $this->tpl->setContent($this->form->getHTML());
@@ -266,7 +267,7 @@ class PlayerGUI
 
         //Order is just a completely random array same length as question. $val*123%13 is completely random, but will
         //alway return the same order.
-        $order = array_map(function($val){return $val*123%13;}, range(1, count($questions)));
+        $order = array_map(function ($val) {return $val * 123 % 13;}, range(1, count($questions)));
         array_multisort($order, $questions);
 
         $questions_in_block = 0;
@@ -321,7 +322,7 @@ class PlayerGUI
         foreach ($blocks as $block) {
             $this->addBlockHtmlToForm($block);
         }
-        $this->form->addCommandButton( 'finishEvaluation', $this->plugin->txt('send_' . $mode));
+        $this->form->addCommandButton('finishEvaluation', $this->plugin->txt('send_' . $mode));
     }
 
     protected function addBlockHtmlToForm($block)
@@ -349,9 +350,9 @@ class PlayerGUI
         $data = Data::_getAllInstancesByDatasetId($this->db, $this->dataset->getId());
         $values = [];
         foreach ($data as $question_data) {
-            if($question_data->getQuestionType() == DATA::QUESTION_TYPE){
+            if($question_data->getQuestionType() == DATA::QUESTION_TYPE) {
                 $values[MatrixQuestion::POSTVAR_PREFIX . $question_data->getQuestionId()] = $question_data->getValue();
-            }else{
+            } else {
                 $values[MetaQuestion::POSTVAR_PREFIX . $question_data->getQuestionId()] = $question_data->getValue();
             }
         }
@@ -359,4 +360,3 @@ class PlayerGUI
         $this->form->setValuesByArray($values);
     }
 }
-

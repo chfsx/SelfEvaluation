@@ -153,7 +153,7 @@ if (!$this->db->tableColumnExists($block::_getTableName(), 'abbreviation')) {
 <?php
 
 $pl = new ilSelfEvaluationPlugin();
-if ($this->db->tableExists('robjselfevaluation_c') AND !$this->db->tableExists($pl->getConfigTableName())) {
+if ($this->db->tableExists('robjselfevaluation_c') and !$this->db->tableExists($pl->getConfigTableName())) {
     $this->db->renameTable('robjselfevaluation_c', $pl->getConfigTableName());
 }
 
@@ -217,8 +217,10 @@ if ($this->db->tableExists(\ilub\plugin\SelfEvaluation\Dataset\Data::TABLE_NAME)
 
 
 
-if (!$this->db->tableColumnExists(\ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestion::TABLE_NAME,
-    'short_title')) {
+if (!$this->db->tableColumnExists(
+    \ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestion::TABLE_NAME,
+    'short_title'
+)) {
     $field = [
         'type' => 'text',
         'length' => 1024,
@@ -371,7 +373,7 @@ if ($this->db->tableExists(ilObjSelfEvaluation::TABLE_NAME)) {
 ?>
 <#23>
 <?php
-$overall_feedbacks = \ilub\plugin\SelfEvaluation\Feedback\Feedback::_getAllInstances($this->db,true);
+$overall_feedbacks = \ilub\plugin\SelfEvaluation\Feedback\Feedback::_getAllInstances($this->db, true);
 foreach ($overall_feedbacks as $overall_feedback) {
     if (ilObject::_lookupType($overall_feedback->getParentId(), true) == "xsev") {
         $self_eval = new ilObjSelfEvaluation($overall_feedback->getParentId());

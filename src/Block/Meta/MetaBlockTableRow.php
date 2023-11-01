@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block\Meta;
 
 use ilub\plugin\SelfEvaluation\Block\BlockTableRow;
@@ -9,12 +12,12 @@ use ilUtil;
 
 class MetaBlockTableRow extends BlockTableRow
 {
-
-    public function __construct(ilCtrl $ilCtrl,
+    public function __construct(
+        ilCtrl $ilCtrl,
         ilSelfEvaluationPlugin $plugin,
-        MetaBlock $block)
-    {
-        parent::__construct($ilCtrl,$plugin,$block);
+        MetaBlock $block
+    ) {
+        parent::__construct($ilCtrl, $plugin, $block);
 
         $this->setQuestionCount(count($block->getQuestions()));
         $question_action = $this->getQuestionAction();
@@ -31,7 +34,7 @@ class MetaBlockTableRow extends BlockTableRow
         $this->ctrl->setParameterByClass('MetaQuestionGUI', 'block_id', $this->getBlockId());
     }
 
-    protected function getQuestionAction() : BlockTableAction
+    protected function getQuestionAction(): BlockTableAction
     {
         $title = $this->plugin->txt('edit_questions');
         $link = $this->ctrl->getLinkTargetByClass('MetaQuestionGUI', 'listFields');

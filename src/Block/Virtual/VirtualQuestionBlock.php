@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block\Virtual;
 
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlockInterface;
@@ -7,7 +10,6 @@ use ilub\plugin\SelfEvaluation\Block\BlockType;
 
 class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
 {
-
     /**
      * @var int
      */
@@ -37,7 +39,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
      */
     protected $questions = [];
 
-    function __construct(int $parent_id = 0)
+    public function __construct(int $parent_id = 0)
     {
         $this->setParentId($parent_id);
     }
@@ -47,7 +49,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         $this->abbreviation = $abbreviation;
     }
 
-    public function getAbbreviation() : string
+    public function getAbbreviation(): string
     {
         return $this->abbreviation;
     }
@@ -57,7 +59,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         $this->description = $description;
     }
 
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -67,7 +69,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         $this->id = $id;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -77,7 +79,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         $this->parent_id = $parent_id;
     }
 
-    public function getParentId() : int
+    public function getParentId(): int
     {
         return $this->parent_id;
     }
@@ -87,7 +89,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         $this->position = $position;
     }
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -97,7 +99,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         $this->title = $title;
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -119,4 +121,3 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
     }
 
 }
-

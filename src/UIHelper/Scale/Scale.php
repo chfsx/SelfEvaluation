@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper\Scale;
 
 use ilDBInterface;
@@ -10,7 +13,7 @@ class Scale implements hasDBFields
 {
     use ArrayForDB;
 
-    const TABLE_NAME = 'rep_robj_xsev_scale';
+    public const TABLE_NAME = 'rep_robj_xsev_scale';
     /**
      * @var int
      */
@@ -30,7 +33,7 @@ class Scale implements hasDBFields
      */
     protected $db;
 
-    function __construct(ilDBInterface $db, int $id = 0)
+    public function __construct(ilDBInterface $db, int $id = 0)
     {
         $this->db = $db;
 
@@ -38,7 +41,7 @@ class Scale implements hasDBFields
         if ($id != 0) {
             $this->read();
         }
-        $this->units = ScaleUnit::_getAllInstancesByParentId($this->db,$this->getId());
+        $this->units = ScaleUnit::_getAllInstancesByParentId($this->db, $this->getId());
     }
 
     public function cloneTo($parent_obj_id)
@@ -46,7 +49,7 @@ class Scale implements hasDBFields
         $clone = new self($this->db);
         $clone->setParentId($parent_obj_id);
         $clone->update();
-        $old_units = ScaleUnit::_getAllInstancesByParentId($this->db,$this->getId());
+        $old_units = ScaleUnit::_getAllInstancesByParentId($this->db, $this->getId());
         $new_units = [];
 
         foreach ($old_units as $old_unit) {
@@ -57,10 +60,10 @@ class Scale implements hasDBFields
         return $clone;
     }
 
-    public function toXml(SimpleXMLElement $xml) : SimpleXMLElement
+    public function toXml(SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("scale");
-        $units = ScaleUnit::_getAllInstancesByParentId($this->db,$this->getId());
+        $units = ScaleUnit::_getAllInstancesByParentId($this->db, $this->getId());
 
         foreach ($units as $unit) {
             $child_xml = $unit->toXml($this->getId(), $child_xml);
@@ -69,14 +72,14 @@ class Scale implements hasDBFields
         return $xml;
     }
 
-    static function fromXml(ilDBInterface $db,int $parent_id, SimpleXMLElement $xml) : SimpleXMLElement
+    public static function fromXml(ilDBInterface $db, int $parent_id, SimpleXMLElement $xml): SimpleXMLElement
     {
         $scale = new self($db);
         $scale->setParentId($parent_id);
         $scale->create();
 
         foreach ($xml->scaleUnit as $unit) {
-            ScaleUnit::fromXML($db,$scale->getId(), $unit);
+            ScaleUnit::fromXML($db, $scale->getId(), $unit);
         }
 
         return $xml;
@@ -124,7 +127,7 @@ class Scale implements hasDBFields
     /**
      * @return ScaleUnit[]
      */
-    public function getUnits() : array
+    public function getUnits(): array
     {
         return $this->units;
     }
@@ -151,7 +154,7 @@ class Scale implements hasDBFields
     public function read()
     {
         $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '.$this->getId());
-        $this->setObjectValuesFromRecord($this,$this->db->fetchObject($set));
+        $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
     /**
@@ -162,7 +165,7 @@ class Scale implements hasDBFields
         return ['db','units'];
     }
 
-    final function initDB()
+    final public function initDB()
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->db->createTable(self::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -192,14 +195,14 @@ class Scale implements hasDBFields
         if ($this->getId() == 0) {
             $this->create();
         }
-        $this->db->update(self::TABLE_NAME, $this->getArrayForDb(),$this->getIdForDb());
+        $this->db->update(self::TABLE_NAME, $this->getArrayForDb(), $this->getIdForDb());
     }
 
-    public static function _getInstanceByObjId(ilDBInterface $db, int $parent_obj_id) : self
+    public static function _getInstanceByObjId(ilDBInterface $db, int $parent_obj_id): self
     {
         $set = $db->query("SELECT * FROM " . self::TABLE_NAME . " " . " WHERE parent_id = ".$parent_obj_id);
         while ($rec = $db->fetchObject($set)) {
-            return new self($db,$rec->id);
+            return new self($db, $rec->id);
         }
         $obj = new self($db);
         $obj->setParentId($parent_obj_id);
@@ -207,7 +210,7 @@ class Scale implements hasDBFields
         return $obj;
     }
 
-    public static function _getHighestScaleByObjId(ilDBInterface $db, int $parent_obj_id) : int
+    public static function _getHighestScaleByObjId(ilDBInterface $db, int $parent_obj_id): int
     {
         $scale = self::_getInstanceByObjId($db, $parent_obj_id)->getUnitsAsArray();
         $sorted_scale = array_keys($scale);
@@ -220,12 +223,12 @@ class Scale implements hasDBFields
         $this->id = $id;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getAmount() : int
+    public function getAmount(): int
     {
         return count($this->units);
     }
@@ -235,10 +238,8 @@ class Scale implements hasDBFields
         $this->parent_id = $parent_id;
     }
 
-    public function getParentId() : int
+    public function getParentId(): int
     {
         return $this->parent_id;
     }
 }
-
-

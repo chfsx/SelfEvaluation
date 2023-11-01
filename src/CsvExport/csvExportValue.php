@@ -1,6 +1,8 @@
 <?php
-namespace ilub\plugin\SelfEvaluation\CsvExport;
 
+declare(strict_types=1);
+
+namespace ilub\plugin\SelfEvaluation\CsvExport;
 
 /**
  * Class csvExportValue
@@ -18,7 +20,7 @@ class csvExportValue
      */
     protected $value = "";
 
-    function __construct(string $column_name, string $value)
+    public function __construct(string $column_name, string $value)
     {
         $this->column = new csvExportColumn($column_name);
         $this->value = $value;

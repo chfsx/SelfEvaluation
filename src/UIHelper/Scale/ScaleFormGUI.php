@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper\Scale;
 
 use ilPropertyFormGUI;
@@ -13,8 +16,7 @@ use ilFormSectionHeaderGUI;
  */
 class ScaleFormGUI extends ilPropertyFormGUI
 {
-
-    const FIELD_NAME = 'scale';
+    public const FIELD_NAME = 'scale';
 
     /**
      * @var Scale
@@ -26,10 +28,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
      */
     protected $plugin;
 
-    /**
-     * @var ilGlobalTemplateInterface
-     */
-    protected $tpl;
+    protected \ilTemplate $tpl;
 
     /**
      * @var ilDBInterface
@@ -129,7 +128,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
         }
         if (is_array($_POST[self::FIELD_NAME . '_new']['value'])) {
             foreach ($_POST[self::FIELD_NAME . '_new']['value'] as $k => $v) {
-                if ($v !== false AND $v !== null AND $v !== '') {
+                if ($v !== false and $v !== null and $v !== '') {
                     $obj = new ScaleUnit($this->db);
                     $obj->setParentId($this->scale->getId());
                     $obj->setTitle($_POST['scale_new']['title'][$k]);
@@ -141,7 +140,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
         }
         if (is_array($_POST[self::FIELD_NAME . '_old']['value'])) {
             foreach ($_POST[self::FIELD_NAME . '_old']['value'] as $k => $v) {
-                if ($v !== false AND $v !== null AND $v !== '') {
+                if ($v !== false and $v !== null and $v !== '') {
                     $obj = new ScaleUnit($this->db, str_replace('id_', '', $k));
                     $obj->setTitle($_POST['scale_old']['title'][$k]);
                     $obj->setValue($v);
@@ -157,4 +156,3 @@ class ScaleFormGUI extends ilPropertyFormGUI
         }
     }
 }
-

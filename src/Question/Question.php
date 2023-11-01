@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Question;
 
 use ilub\plugin\SelfEvaluation\DatabaseHelper\hasDBFields;
@@ -12,12 +14,12 @@ abstract class Question implements hasDBFields
 {
     use ArrayForDB;
 
-    const TABLE_NAME = "";
+    public const TABLE_NAME = "";
 
     /**
      * @var string
      */
-    const PRIMARY_KEY = 'id';
+    public const PRIMARY_KEY = 'id';
 
     /**
      * @var \ilDBInterface
@@ -39,7 +41,7 @@ abstract class Question implements hasDBFields
      */
     protected $parent_id;
 
-    function __construct(ilDBInterface $db, int $id = 0)
+    public function __construct(ilDBInterface $db, int $id = 0)
     {
         $this->db = $db;
         $this->id = $id;
@@ -49,15 +51,15 @@ abstract class Question implements hasDBFields
         }
     }
 
-    abstract public function cloneTo(int $parent_id) : Question;
+    abstract public function cloneTo(int $parent_id): Question;
 
-    abstract public function toXml(SimpleXMLElement $xml) : SimpleXMLElement;
+    abstract public function toXml(SimpleXMLElement $xml): SimpleXMLElement;
 
     abstract public static function fromXml(
         ilDBInterface $db,
         int $parent_id,
         SimpleXMLElement $xml
-    ) : SimpleXMLElement;
+    ): SimpleXMLElement;
 
     public function read()
     {
@@ -66,7 +68,7 @@ abstract class Question implements hasDBFields
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
-    final function initDB()
+    final public function initDB()
     {
         if (!$this->db->tableExists(static::TABLE_NAME)) {
             $this->db->createTable(static::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -75,7 +77,7 @@ abstract class Question implements hasDBFields
         }
     }
 
-    final function updateDB()
+    final public function updateDB()
     {
         if (!$this->db->tableExists(static::TABLE_NAME)) {
             $this->initDB();
@@ -100,7 +102,7 @@ abstract class Question implements hasDBFields
         $this->db->insert(static::TABLE_NAME, $this->getArrayForDb());
     }
 
-    public function delete() : int
+    public function delete(): int
     {
         return $this->db->manipulate('DELETE FROM ' . static::TABLE_NAME . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId());
     }
@@ -119,18 +121,18 @@ abstract class Question implements hasDBFields
         $this->parent_id = $parent_id;
     }
 
-    public function getParentId() : int
+    public function getParentId(): int
     {
         return $this->parent_id;
     }
 
-    protected static function _getAllInstancesForParentIdGetQuery(ilDBInterface $db, int $parent_id) : ilPDOStatement
+    protected static function _getAllInstancesForParentIdGetQuery(ilDBInterface $db, int $parent_id): ilPDOStatement
     {
         return $db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
             . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC');
     }
 
-    protected function getNextPosition() : int
+    protected function getNextPosition(): int
     {
         $set = $this->db->query('SELECT MAX(position) next_pos FROM ' . static::TABLE_NAME
             . ' ' . ' WHERE parent_id = ' . $this->parent_id);
@@ -156,15 +158,15 @@ abstract class Question implements hasDBFields
      * @param int           $parent_id
      * @return ilPDOStatement
      */
-    public static function _getAllInstancesForParentIdQuery(ilDBInterface $db, int $parent_id) : ilPDOStatement
+    public static function _getAllInstancesForParentIdQuery(ilDBInterface $db, int $parent_id): ilPDOStatement
     {
         return $db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
             . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC');
     }
 
-    abstract public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id) : array;
+    abstract public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id): array;
 
-    public static function _isObject(ilDBInterface $db, int $id) : bool
+    public static function _isObject(ilDBInterface $db, int $id): bool
     {
         $set = $db->query('SELECT id FROM ' . static::TABLE_NAME . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $id);
 
@@ -180,14 +182,14 @@ abstract class Question implements hasDBFields
         $this->id = $id;
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    abstract public function getTitle() : string;
+    abstract public function getTitle(): string;
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }

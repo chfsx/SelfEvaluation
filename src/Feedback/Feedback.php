@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Feedback;
 
 use ilDBInterface;
@@ -12,7 +14,7 @@ class Feedback implements hasDBFields
 {
     use ArrayForDB;
 
-    const TABLE_NAME = 'rep_robj_xsev_fb';
+    public const TABLE_NAME = 'rep_robj_xsev_fb';
     /**
      * @var int
      */
@@ -50,7 +52,7 @@ class Feedback implements hasDBFields
      */
     protected $db;
 
-    function __construct(ilDBInterface $db, int $id = 0)
+    public function __construct(ilDBInterface $db, int $id = 0)
     {
         $this->id = $id;
         $this->db = $db;
@@ -73,31 +75,31 @@ class Feedback implements hasDBFields
         return $clone;
     }
 
-    public function toXml(SimpleXMLElement $xml) : SimpleXMLElement
+    public function toXml(SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("feedback");
-        $child_xml->addAttribute("parentId", $this->getParentId());
+        $child_xml->addAttribute("parentId", (string) $this->getParentId());
         $child_xml->addAttribute("title", $this->getTitle());
         $child_xml->addAttribute("description", $this->getDescription());
-        $child_xml->addAttribute("startValue", $this->getStartValue());
-        $child_xml->addAttribute("endValue", $this->getEndValue());
+        $child_xml->addAttribute("startValue", (string) $this->getStartValue());
+        $child_xml->addAttribute("endValue", (string) $this->getEndValue());
         $child_xml->addAttribute("feedbackText", $this->getFeedbackText());
-        $child_xml->addAttribute("parentTypeOverall", $this->isParentTypeOverall());
+        $child_xml->addAttribute("parentTypeOverall", (string) $this->isParentTypeOverall());
 
         return $xml;
     }
 
-    public static function fromXml(ilDBInterface $db, $parent_id, SimpleXMLElement $xml) : SimpleXMLElement
+    public static function fromXml(ilDBInterface $db, $parent_id, SimpleXMLElement $xml): SimpleXMLElement
     {
         $attributes = $xml->attributes();
         $question = new self($db);
         $question->setParentId($parent_id);
-        $question->setTitle($attributes["title"]);
-        $question->setDescription($attributes["description"]);
+        $question->setTitle($attributes["title"]->__toString());
+        $question->setDescription($attributes["description"]->__toString());
         $question->setStartValue((int)$attributes["startValue"]);
         $question->setEndValue((int)$attributes["endValue"]);
-        $question->setFeedbackText($attributes["feedbackText"]);
-        $question->setParentTypeOverall((int)$attributes["parentTypeOverall"]);
+        $question->setFeedbackText($attributes["feedbackText"]->__toString());
+        $question->setParentTypeOverall((bool)$attributes["parentTypeOverall"]);
         $question->create();
         return $xml;
     }
@@ -110,7 +112,7 @@ class Feedback implements hasDBFields
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
-    final function initDB()
+    final public function initDB()
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->db->createTable(self::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -119,7 +121,7 @@ class Feedback implements hasDBFields
         }
     }
 
-    final function updateDB()
+    final public function updateDB()
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->initDB();
@@ -187,7 +189,7 @@ class Feedback implements hasDBFields
 
         while ($rec = $db->fetchObject($set)) {
             $feedback = new self($db);
-            $feedback->setObjectValuesFromRecord($feedback,$rec);
+            $feedback->setObjectValuesFromRecord($feedback, $rec);
 
             if ($as_array) {
                 $return[] = (array) $feedback;
@@ -216,7 +218,7 @@ class Feedback implements hasDBFields
 
         while ($rec = $db->fetchObject($set)) {
             $feedback = new self($db);
-            $feedback->setObjectValuesFromRecord($feedback,$rec);
+            $feedback->setObjectValuesFromRecord($feedback, $rec);
             $return[] = $feedback;
 
         }
@@ -229,7 +231,7 @@ class Feedback implements hasDBFields
         int $parent_id,
         float $percentage,
         bool $is_overall = false
-    ) : ?Feedback {
+    ): ?Feedback {
         $q = 'SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE parent_id = ' . $db->quote($parent_id, 'integer')
             . ' AND start_value <= ' . $db->quote($percentage, 'float')
             . ' AND end_value >= ' . $db->quote($percentage, 'float');
@@ -239,7 +241,7 @@ class Feedback implements hasDBFields
         $set = $db->query($q);
 
         while ($rec = $db->fetchObject($set)) {
-            $feedback = new self($db,$rec->id);
+            $feedback = new self($db, $rec->id);
             return $feedback;
         }
         return null;
@@ -251,7 +253,7 @@ class Feedback implements hasDBFields
         int $value = 0,
         int $ignore = 0,
         bool $is_overall = false
-    ) : int {
+    ): int {
         for ($return = $value; $return < 100; $return++) {
             $q =
                 'SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE parent_id = ' . $db->quote($parent_id, 'integer')
@@ -279,7 +281,7 @@ class Feedback implements hasDBFields
         int $value = 0,
         int $ignore = 0,
         bool $is_overall = false
-    ) : int {
+    ): int {
         for ($return = $value + 1; $return <= 100; $return++) {
             $q =
                 'SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE parent_id = ' . $db->quote($parent_id, 'integer')
@@ -302,15 +304,15 @@ class Feedback implements hasDBFields
         return 100;
     }
 
-    public static function _isComplete(ilDBInterface $db, int $parent_id, bool $is_overall = false) : bool
+    public static function _isComplete(ilDBInterface $db, int $parent_id, bool $is_overall = false): bool
     {
         $min = self::_getNextMinValueForParentId($db, $parent_id, 0, 0, $is_overall);
         $max = self::_getNextMaxValueForParentId($db, $parent_id, $min, 0, $is_overall);
 
-        return ($min == 100 AND $max == 100) ? true : false;
+        return ($min == 100 and $max == 100) ? true : false;
     }
 
-    public static function _getNewInstanceByParentId(ilDBInterface $db, int $parent_id, bool $is_overall = false) : self
+    public static function _getNewInstanceByParentId(ilDBInterface $db, int $parent_id, bool $is_overall = false): self
     {
         $obj = new self($db);
         $obj->setParentId($parent_id);
@@ -319,7 +321,7 @@ class Feedback implements hasDBFields
         return $obj;
     }
 
-    public static function _rearangeFeedbackLinear(ilDBInterface $db, int $parent_id, bool $is_overall = false) : int
+    public static function _rearangeFeedbackLinear(ilDBInterface $db, int $parent_id, bool $is_overall = false): int
     {
         $obj = new self($db);
         $obj->setParentId($parent_id);
@@ -351,7 +353,7 @@ class Feedback implements hasDBFields
         $this->id = $id;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -361,7 +363,7 @@ class Feedback implements hasDBFields
         $this->description = $description;
     }
 
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -371,7 +373,7 @@ class Feedback implements hasDBFields
         $this->end_value = $end_value;
     }
 
-    public function getEndValue() : int
+    public function getEndValue(): int
     {
         return $this->end_value;
     }
@@ -381,7 +383,7 @@ class Feedback implements hasDBFields
         $this->feedback_text = $feedback_text;
     }
 
-    public function getFeedbackText() : string
+    public function getFeedbackText(): string
     {
         return $this->feedback_text;
     }
@@ -391,7 +393,7 @@ class Feedback implements hasDBFields
         $this->parent_id = $parent_id;
     }
 
-    public function getParentId() : int
+    public function getParentId(): int
     {
         return $this->parent_id;
     }
@@ -401,7 +403,7 @@ class Feedback implements hasDBFields
         $this->start_value = $start_value;
     }
 
-    public function getStartValue() : int
+    public function getStartValue(): int
     {
         return $this->start_value;
     }
@@ -411,14 +413,14 @@ class Feedback implements hasDBFields
         $this->title = $title;
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function isParentTypeOverall() : bool
+    public function isParentTypeOverall(): bool
     {
-        return (bool)$this->parent_type_overall;
+        return $this->parent_type_overall;
     }
 
     public function setParentTypeOverall(bool $parent_type_overall)
@@ -426,5 +428,3 @@ class Feedback implements hasDBFields
         $this->parent_type_overall = $parent_type_overall;
     }
 }
-
-

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Player\Block;
 
 use ilub\plugin\SelfEvaluation\Player\Question\QuestionPlayerGUI;
@@ -15,7 +18,7 @@ class QuestionBlockPlayerGUI extends BlockPlayerGUI
      */
     protected $block;
 
-    public function getBlockForm(PlayerFormContainer $parent_form) : PlayerFormContainer
+    public function getBlockForm(PlayerFormContainer $parent_form): PlayerFormContainer
     {
         $form = parent::getBlockForm($parent_form);
 
@@ -40,4 +43,3 @@ class QuestionBlockPlayerGUI extends BlockPlayerGUI
         return $form;
     }
 }
-

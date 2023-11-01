@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Question\Matrix;
 
 use ilub\plugin\SelfEvaluation\Question\Question as BaseQuestion;
@@ -8,9 +11,9 @@ use ilDBInterface;
 
 class Question extends BaseQuestion
 {
-    const TABLE_NAME = 'rep_robj_xsev_qst';
+    public const TABLE_NAME = 'rep_robj_xsev_qst';
 
-    const POSTVAR_PREFIX = 'qst_';
+    public const POSTVAR_PREFIX = 'qst_';
 
     /**
      * @var string
@@ -32,12 +35,12 @@ class Question extends BaseQuestion
     /**
      * @var array
      */
-    static protected $instances_for_parent_id_array = [];
+    protected static $instances_for_parent_id_array = [];
 
     /**
      * @var array
      */
-    static protected $instances_for_parent_id = [];
+    protected static $instances_for_parent_id = [];
 
     /**
      * @var int
@@ -59,11 +62,11 @@ class Question extends BaseQuestion
     public function toXml(SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("question");
-        $child_xml->addAttribute("parentId", $this->getParentId());
+        $child_xml->addAttribute("parentId", (string)$this->getParentId());
         $child_xml->addAttribute("title", $this->getTitle());
         $child_xml->addAttribute("questionBody", $this->getQuestionBody());
-        $child_xml->addAttribute("position", $this->getPosition());
-        $child_xml->addAttribute("inverse", $this->getIsInverse());
+        $child_xml->addAttribute("position", (string)$this->getPosition());
+        $child_xml->addAttribute("inverse", (string)$this->getIsInverse());
         return $xml;
     }
 
@@ -72,9 +75,9 @@ class Question extends BaseQuestion
         $attributes = $xml->attributes();
         $question = new self($db);
         $question->setParentId($parent_id);
-        $question->setTitle($attributes["title"]);
-        $question->setQuestionBody($attributes["questionBody"]);
-        $question->setIsInverse((int)$attributes["inverse"]);
+        $question->setTitle((string) $attributes["title"]);
+        $question->setQuestionBody((string) $attributes["questionBody"]);
+        $question->setIsInverse((bool)$attributes["inverse"]);
         $question->create();
         $question->setPosition((int)$attributes["position"]);
         $question->update();
@@ -86,7 +89,7 @@ class Question extends BaseQuestion
      * @param int           $parent_id
      * @return Question[]
      */
-    public static function _getAllInstancesForParentId(ilDBInterface $db, int $parent_id) : array
+    public static function _getAllInstancesForParentId(ilDBInterface $db, int $parent_id): array
     {
         if (!self::$instances_for_parent_id[$parent_id]) {
             self::$instances_for_parent_id[$parent_id] = [];
@@ -98,7 +101,7 @@ class Question extends BaseQuestion
                 $question->setParentId($parent_id);
                 $question->setTitle((string)$rec->title);
                 $question->setQuestionBody((string)$rec->question_body);
-                $question->setIsInverse((int)$rec->is_inverse);
+                $question->setIsInverse($rec->is_inverse);
                 $question->setPosition((int)$rec->position);
                 self::$instances_for_parent_id[$parent_id][$rec->id] = $question;
             }
@@ -106,10 +109,11 @@ class Question extends BaseQuestion
         return self::$instances_for_parent_id[$parent_id];
     }
 
-    public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id) : array{
+    public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id): array
+    {
         if (!self::$instances_for_parent_id_array[$parent_id]) {
             self::$instances_for_parent_id_array[$parent_id] = [];
-            foreach (self::_getAllInstancesForParentId( $db,  $parent_id) as $question){
+            foreach (self::_getAllInstancesForParentId($db, $parent_id) as $question) {
                 self::$instances_for_parent_id_array[$parent_id][$question->getId()] = $question->getArray();
             }
         }
@@ -121,7 +125,7 @@ class Question extends BaseQuestion
         $this->is_inverse = $is_inverse;
     }
 
-    public function getIsInverse(): int
+    public function getIsInverse(): bool
     {
         return $this->is_inverse;
     }

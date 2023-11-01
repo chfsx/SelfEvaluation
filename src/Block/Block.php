@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block;
 
 use ilub\plugin\SelfEvaluation\DatabaseHelper\ArrayForDB;
@@ -40,7 +43,7 @@ abstract class Block implements hasDBFields, BlockType
      */
     protected $db;
 
-    function __construct(ilDBInterface $db, $id = 0)
+    public function __construct(ilDBInterface $db, $id = 0)
     {
         $this->db = $db;
 
@@ -52,9 +55,9 @@ abstract class Block implements hasDBFields, BlockType
 
     abstract public function cloneTo(int $parent_id);
 
-    abstract function toXml(SimpleXMLElement $xml) : SimpleXMLElement;
+    abstract public function toXml(SimpleXMLElement $xml): SimpleXMLElement;
 
-    static abstract function fromXml(ilDBInterface $db,int $parent_id, SimpleXMLElement $xml) : SimpleXMLElement;
+    abstract public static function fromXml(ilDBInterface $db, int $parent_id, SimpleXMLElement $xml): SimpleXMLElement;
 
     /**
      * @return BaseQuestion[]
@@ -65,10 +68,10 @@ abstract class Block implements hasDBFields, BlockType
     {
         $set = $this->db->query('SELECT * FROM ' . static::_getTableName() . ' ' . ' WHERE id = '
             . $this->db->quote($this->getId(), 'integer'));
-        $this->setObjectValuesFromRecord($this,$this->db->fetchObject($set));
+        $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
-    abstract static public function _getTableName() : string;
+    abstract public static function _getTableName(): string;
 
     public function initDB()
     {
@@ -79,7 +82,7 @@ abstract class Block implements hasDBFields, BlockType
         }
     }
 
-    final function updateDB()
+    final public function updateDB()
     {
         if (!$this->db->tableExists(static::_getTableName())) {
             $this->initDB();
@@ -131,7 +134,7 @@ abstract class Block implements hasDBFields, BlockType
         $set = $db->query('SELECT * FROM ' . static::_getTableName() . ' ' . ' WHERE parent_id = '.$parent_id. ' ORDER BY position ASC');
         while ($rec = $db->fetchObject($set)) {
             $block = new static($db);
-            $block->setObjectValuesFromRecord( $block, $rec);
+            $block->setObjectValuesFromRecord($block, $rec);
             $return[] = $block;
         }
 
@@ -143,9 +146,9 @@ abstract class Block implements hasDBFields, BlockType
      * @param int $identity_id
      * @return static[]
      */
-    public static function _getAllInstancesByIdentifierId(ilDBInterface $db, int $identity_id)
+    public static function _getAllInstancesByIdentifierId(ilDBInterface $db, string $identity_id)
     {
-        return self::_getAllInstancesByParentId($db, Identity::_getObjIdForIdentityId($db,$identity_id));
+        return self::_getAllInstancesByParentId($db, Identity::_getObjIdForIdentityId($db, $identity_id));
     }
 
     public function getNextPosition(int $parent_id)
@@ -164,7 +167,7 @@ abstract class Block implements hasDBFields, BlockType
         $this->id = $id;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -174,7 +177,7 @@ abstract class Block implements hasDBFields, BlockType
         $this->description = $description;
     }
 
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -184,7 +187,7 @@ abstract class Block implements hasDBFields, BlockType
         $this->parent_id = $parent_id;
     }
 
-    public function getParentId() : int
+    public function getParentId(): int
     {
         return $this->parent_id;
     }
@@ -194,7 +197,7 @@ abstract class Block implements hasDBFields, BlockType
         $this->position = $position;
     }
 
-    public function getPosition() : int
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -204,19 +207,20 @@ abstract class Block implements hasDBFields, BlockType
         $this->title = $title;
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function getPositionId() : string
+    public function getPositionId(): string
     {
         return get_class($this) . '_' . $this->getId();
     }
 
-    abstract function getBlockTableRow(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin) : BlockTableRow;
+    abstract public function getBlockTableRow(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin): BlockTableRow;
 
-    public function unserialize($serialized){
+    public function unserialize($serialized)
+    {
         global $DIC;
 
         $this->db = $DIC->database();

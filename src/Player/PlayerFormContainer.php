@@ -1,13 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Player;
 
 use ilPropertyFormGUI;
 use ilub\plugin\SelfEvaluation\UIHelper\KnobGUI;
 use ilGlobalTemplateInterface;
 use ilRepositoryObjectPlugin;
+
 class PlayerFormContainer extends ilPropertyFormGUI
 {
-
     /**
      * @var array
      */
@@ -26,7 +29,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
     /**
      * @var ilGlobalTemplateInterface
      */
-    protected $global_tpl;
+    protected ilGlobalTemplateInterface|null $global_tpl;
 
     /**
      * @var ilRepositoryObjectPlugin
@@ -46,7 +49,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
      * @param        $a_text
      * @param string $a_id
      */
-    public function addCommandButton($a_cmd, $a_text, $a_id = '')
+    public function addCommandButton(string $a_cmd, string $a_text, string $a_id = ''): void
     {
 
         $this->copy_of_buttons[] = ["cmd" => $a_cmd, "text" => $a_text];
@@ -56,7 +59,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
     /**
      * Remove all command buttons
      */
-    function clearCommandButtons()
+    public function clearCommandButtons(): void
     {
         $this->copy_of_buttons = [];
         parent::clearCommandButtons();
@@ -73,7 +76,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
     /**
      * Get Content.
      */
-    public function getContent()
+    public function getContent(): string
     {
         $this->tpl = $this->plugin->getTemplate('default/Player/tpl.player_form.html');
         $this->global_tpl->addCss($this->plugin->getStyleSheetLocation("css/player.css"));
@@ -91,7 +94,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
              * @var $item \ilFormPropertyGUI
              */
             if ($item->getType() == "section_header" && $this->knob) {
-                $this->tpl->setVariable("PROGRESS_KNOB", $this->knob->getHtml($this->global_tpl,$this->plugin));
+                $this->tpl->setVariable("PROGRESS_KNOB", $this->knob->getHtml($this->global_tpl, $this->plugin));
             }
             if ($item->getType() != "hidden") {
                 $this->tpl->setVariable("RATING_SIZE", 12 - $this->getQuestionFieldSize());
@@ -159,4 +162,3 @@ class PlayerFormContainer extends ilPropertyFormGUI
     }
 
 }
-

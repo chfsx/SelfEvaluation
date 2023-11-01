@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper\Chart;
 
 use ilChartGrid;
@@ -9,7 +12,7 @@ class BarChart extends ilChartGrid
 {
     use ChartHelper;
 
-    const BAR_WIDTH = 0.5;
+    public const BAR_WIDTH = 0.5;
 
     /**
      * @var bool
@@ -48,14 +51,14 @@ class BarChart extends ilChartGrid
 
     }
 
-    public function getDataInstance($type = null) : ilChartDataBars
+    public function getDataInstance($type = null): ilChartDataBars
     {
         $data = new ilChartDataBars();
         $data->setBarOptions(self::BAR_WIDTH, 'center');
         return $data;
     }
 
-    public function parseGlobalOptions(stdClass $a_options)
+    public function parseGlobalOptions(stdClass $a_options): void
     {
         parent::parseGlobalOptions($a_options);
         $a_options->{"grid"} = new stdClass();
@@ -90,7 +93,7 @@ class BarChart extends ilChartGrid
         }
     }
 
-    public function isShowAverageLine() : bool
+    public function isShowAverageLine(): bool
     {
         return $this->show_average_line;
     }
@@ -100,17 +103,17 @@ class BarChart extends ilChartGrid
         $this->show_average_line = $show_average_line;
     }
 
-    public function getAverage() : int
+    public function getAverage(): float
     {
         return $this->average;
     }
 
-    public function setAverage(int $average)
+    public function setAverage(float $average)
     {
         $this->average = $average;
     }
 
-    public function isShowVarianz() : bool
+    public function isShowVarianz(): bool
     {
         return $this->show_varianz;
     }
@@ -120,7 +123,7 @@ class BarChart extends ilChartGrid
         $this->show_varianz = $show_varianz;
     }
 
-    public function getStandardabweichungData() : array
+    public function getStandardabweichungData(): array
     {
         return $this->standardabweichung_data;
     }
@@ -130,7 +133,7 @@ class BarChart extends ilChartGrid
         $this->standardabweichung_data = $standardabweichung_data;
     }
 
-    public function getValuesForStandardabweichung() : array
+    public function getValuesForStandardabweichung(): array
     {
         return $this->values_for_standardabweichung;
     }

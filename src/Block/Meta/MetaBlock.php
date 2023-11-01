@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block\Meta;
 
 use ilDBInterface;
@@ -11,7 +14,6 @@ use ilub\plugin\SelfEvaluation\Block\BlockTableRow;
 
 class MetaBlock extends Block
 {
-
     /**
      * @var string
      */
@@ -29,7 +31,7 @@ class MetaBlock extends Block
      */
     protected $parent_id = 0;
 
-    public function cloneTo($parent_id) : self
+    public function cloneTo($parent_id): self
     {
         $clone = new self($this->db);
         $clone->setParentId($parent_id);
@@ -47,13 +49,13 @@ class MetaBlock extends Block
         return $clone;
     }
 
-    public function toXml(SimpleXMLElement $xml) : SimpleXMLElement
+    public function toXml(SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("metaBlock");
-        $child_xml->addAttribute("parentId", $this->getParentId());
+        $child_xml->addAttribute("parentId", (string) $this->getParentId());
         $child_xml->addAttribute("title", $this->getTitle());
         $child_xml->addAttribute("description", $this->getDescription());
-        $child_xml->addAttribute("position", $this->getPosition());
+        $child_xml->addAttribute("position", (string) $this->getPosition());
 
         $questions = MetaQuestion::_getAllInstancesForParentId($this->db, $this->getId());
 
@@ -64,13 +66,13 @@ class MetaBlock extends Block
         return $xml;
     }
 
-    static function fromXml(ilDBInterface $db, $parent_id, SimpleXMLElement $xml) : SimpleXMLElement
+    public static function fromXml(ilDBInterface $db, $parent_id, SimpleXMLElement $xml): SimpleXMLElement
     {
         $attributes = $xml->attributes();
         $block = new self($db);
         $block->setParentId($parent_id);
-        $block->setTitle($attributes["title"]);
-        $block->setDescription($attributes["description"]);
+        $block->setTitle($attributes["title"]->__toString());
+        $block->setDescription($attributes["description"]->__toString());
         $block->setPosition((int) $attributes["position"]);
         $block->create();
 
@@ -81,7 +83,7 @@ class MetaBlock extends Block
         return $xml;
     }
 
-    public static function _getTableName() : string
+    public static function _getTableName(): string
     {
         return 'rep_robj_xsev_mblock';
     }
@@ -99,13 +101,13 @@ class MetaBlock extends Block
     /**
      * @return MetaQuestion[]
      */
-    public function getQuestions() : array
+    public function getQuestions(): array
     {
-        return (MetaQuestion::_getAllInstancesForParentId($this->db,$this->getId()));
+        return (MetaQuestion::_getAllInstancesForParentId($this->db, $this->getId()));
     }
 
-    public function getBlockTableRow(ilDBInterface $db,ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin) : BlockTableRow
+    public function getBlockTableRow(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin): BlockTableRow
     {
-        return new MetaBlockTableRow($ilCtrl,$plugin,$this);
+        return new MetaBlockTableRow($ilCtrl, $plugin, $this);
     }
 }

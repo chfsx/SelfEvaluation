@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper\Chart;
 
 use ilChartLegend;
@@ -8,19 +11,19 @@ trait ChartHelper
     protected $canvas_width = "99%";
     protected $canvas_height = "450px";
 
-    protected function getLegend() : ilChartLegend
+    protected function getLegend(): ilChartLegend
     {
         $legend = new ilChartLegend();
         $legend->setBackground($this->getChartColors()[0]);
         return $legend;
     }
 
-    protected function getBackgroundColor() : string
+    protected function getBackgroundColor(): string
     {
         return $this->getChartColors()[0];
     }
 
-    protected function getChartColors() : array
+    protected function getChartColors(): array
     {
         return [
             '#00CCFF',
@@ -38,7 +41,7 @@ trait ChartHelper
         ];
     }
 
-    public function getCanvasWidth() : string
+    public function getCanvasWidth(): string
     {
         return $this->canvas_width;
     }
@@ -48,7 +51,7 @@ trait ChartHelper
         $this->canvas_width = $canvas_width;
     }
 
-    public function getCanvasHeight() : string
+    public function getCanvasHeight(): string
     {
         return $this->canvas_height;
     }

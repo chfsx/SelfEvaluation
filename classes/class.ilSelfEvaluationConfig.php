@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+declare(strict_types=1);
 
 class ilSelfEvaluationConfig
 {
-
     /**
      * @var string
      */
@@ -16,7 +16,7 @@ class ilSelfEvaluationConfig
     /**
      * @param $table_name
      */
-    function __construct($table_name)
+    public function __construct($table_name)
     {
         global $DIC;
 
@@ -45,7 +45,7 @@ class ilSelfEvaluationConfig
      * @param $params
      * @return bool|null
      */
-    function __call($method, $params)
+    public function __call($method, $params)
     {
         if (substr($method, 0, 3) == 'get') {
             return $this->getValue(self::_fromCamelCase(substr($method, 3)));
@@ -100,12 +100,12 @@ class ilSelfEvaluationConfig
      * @param $key
      * @return bool|string
      */
-    public function getValue($key)
+    public function getValue($key): string
     {
         $result = $this->db->query("SELECT config_value FROM " . $this->getTableName() . " WHERE config_key = "
             . $this->db->quote($key, "text"));
         if ($result->numRows() == 0) {
-            return false;
+            return '';
         }
         $record = $this->db->fetchAssoc($result);
 
@@ -118,7 +118,7 @@ class ilSelfEvaluationConfig
     public function getContainer()
     {
         $key = $this->getValue('container');
-        if ($key == '' OR $key == 0) {
+        if ($key == '' or $key == 0) {
             return 1;
         } else {
             return $key;
@@ -166,7 +166,8 @@ class ilSelfEvaluationConfig
             function ($c) {
                 return "_" . strtolower($c[1]);
             },
-            $str);
+            $str
+        );
     }
 
     /**
@@ -185,6 +186,7 @@ class ilSelfEvaluationConfig
             function ($c) {
                 return strtoupper($c[1]);
             },
-            $str);
+            $str
+        );
     }
 }

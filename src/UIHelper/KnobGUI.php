@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper;
 
 use ilRepositoryObjectPlugin;
@@ -6,9 +9,9 @@ use ilGlobalTemplateInterface;
 
 class KnobGUI
 {
-    const CAP_BUTT = '\'butt\'';
-    const CAP_ROUND = '\'round\'';
-    const CAP_GAUGE = '\'gauge\'';
+    public const CAP_BUTT = '\'butt\'';
+    public const CAP_ROUND = '\'round\'';
+    public const CAP_GAUGE = '\'gauge\'';
     /**
      * @var int
      */
@@ -107,7 +110,7 @@ class KnobGUI
         $this->html = $html;
     }
 
-    public function getHtml(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin) : string
+    public function getHtml(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin): string
     {
         $this->render($tpl, $plugin);
 

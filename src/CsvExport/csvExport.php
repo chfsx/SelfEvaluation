@@ -1,9 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\CsvExport;
 
 class csvExport
 {
-
     /**
      * @var csvExportTable
      */
@@ -12,7 +14,7 @@ class csvExport
     /**
      * @param csvExportTable $table
      */
-    function __construct($table = null)
+    public function __construct($table = null)
     {
         if ($table) {
             $this->table = $table;
@@ -38,7 +40,7 @@ class csvExport
                 $utf8_row[] = $this->convertExcelUtf8($entry);
             }
 
-            fputcsv($output,$row, $delimiter, $enclosure);
+            fputcsv($output, $row, $delimiter, $enclosure);
         }
 
     }
@@ -63,7 +65,7 @@ class csvExport
         $this->table = $table;
     }
 
-    public function getTable() : csvExportTable
+    public function getTable(): csvExportTable
     {
         return $this->table;
     }

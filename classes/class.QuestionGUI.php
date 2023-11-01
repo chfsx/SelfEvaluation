@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+declare(strict_types=1);
 
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
@@ -22,9 +23,9 @@ class QuestionGUI extends BaseQuestionGUI
      */
     protected $question;
 
-    protected function createTableGUI() : ilTable2GUI
+    protected function createTableGUI(): ilTable2GUI
     {
-        return new QuestionTableGUI($this, $this->plugin, $this->tpl,'showContent', $this->block, $this->hasSorting());
+        return new QuestionTableGUI($this, $this->plugin, $this->tpl, 'showContent', $this->block, $this->hasSorting());
     }
 
     public function initQuestionForm(string $mode = 'create')
@@ -39,7 +40,7 @@ class QuestionGUI extends BaseQuestionGUI
         $te->setRequired(false);
         $this->form->addItem($te);
         $cb = new ilCheckboxInputGUI($this->plugin->txt('is_inverse'), 'is_inverse');
-        $cb->setValue(1);
+        $cb->setValue('1');
         $this->form->addItem($cb);
     }
 

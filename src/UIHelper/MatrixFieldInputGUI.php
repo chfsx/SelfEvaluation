@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper;
 
 use ilSubEnabledFormPropertyGUI;
@@ -7,7 +10,6 @@ use ilTemplate;
 
 class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
 {
-
     /**
      * @var string
      */
@@ -33,12 +35,12 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->plugin = $plugin;
     }
 
-    public function getHtml() : string
+    public function getHtml(): string
     {
         return $this->buildHTML();
     }
 
-    private function buildHTML() : string
+    private function buildHTML(): string
     {
         $tpl = $this->plugin->getTemplate('default/Matrix/tpl.matrix_input.html');
 
@@ -46,7 +48,7 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $tpl->setVariable('ROW_NAME', $this->getPostVar());
         foreach ($this->getScale() as $value => $title) {
             $tpl->setCurrentBlock('item');
-            if ($this->getValue() == $value AND $this->getValue() !== null AND $this->getValue() !== '') {
+            if ($this->getValue() == $value and $this->getValue() !== null and $this->getValue() !== '') {
                 $tpl->setVariable('SELECTED', 'checked="checked"');
             }
             $tpl->setVariable('CLASS', $even ? "ilUnitEven" : "ilUnitOdd");
@@ -68,15 +70,15 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
 
     public function setValueByArray($values)
     {
-        if(array_key_exists($this->getPostVar(),$values)){
+        if(array_key_exists($this->getPostVar(), $values)) {
             $this->setValue($values[$this->getPostVar()]);
             return;
         }
-        list($matrix_key,$question_key) = explode("[", str_replace("]", "", $this->getPostVar()));
+        list($matrix_key, $question_key) = explode("[", str_replace("]", "", $this->getPostVar()));
 
-        if(array_key_exists($matrix_key,$values)){
+        if(array_key_exists($matrix_key, $values)) {
             $meta_question_values = $values[$matrix_key];
-            if($meta_question_values[$question_key]){
+            if($meta_question_values[$question_key]) {
                 $this->setValue($meta_question_values[$question_key]);
             }
         }
@@ -92,7 +94,7 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->scale = $scale;
     }
 
-    public function getScale() : array
+    public function getScale(): array
     {
         return $this->scale;
     }
@@ -102,7 +104,7 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->value = $value;
     }
 
-    public function getValue() : string
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -112,12 +114,12 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->values = $values;
     }
 
-    public function getValues() : array
+    public function getValues(): array
     {
         return $this->values;
     }
 
-    function checkInput() : bool
+    public function checkInput(): bool
     {
         if ($this->getRequired()) {
 
@@ -145,4 +147,3 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         return true;
     }
 }
-

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block;
 
 use ilObjSelfEvaluationGUI;
@@ -14,11 +17,12 @@ class BlockTableGUI extends ilTable2GUI
      */
     protected $plugin;
 
-    function __construct(
+    public function __construct(
         ilCtrl $ilCtrl,
         ilSelfEvaluationPlugin $plugin,
-        ilObjSelfEvaluationGUI $parent, $a_parent_cmd)
-    {
+        ilObjSelfEvaluationGUI $parent,
+        $a_parent_cmd
+    ) {
 
         $this->plugin = $plugin;
         $this->ctrl = $ilCtrl;
@@ -28,22 +32,19 @@ class BlockTableGUI extends ilTable2GUI
 
         // Columns
         $this->addColumn('', '', '20px');
-        $this->addColumn($this->plugin->txt('title'), false, 'auto');
-        $this->addColumn($this->plugin->txt('abbreviation'), false, 'auto');
-        $this->addColumn($this->plugin->txt('description'), false, 'auto');
-        $this->addColumn($this->plugin->txt('count_questions'), false, 'auto');
-        $this->addColumn($this->plugin->txt('count_feedbacks'), false, 'auto');
-        $this->addColumn($this->plugin->txt('feedback_status'), false, 'auto');
-        $this->addColumn($this->plugin->txt('actions'), false, 'auto');
+        $this->addColumn($this->plugin->txt('title'), '', 'auto');
+        $this->addColumn($this->plugin->txt('abbreviation'), '', 'auto');
+        $this->addColumn($this->plugin->txt('description'), '', 'auto');
+        $this->addColumn($this->plugin->txt('count_questions'), '', 'auto');
+        $this->addColumn($this->plugin->txt('count_feedbacks'), '', 'auto');
+        $this->addColumn($this->plugin->txt('feedback_status'), '', 'auto');
+        $this->addColumn($this->plugin->txt('actions'), '', 'auto');
         $this->setFormAction($ilCtrl->getFormActionByClass('ListBlocksGUI'));
         $this->addMultiCommand('saveSorting', $this->plugin->txt('save_sorting'));
         $this->setRowTemplate($this->plugin->getDirectory() . '/templates/default/Block/tpl.template_block_row.html');
     }
 
-    /**
-     * @param array $a_set
-     */
-    public function fillRow($a_set)
+    public function fillRow(array $a_set): void
     {
         // Row
         $this->tpl->setVariable('ID', $a_set['position_id']);
@@ -95,4 +96,3 @@ class BlockTableGUI extends ilTable2GUI
         $this->tpl->setVariable('ACTIONS', $ac->getHTML());
     }
 }
-

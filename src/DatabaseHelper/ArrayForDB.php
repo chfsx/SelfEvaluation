@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\DatabaseHelper;
 
 use stdClass;
@@ -28,12 +30,12 @@ trait ArrayForDB
         return $array;
     }
 
-    public function getArrayForDb() : array
+    public function getArrayForDb(): array
     {
         $array = [];
         foreach (get_object_vars($this) as $property => $value) {
             if (!in_array($property, $this->getNonDbFields())) {
-                if(is_array($value)){
+                if(is_array($value)) {
                     $value = serialize($value);
                 }
                 $array[$property] = [$this->getDBFieldType($value), $value];
@@ -43,7 +45,7 @@ trait ArrayForDB
         return $array;
     }
 
-    public function getArray() : array
+    public function getArray(): array
     {
         $array = [];
         foreach (get_object_vars($this) as $property => $value) {
@@ -55,21 +57,20 @@ trait ArrayForDB
         return $array;
     }
 
-    public function fromArray(array $array) : self
+    public function fromArray(array $array): self
     {
         foreach ($array as $k => $v) {
             $serialized = unserialize($v);
-            if(is_array($serialized)){
+            if(is_array($serialized)) {
                 $this->{$k} = $serialized;
-            }
-            else{
+            } else {
                 $this->{$k} = $v;
             }
         }
         return $this;
     }
 
-    protected function getIdForDb() : array
+    protected function getIdForDb(): array
     {
         return ['id' => ['integer', $this->getId()]];
     }
@@ -86,10 +87,9 @@ trait ArrayForDB
     {
         foreach ($data->getArrayForDb() as $k => $v) {
             $serialized = unserialize($rec->{$k});
-            if(is_array($serialized)){
+            if(is_array($serialized)) {
                 $this->{$k} = $serialized;
-            }
-            else{
+            } else {
                 $this->{$k} = $rec->{$k};
             }
 
@@ -97,7 +97,7 @@ trait ArrayForDB
         return $this;
     }
 
-    protected function getDBFieldType($var) : string
+    protected function getDBFieldType($var): string
     {
         switch (gettype($var)) {
             case 'string':
@@ -112,11 +112,13 @@ trait ArrayForDB
         }
     }
 
-    public function serialize(){
+    public function serialize()
+    {
         return serialize($this->getArray());
     }
 
-    public function unserialize($serialized){
+    public function unserialize($serialized)
+    {
         return $this->fromArray(unserialize($serialized));
     }
 }

@@ -1,11 +1,15 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+declare(strict_types=1);
+/**
+ @ilCtrl_IsCalledBy ilSelfEvaluationConfigGUI: ilObjComponentSettingsGUI
+ */
 
 class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
 {
-    const TYPE_TEXT = 'ilTextInputGUI';
-    const TYPE_RTE_TEXT_AREA = 'ilTextAreaInputGUI';
-    const TYPE_CHECKBOX = 'ilCheckboxInputGUI';
+    public const TYPE_TEXT = 'ilTextInputGUI';
+    public const TYPE_RTE_TEXT_AREA = 'ilTextAreaInputGUI';
+    public const TYPE_CHECKBOX = 'ilCheckboxInputGUI';
     /**
      * @var ilSelfEvaluationConfig
      */
@@ -39,7 +43,7 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
      */
     protected $plugin;
 
-    function __construct()
+    public function __construct()
     {
         global $DIC;
 
@@ -87,7 +91,7 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
     /**
      * @param $cmd
      */
-    function performCommand($cmd)
+    public function performCommand($cmd): void
     {
         switch ($cmd) {
             case 'configure':
@@ -98,7 +102,7 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    function configure()
+    public function configure()
     {
         $this->initConfigurationForm();
         $this->getValues();
@@ -172,7 +176,7 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
                     }
                 }
             }
-            ilUtil::sendSuccess($this->plugin->txt('conf_saved'));
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('conf_saved'));
             $this->ctrl->redirect($this, 'configure');
         } else {
             $this->form->setValuesByPost();
@@ -180,5 +184,3 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         }
     }
 }
-
-

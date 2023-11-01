@@ -1,73 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block;
 
 use ilCtrl;
 use ilSelfEvaluationPlugin;
+use iLub\Plugins\Mods\ModHelper\Translation\uiHookGuiModTranslatedString;
 
 class BlockTableRow
 {
-
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
-    /**
-     * @var int
-     */
-    protected $block_id;
-    /**
-     * @var string
-     */
-    protected $title;
-    /**
-     * @var string
-     */
-    protected $abbreviation;
-    /**
-     * @var string
-     */
-    protected $description;
-    /**
-     * @var int
-     */
-    protected $question_count;
-    /**
-     * @var int
-     */
-    protected $feedback_count;
-    /**
-     * @var string
-     */
-    protected $status_img;
-    /**
-     * @var string
-     */
-    protected $block_edit_link;
-    /**
-     * @var string
-     */
-    protected $questions_link;
-    /**
-     * @var string
-     */
-    protected $feedback_link;
-    /**
-     * @var int
-     */
-    protected $position_id;
+    protected ilCtrl $ctrl;
+    protected ilSelfEvaluationPlugin $plugin;
+    protected int $block_id;
+    protected string $title;
+    protected string $abbreviation;
+    protected string $description;
+    protected int $question_count;
+    protected int $feedback_count;
+    protected string $status_img;
+    protected string $block_edit_link;
+    protected string $questions_link;
+    protected string $feedback_link;
+    protected string $position_id;
     /**
      * @var BlockTableAction[]
      */
-    protected $actions;
-    /**
-     * @var string
-     */
-    protected $block_gui_class;
+    protected array $actions;
+    protected string $block_gui_class;
 
     public function __construct(
         ilCtrl $ilCtrl,
@@ -97,7 +57,7 @@ class BlockTableRow
         $this->addAction($delete_action);
     }
 
-    public function toArray() : array
+    public function toArray(): array
     {
         $arr = [];
         $arr['block_id'] = $this->getBlockId();
@@ -122,7 +82,7 @@ class BlockTableRow
         $this->abbreviation = $abbreviation;
     }
 
-    public function getAbbreviation() : ?string
+    public function getAbbreviation(): ?string
     {
         return $this->abbreviation;
     }
@@ -132,7 +92,7 @@ class BlockTableRow
         $this->block_edit_link = $block_edit_link;
     }
 
-    public function getBlockEditLink() : string
+    public function getBlockEditLink(): string
     {
         return $this->block_edit_link;
     }
@@ -142,7 +102,7 @@ class BlockTableRow
         $this->block_id = $block_id;
     }
 
-    public function getBlockId() : int
+    public function getBlockId(): int
     {
         return $this->block_id;
     }
@@ -152,7 +112,7 @@ class BlockTableRow
         $this->description = $description;
     }
 
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -162,7 +122,7 @@ class BlockTableRow
         $this->feedback_count = $feedback_count;
     }
 
-    public function getFeedbackCount() : ?int
+    public function getFeedbackCount(): ?int
     {
         return $this->feedback_count;
     }
@@ -172,7 +132,7 @@ class BlockTableRow
         $this->feedback_link = $feedback_link;
     }
 
-    public function getFeedbackLink() : ?string
+    public function getFeedbackLink(): ?string
     {
         return $this->feedback_link;
     }
@@ -182,7 +142,7 @@ class BlockTableRow
         $this->position_id = $position_id;
     }
 
-    public function getPositionId() : string
+    public function getPositionId(): string
     {
         return $this->position_id;
     }
@@ -192,7 +152,7 @@ class BlockTableRow
         $this->question_count = $question_count;
     }
 
-    public function getQuestionCount() : int
+    public function getQuestionCount(): int
     {
         return $this->question_count;
     }
@@ -202,7 +162,7 @@ class BlockTableRow
         $this->questions_link = $questions_link;
     }
 
-    public function getQuestionsLink() : string
+    public function getQuestionsLink(): string
     {
         return $this->questions_link;
     }
@@ -212,7 +172,7 @@ class BlockTableRow
         $this->status_img = $status_img;
     }
 
-    public function getStatusImg() : string
+    public function getStatusImg(): string
     {
         return $this->status_img;
     }
@@ -222,7 +182,7 @@ class BlockTableRow
         $this->title = $title;
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -253,7 +213,7 @@ class BlockTableRow
         $this->ctrl->setParameterByClass('BlockGUI', 'block_id', $this->getBlockId());
     }
 
-    protected function getEditAction() : BlockTableAction
+    protected function getEditAction(): BlockTableAction
     {
         $title = $this->plugin->txt('edit_block');
         $link = $this->ctrl->getLinkTargetByClass($this->block_gui_class, 'editBlock');
@@ -262,22 +222,22 @@ class BlockTableRow
         return new  BlockTableAction($title, $cmd, $link, $position);
     }
 
-    protected function getDeleteAction() : BlockTableAction
+    protected function getDeleteAction(): BlockTableAction
     {
         $title = $this->plugin->txt('delete_block');
         $link = $this->ctrl->getLinkTargetByClass($this->block_gui_class, 'deleteBlock');
         $cmd = 'delete_block';
-        $position = 4;
+        $position = 5;
 
         return new BlockTableAction($title, $cmd, $link, $position);
     }
 
-    protected function getDuplicateAction() : BlockTableAction
+    protected function getDuplicateAction(): BlockTableAction
     {
         $title = $this->plugin->txt('duplicate_block');
         $link = $this->ctrl->getLinkTargetByClass($this->block_gui_class, 'duplicateBlock');
         $cmd = 'duplicateBlock';
-        $position = 3.5;
+        $position = 4;
 
         return new BlockTableAction($title, $cmd, $link, $position);
     }

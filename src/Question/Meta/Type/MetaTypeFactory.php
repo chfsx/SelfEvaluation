@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Question\Meta\Type;
 
 class MetaTypeFactory
@@ -9,7 +12,7 @@ class MetaTypeFactory
      */
     public function getTypeByTypeId(int $type_id): ?MetaQuestionType
     {
-        switch($type_id){
+        switch($type_id) {
             case MetaTypeMatrix::TYPE_ID:
                 return new MetaTypeMatrix();
             case MetaTypeSelect::TYPE_ID:
@@ -22,7 +25,8 @@ class MetaTypeFactory
         return null;
     }
 
-    public function getTypes(){
+    public function getTypes()
+    {
         $type = new MetaTypeText();
         $types[$type->getId()] = $type;
         $type = new MetaTypeSelect();

@@ -1,16 +1,14 @@
 <?php
+
+declare(strict_types=1);
 use ilub\plugin\SelfEvaluation\Block\BlockGUI;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 
 class QuestionBlockGUI extends BlockGUI
 {
+    protected QuestionBlock $object;
 
-    /**
-     * @var QuestionBlock
-     */
-    protected $object;
-
-    function __construct(
+    public function __construct(
         ilDBInterface $db,
         ilGlobalTemplateInterface $tpl,
         ilCtrl $ilCtrl,
@@ -18,10 +16,10 @@ class QuestionBlockGUI extends BlockGUI
         ilSelfEvaluationPlugin $plugin,
         ilObjSelfEvaluationGUI $parent
     ) {
-        parent::__construct( $db, $tpl, $ilCtrl, $access, $plugin, $parent);
+        parent::__construct($db, $tpl, $ilCtrl, $access, $plugin, $parent);
 
         $this->object = new QuestionBlock($this->db, (int) $_GET['block_id']);
-        $this->object->setParentId($this->parent->obj_id);
+        $this->object->setParentId($this->parent->getObjId());
     }
 
     public function initForm(string $mode = 'create')
@@ -40,11 +38,10 @@ class QuestionBlockGUI extends BlockGUI
         $this->object->setAbbreviation($this->form->getInput('abbreviation'));
     }
 
-    protected function getObjectValuesAsArray() : array
+    protected function getObjectValuesAsArray(): array
     {
         $values = ['abbreviation' => $this->object->getAbbreviation()];
 
         return array_merge(parent::getObjectValuesAsArray(), $values);
     }
 }
-

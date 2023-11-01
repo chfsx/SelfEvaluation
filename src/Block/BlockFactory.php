@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Block;
 
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
@@ -8,7 +10,6 @@ use ilDBInterface;
 
 class BlockFactory
 {
-
     /**
      * @var int
      */
@@ -39,7 +40,7 @@ class BlockFactory
         return $blocks;
     }
 
-    public static function _getNextPositionAcrossBlocks(ilDBInterface $db, int $self_eval_id) : int
+    public static function _getNextPositionAcrossBlocks(ilDBInterface $db, int $self_eval_id): int
     {
         $block = new QuestionBlock($db);
         $pos = $block->getNextPosition($self_eval_id);
@@ -49,7 +50,7 @@ class BlockFactory
         return $pos;
     }
 
-    protected function positionSort(Block $a, Block $b) : int
+    protected function positionSort(Block $a, Block $b): int
     {
         if ($a->getPosition() == $b->getPosition()) {
 
@@ -70,7 +71,7 @@ class BlockFactory
      * @param Block[] $blocks
      * @return bool
      */
-    public function sortByPosition(&$blocks) : bool
+    public function sortByPosition(&$blocks): bool
     {
         return usort($blocks, [get_class(), "positionSort"]);
     }

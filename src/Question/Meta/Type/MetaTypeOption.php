@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Question\Meta\Type;
 
 use ilRadioOption;
@@ -10,10 +13,7 @@ class MetaTypeOption extends ilRadioOption
         parent::__construct('', '', $info);
     }
 
-    /**
-     * @param bool $disabled
-     */
-    public function setDisabled($disabled)
+    public function setDisabled(bool $disabled): void
     {
         $this->disabled = $disabled;
 

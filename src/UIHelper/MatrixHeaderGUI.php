@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper;
 
 use ilSubEnabledFormPropertyGUI;
@@ -8,7 +11,6 @@ use ilUtil;
 
 class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
 {
-
     /**
      * @var string
      */
@@ -26,7 +28,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
      */
     protected $plugin;
 
-    public function __construct(ilRepositoryObjectPlugin $plugin, string $a_title = '',string $a_postvar = '')
+    public function __construct(ilRepositoryObjectPlugin $plugin, string $a_title = '', string $a_postvar = '')
     {
         parent::__construct($a_title, $a_postvar);
         $this->setType('matrix_header');
@@ -34,7 +36,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         $this->plugin = $plugin;
     }
 
-    public function getHtml() : string
+    public function getHtml(): string
     {
         $tpl = $this->plugin->getTemplate('default/Matrix/tpl.matrix_header.html');
 
@@ -74,7 +76,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         $a_tpl->parseCurrentBlock();
     }
 
-    public function checkInput() : bool
+    public function checkInput(): bool
     {
         return $this->checkSubItemsInput();
     }
@@ -82,12 +84,12 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
     /**
      * @param mixed $parentform
      */
-    public function setParentform($parentform)
+    public function setParentform($parentform): void
     {
         $this->parentform = $parentform;
     }
 
-    public function getParentform()
+    public function getParentform(): \ilPropertyFormGUI|null
     {
         return $this->parentform;
     }
@@ -102,12 +104,12 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         return $this->parentgui;
     }
 
-    public function setPostvar($postvar)
+    public function setPostvar($postvar): void
     {
         $this->postvar = $postvar;
     }
 
-    public function getPostvar()
+    public function getPostvar(): string
     {
         return $this->postvar;
     }
@@ -117,7 +119,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         $this->scale = $scale;
     }
 
-    public function getScale() : array
+    public function getScale(): array
     {
         return $this->scale;
     }
@@ -128,12 +130,12 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         $this->block_info = $block_info;
     }
 
-    public function getBlockInfo() : string
+    public function getBlockInfo(): string
     {
         return $this->block_info;
     }
 
-    public function getRequired() : bool
+    public function getRequired(): bool
     {
         return false;
     }

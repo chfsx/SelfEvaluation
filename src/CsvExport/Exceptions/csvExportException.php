@@ -1,15 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\CsvExport\Exceptions;
 
 use ILIAS\DI\Exceptions\Exception;
 
 class csvExportException extends Exception
 {
-
-    const UNKNONWN_EXCEPTION = -1;
-    const COLUMN_DOES_NOT_EXIST = 1001;
-    const COLUMN_DOES_ALREADY_EXISTS_IN_ROW = 1002;
-    const INVALID_ARRAY = 2001;
+    public const UNKNONWN_EXCEPTION = -1;
+    public const COLUMN_DOES_NOT_EXIST = 1001;
+    public const COLUMN_DOES_ALREADY_EXISTS_IN_ROW = 1002;
+    public const INVALID_ARRAY = 2001;
     /**
      * @var array
      */

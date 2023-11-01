@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper;
 
 use ilSubEnabledFormPropertyGUI;
@@ -9,8 +11,7 @@ use ilTemplate;
 
 class SliderInputGUI extends ilSubEnabledFormPropertyGUI
 {
-
-    const PREFIX = 'slider_';
+    public const PREFIX = 'slider_';
     /**
      * @var array
      */
@@ -48,7 +49,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         string $post_var,
         int $min,
         int $max,
-        bool $ajax_request = false
+        string $ajax_request = ''
     ) {
         parent::__construct($title, $post_var);
         $this->tpl = $tpl;
@@ -58,12 +59,12 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $this->setAjax($ajax_request);
     }
 
-    public function getHtml() : string
+    public function getHtml(): string
     {
         return $this->buildHTML();
     }
 
-    private function buildHTML() : string
+    private function buildHTML(): string
     {
         $this->tpl->addCss("./libs/bower/bower_components/jquery-ui/themes/base/jquery-ui.css");
         $this->tpl->addJavaScript("./libs/bower/bower_components/jquery-ui/jquery-ui.min.js");
@@ -92,7 +93,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $a_tpl->parseCurrentBlock();
     }
 
-    public function checkInput() : bool
+    public function checkInput(): bool
     {
         global $lng;
         $_POST[$this->getPostVar()] = [
@@ -100,8 +101,8 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
             $_POST[self::PREFIX . $this->getPostVar() . '_to']
         ];
 
-        if ($this->getRequired() AND
-            trim($_POST[self::PREFIX . $this->getPostVar() . '_from']) == '' AND
+        if ($this->getRequired() and
+            trim($_POST[self::PREFIX . $this->getPostVar() . '_from']) == '' and
             trim($_POST[self::PREFIX . $this->getPostVar() . '_to']) == ''
         ) {
             $this->setAlert($lng->txt('msg_input_is_required'));
@@ -128,7 +129,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $this->values = $values;
     }
 
-    public function getValues() : array
+    public function getValues(): array
     {
         return $this->values;
     }
@@ -138,7 +139,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $this->max = $max;
     }
 
-    public function getMax() : int
+    public function getMax(): int
     {
         return $this->max;
     }
@@ -148,7 +149,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $this->min = $min;
     }
 
-    public function getMin() : int
+    public function getMin(): int
     {
         return $this->min;
     }
@@ -158,7 +159,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $this->unit = $unit;
     }
 
-    public function getUnit() : string
+    public function getUnit(): string
     {
         return $this->unit;
     }
@@ -168,7 +169,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $this->ajax = $ajax;
     }
 
-    public function getAjax() : string
+    public function getAjax(): string
     {
         return $this->ajax;
     }

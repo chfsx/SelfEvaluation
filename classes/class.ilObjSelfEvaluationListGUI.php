@@ -1,29 +1,29 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+declare(strict_types=1);
 
 class ilObjSelfEvaluationListGUI extends ilObjectPluginListGUI
 {
-
     /**
      * @var ilSelfEvaluationPlugin
      */
-    protected $plugin;
+    protected ?ilRepositoryObjectPlugin $plugin;
 
     /**
      *
      */
-    function initType()
+    public function initType()
     {
         $this->enableTimings(false);
         $this->setType('xsev');
     }
 
-    function getGuiClass()
+    public function getGuiClass(): string
     {
         return 'ilObjSelfEvaluationGUI';
     }
 
-    function initCommands()
+    public function initCommands(): array
     {
         return [
             [
@@ -43,7 +43,7 @@ class ilObjSelfEvaluationListGUI extends ilObjectPluginListGUI
     /**
      * @return array
      */
-    function getProperties()
+    public function getProperties(): array
     {
         $props = [];
         $object = new ilObjSelfEvaluation($this->ref_id);
@@ -58,5 +58,3 @@ class ilObjSelfEvaluationListGUI extends ilObjectPluginListGUI
         return $props;
     }
 }
-
-

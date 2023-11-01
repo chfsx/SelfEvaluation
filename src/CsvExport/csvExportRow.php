@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\CsvExport;
 
 use ilub\plugin\SelfEvaluation\CsvExport\Exceptions\csvExportException;
@@ -15,7 +18,7 @@ class csvExportRow
      */
     protected $columns = null;
 
-    function __construct(array $values = [])
+    public function __construct(array $values = [])
     {
         $this->columns = new csvExportColumns();
         $this->values = $values;

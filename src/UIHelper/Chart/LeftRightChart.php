@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper\Chart;
 
 use ilChartGrid;
@@ -21,12 +24,12 @@ class LeftRightChart extends ilChartGrid
         $this->setYAxisToInteger(true);
     }
 
-    public function getDataInstance($type = null)
+    public function getDataInstance($type = null): \ilChartData
     {
         return new ilChartDataLines();
     }
 
-    public function parseGlobalOptions(stdClass $a_options)
+    public function parseGlobalOptions(stdClass $a_options): void
     {
         parent::parseGlobalOptions($a_options);
         $x_tick_key = array_keys($this->getTicks()["x"]);

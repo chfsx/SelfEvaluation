@@ -1,13 +1,20 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
+declare(strict_types=1);
 
 class ilSelfEvaluationPlugin extends ilRepositoryObjectPlugin
 {
+    public function __construct()
+    {
+        global $DIC;
+        $this->db = $DIC->database();
+        parent::__construct($this->db, $DIC["component.repository"], 'xsev');
+    }
 
     /**
      * @return string
      */
-    function getPluginName()
+    public function getPluginName(): string
     {
         return 'SelfEvaluation';
     }
@@ -30,7 +37,7 @@ class ilSelfEvaluationPlugin extends ilRepositoryObjectPlugin
         return 'rep_robj_xsev_c';
     }
 
-    protected function uninstallCustom()
+    protected function uninstallCustom(): void
     {
         return;
     }
@@ -39,10 +46,8 @@ class ilSelfEvaluationPlugin extends ilRepositoryObjectPlugin
      * decides if this repository plugin can be copied
      * @return bool
      */
-    public function allowCopy()
+    public function allowCopy(): bool
     {
         return true;
     }
 }
-
-

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Player\Block;
 
 use ilPropertyFormGUI;
@@ -32,7 +35,7 @@ abstract class BlockPlayerGUI
      */
     protected $plugin;
 
-    function __construct(ilDBInterface $db,ilSelfEvaluationPlugin $plugin, ilObjSelfEvaluationGUI $parent, BlockType $block)
+    public function __construct(ilDBInterface $db, ilSelfEvaluationPlugin $plugin, ilObjSelfEvaluationGUI $parent, BlockType $block)
     {
         $this->db = $db;
         $this->block = $block;
@@ -40,7 +43,7 @@ abstract class BlockPlayerGUI
         $this->plugin = $plugin;
     }
 
-    public function getBlockForm(PlayerFormContainer $parent_form) : PlayerFormContainer
+    public function getBlockForm(PlayerFormContainer $parent_form): PlayerFormContainer
     {
         if ($parent_form) {
             $form = $parent_form;
@@ -63,4 +66,3 @@ abstract class BlockPlayerGUI
         return $form;
     }
 }
-

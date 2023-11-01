@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\UIHelper\Scale;
 
 use ilSubEnabledFormPropertyGUI;
@@ -8,7 +11,6 @@ use ilUtil;
 
 class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
 {
-
     /**
      * @var array
      */
@@ -47,7 +49,7 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->plugin = $plugin;
     }
 
-    public function getHtml() : string
+    public function getHtml(): string
     {
         $tpl = $this->plugin->getTemplate('default/Form/tpl.multiple_input.html', true, true);
         $tpl->setVariable('LOCK_CSS', $this->getDisabled() ? 'locked' : '');
@@ -101,7 +103,7 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->setValues(is_array($value[$this->getPostVar()]) ? $value[$this->getPostVar()] : []);
     }
 
-    public function checkInput()
+    public function checkInput(): bool
     {
         $lng = $this->lng;
 
@@ -120,7 +122,7 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->values = $values;
     }
 
-    public function getValues() : array
+    public function getValues(): array
     {
         return $this->values;
     }
@@ -130,7 +132,7 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->field_name = $field_name;
     }
 
-    public function getFieldName() : string
+    public function getFieldName(): string
     {
         return $this->field_name;
     }
@@ -140,7 +142,7 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->placeholder_title = $placeholder_title;
     }
 
-    public function getPlaceholderTitle() : string
+    public function getPlaceholderTitle(): string
     {
         return $this->placeholder_title;
     }
@@ -150,7 +152,7 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->placeholder_value = $placeholder_value;
     }
 
-    public function getPlaceholderValue() : string
+    public function getPlaceholderValue(): string
     {
         return $this->placeholder_value;
     }
@@ -160,7 +162,7 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->default_value = $default_value;
     }
 
-    public function getDefaultValue() : string
+    public function getDefaultValue(): int
     {
         return $this->default_value;
     }
@@ -170,9 +172,8 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $this->description = $description;
     }
 
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
     }
 }
-

@@ -1,21 +1,22 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+declare(strict_types=1);
 
 class ilSelfEvaluationExporter extends ilXmlExporter
 {
 
-    public function init()
+    public function init(): void
     {
 
     }
 
-    public function getXmlRepresentation($a_entity, $a_schema_version, $a_id)
+    public function getXmlRepresentation(string $a_entity, string $a_schema_version, string $a_id): string
     {
-        if ($type = ilObject::_lookupType($a_id) != "xsev") {
+        if ($type = ilObject::_lookupType((int)$a_id) != "xsev") {
             throw new Exception("Wrong type " . $type . " for selfevaluation export.");
         }
 
-        $ref_id = end(ilObject::_getAllReferences($a_id));
+        $ref_array = ilObject::_getAllReferences((int) $a_id);
+        $ref_id = end($ref_array);
 
         $obj_self_eval = new ilObjSelfEvaluation($ref_id);
         $dom = dom_import_simplexml($obj_self_eval->toXML());
@@ -23,7 +24,7 @@ class ilSelfEvaluationExporter extends ilXmlExporter
         return $xml_string;
     }
 
-    public function getValidSchemaVersions($a_entity)
+    public function getValidSchemaVersions(string $a_entity): array
     {
         return [
             "5.3.0" => [

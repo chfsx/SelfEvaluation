@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Question\Meta;
 
 use ilub\plugin\SelfEvaluation\Question\Question as BaseQuestion;
@@ -7,14 +10,14 @@ use ilDBInterface;
 
 class MetaQuestion extends BaseQuestion
 {
-    const TABLE_NAME = 'rep_robj_xsev_mqst';
+    public const TABLE_NAME = 'rep_robj_xsev_mqst';
 
-    const POSTVAR_PREFIX = 'mqst_';
+    public const POSTVAR_PREFIX = 'mqst_';
 
     /**
      * @var string
      */
-    const PRIMARY_KEY = 'id';
+    public const PRIMARY_KEY = 'id';
 
     /**
      * @var int
@@ -64,13 +67,13 @@ class MetaQuestion extends BaseQuestion
     public function toXml(SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("metaQuestion");
-        $child_xml->addAttribute("containerId", $this->getParentId());
+        $child_xml->addAttribute("containerId", (string) $this->getParentId());
         $child_xml->addAttribute("name", $this->getName());
         $child_xml->addAttribute("shortTitle", $this->getShortTitle());
-        $child_xml->addAttribute("typeId", $this->getTypeId());
+        $child_xml->addAttribute("typeId", (string)$this->getTypeId());
         $child_xml->addAttribute("values", serialize($this->getValues()));
-        $child_xml->addAttribute("enableRequired", $this->isRequired());
-        $child_xml->addAttribute("position", $this->getPosition());
+        $child_xml->addAttribute("enableRequired",(string) $this->isRequired());
+        $child_xml->addAttribute("position", (string) $this->getPosition());
         return $xml;
     }
 
@@ -79,10 +82,10 @@ class MetaQuestion extends BaseQuestion
         $attributes = $xml->attributes();
         $question = new self($db);
         $question->setParentId($parent_id);
-        $question->setName($attributes["name"]);
-        $question->setShortTitle($attributes["shortTitle"]);
+        $question->setName((string) $attributes["name"]);
+        $question->setShortTitle((string) $attributes["shortTitle"]);
         $question->setTypeId((int) $attributes["typeId"]);
-        $question->setValues(unserialize($attributes["values"]));
+        $question->setValues(unserialize((string) $attributes["values"]));
         $question->enableRequired($attributes["enableRequired"] == "1" ? true : false);
         $question->setPosition((int) $attributes["position"]);
         $question->update();
@@ -134,7 +137,7 @@ class MetaQuestion extends BaseQuestion
         $this->values = $values;
     }
 
-    public function isRequired():bool
+    public function isRequired(): bool
     {
         return $this->required;
     }
@@ -149,7 +152,7 @@ class MetaQuestion extends BaseQuestion
      * @param int           $parent_id
      * @return MetaQuestion[]
      */
-    public static function _getAllInstancesForParentId(ilDBInterface $db, int $parent_id) : array
+    public static function _getAllInstancesForParentId(ilDBInterface $db, int $parent_id): array
     {
         $questions = [];
         $stmt = self::_getAllInstancesForParentIdQuery($db, $parent_id);
@@ -168,10 +171,11 @@ class MetaQuestion extends BaseQuestion
         return $questions;
     }
 
-    public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id) : array{
+    public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id): array
+    {
         $questions = [];
 
-        foreach (self::_getAllInstancesForParentId( $db,  $parent_id) as $question){
+        foreach (self::_getAllInstancesForParentId($db, $parent_id) as $question) {
             $questions[] = $question->getArray();
         }
         return $questions;

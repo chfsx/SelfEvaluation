@@ -1,44 +1,19 @@
 <?php
 
+declare(strict_types=1);
 use ilub\plugin\SelfEvaluation\Identity\Identity;
 
 class IdentityGUI
 {
-    /**
-     * @var ilPropertyFormGUI
-     */
-    protected $ex;
-    /**
-     * @var ilPropertyFormGUI
-     */
-    protected $new;
+    protected ilPropertyFormGUI $ex;
+    protected ilPropertyFormGUI $new;
+    protected ilSelfEvaluationPlugin $plugin;
+    protected ilGlobalPageTemplate $tpl;
+    protected ilCtrl $ctrl;
+    protected ilDBInterface $db;
+    protected ilObjSelfEvaluationGUI $parent;
 
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
-
-    /**
-     * @var ilGlobalPageTemplate
-     */
-    protected $tpl;
-
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
-
-    /**
-     * @var ilObjSelfEvaluationGUI
-     */
-    protected $parent;
-
-    function __construct(
+    public function __construct(
         ilDBInterface $db,
         ilObjSelfEvaluationGUI $parent,
         ilGlobalPageTemplate $tpl,
@@ -57,15 +32,12 @@ class IdentityGUI
         $this->performCommand();
     }
 
-    /**
-     * @return string
-     */
-    public function getStandardCommand()
+    public function getStandardCommand(): string
     {
         return 'show';
     }
 
-    function performCommand()
+    public function performCommand()
     {
         if (!$this->parent->object->isIdentitySelection()) {
             $this->startWithNewUid();
@@ -124,12 +96,15 @@ class IdentityGUI
         if ($this->ex->checkInput()) {
             $identifier = $this->ex->getInput('uid');
             if (Identity::_identityExists($this->db, $this->parent->object->getId(), $identifier)) {
-                $id = Identity::_getInstanceForObjIdAndIdentifier($this->db, $this->parent->object->getId(),
-                    $identifier);
+                $id = Identity::_getInstanceForObjIdAndIdentifier(
+                    $this->db,
+                    $this->parent->object->getId(),
+                    $identifier
+                );
                 $this->ctrl->setParameterByClass('PlayerGUI', 'uid', $id->getId());
                 $this->ctrl->redirectByClass('PlayerGUI', 'startScreen');
             } else {
-                ilUtil::sendFailure($this->plugin->txt('uid_not_exists'), true);
+                $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('uid_not_exists'), true);
                 $this->ctrl->redirect($this, 'show');
             }
         }

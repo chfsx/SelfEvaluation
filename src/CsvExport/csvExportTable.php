@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\CsvExport;
 
 use ilDBInterface;
@@ -21,7 +23,7 @@ class csvExportTable
      */
     protected $sort_column;
 
-    function __construct(array $rows = [])
+    public function __construct(array $rows = [])
     {
         $this->rows = $rows;
         $this->setRows($rows);
@@ -82,7 +84,7 @@ class csvExportTable
 
     public function addDBTable(ilDBInterface $db, $table_name)
     {
-        $this->addDBCustom($db,"SELECT * FROM " . $table_name);
+        $this->addDBCustom($db, "SELECT * FROM " . $table_name);
     }
 
     public function addDBCustom(ilDBInterface $db, $query)
@@ -143,7 +145,7 @@ class csvExportTable
         };
     }
 
-    public function getRowsValuesAsArray() : array
+    public function getRowsValuesAsArray(): array
     {
         $values = [];
         foreach ($this->getRows() as $row) {
@@ -186,7 +188,7 @@ class csvExportTable
             $sort_column = $this->getSortColumn();
             uasort($this->rows, function (csvExportRow $row_a, csvExportRow $row_b) use ($sort_column) {
                 if (is_string($row_a->getValue($sort_column))) {
-                    return strcmp($row_a->getValue($sort_column), $row_b->getValue($sort_column));
+                    return strcmp($row_a->getValue($sort_column)->getValue(), $row_b->getValue($sort_column)->getValue());
                 } else {
                     return $row_a->getValue($sort_column) > $row_b->getValue($sort_column);
                 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\CsvExport;
 
 class csvExportColumn
@@ -23,7 +26,7 @@ class csvExportColumn
      * @param string $column_txt
      * @param int    $position
      */
-    function __construct($column_id, $column_txt = "", $position = 0)
+    public function __construct($column_id, $column_txt = "", $position = 0)
     {
         $this->setColumnId($column_id);
         $this->setColumnTxt($column_txt);

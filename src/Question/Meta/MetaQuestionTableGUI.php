@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ilub\plugin\SelfEvaluation\Question\Meta;
 
 use ilTable2GUI;
@@ -12,7 +15,6 @@ use ilub\plugin\SelfEvaluation\Block\Block;
 
 class MetaQuestionTableGUI extends ilTable2GUI
 {
-
     /**
      * @var MetaQuestionType[]
      */
@@ -35,7 +37,7 @@ class MetaQuestionTableGUI extends ilTable2GUI
      * @param array                     $types
      * @param bool                      $sortable
      */
-    public function __construct(MetaQuestionGUI $a_parent_obj,ilSelfEvaluationPlugin $plugin, ilGlobalTemplateInterface $global_template, string $a_parent_cmd, array $types, bool $sortable, Block $block)
+    public function __construct(MetaQuestionGUI $a_parent_obj, ilSelfEvaluationPlugin $plugin, ilGlobalTemplateInterface $global_template, string $a_parent_cmd, array $types, bool $sortable, Block $block)
     {
         $this->types = $types;
         $this->sortable = $sortable;
@@ -62,7 +64,8 @@ class MetaQuestionTableGUI extends ilTable2GUI
         $this->initColumns($global_template);
     }
 
-    protected function initColumns(ilGlobalTemplateInterface $global_template){
+    protected function initColumns(ilGlobalTemplateInterface $global_template)
+    {
         if ($this->sortable) {
             $global_template->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
             $this->addColumn('', 'position', '20px');
@@ -83,24 +86,26 @@ class MetaQuestionTableGUI extends ilTable2GUI
      * Fill row
      * @param array $row
      */
-    public function fillRow($row)
+    public function fillRow(array $row): void
     {
         $this->ctrl->setParameter($this->getParentObject(), 'question_id', $row['id']);
 
         if ($this->sortable) {
             $this->tpl->setCurrentBlock('sortable');
-            $this->tpl->setVariable('MOVE_IMG_SRC',$this->plugin->getDirectory()."/templates/images/move.png");
+            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getDirectory()."/templates/images/move.png");
             $this->tpl->setVariable('ID', $row['id']);
             $this->tpl->parseCurrentBlock();
         }
         $this->tpl->setVariable('VAL_ID', $row['id']);
-        $this->tpl->setVariable('EDIT_LINK',
-            $this->ctrl->getLinkTarget($this->getParentObject(), 'editQuestion'));
+        $this->tpl->setVariable(
+            'EDIT_LINK',
+            $this->ctrl->getLinkTarget($this->getParentObject(), 'editQuestion')
+        );
         $this->tpl->setVariable('VAL_NAME', $row['name']);
         $this->tpl->setVariable('VAL_SHORT_TITLE', $row['short_title']);
         $type_factory = new MetaTypeFactory();
         $this->tpl->setVariable('VAL_TYPE', $this->plugin->txt($type_factory->getTypeByTypeId($row['type_id'])->getTypeName()));
-        
+
         $this->tpl->setVariable('REQUIRED_CHECKED', $row['required'] ? 'checked="checked"' : '');
 
         // actions

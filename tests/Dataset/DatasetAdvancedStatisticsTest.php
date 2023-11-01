@@ -1,10 +1,11 @@
 <?php
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 include_once "DatasetHelperTrait.php";
 
 use PHPUnit\Framework\TestCase;
-use \ilub\plugin\SelfEvaluation\Dataset\Dataset;
+use ilub\plugin\SelfEvaluation\Dataset\Dataset;
 
 class DatasetAdvancedStatisticsTest extends TestCase
 {
@@ -20,7 +21,7 @@ class DatasetAdvancedStatisticsTest extends TestCase
      */
     protected $db;
 
-    public function setUp():void
+    public function setUp(): void
     {
         $this->db = \Mockery::mock("\ilDBInterface");
         $this->dataset = new Dataset($this->db);
@@ -32,18 +33,18 @@ class DatasetAdvancedStatisticsTest extends TestCase
         self::assertEquals($this->getOverallPercentage(), $this->dataset->getOverallPercentage());
     }
 
-    public function testGetOverallPercentageVarianz(){
+    public function testGetOverallPercentageVarianz()
+    {
         self::assertEquals($this->getOverallPercentageVarianz(), $this->dataset->getOverallPercentageVarianz());
     }
 
-    public function testGetOverallPercentageStandardabweichung(){
+    public function testGetOverallPercentageStandardabweichung()
+    {
         self::assertEquals(sqrt($this->getOverallPercentageVarianz()), $this->dataset->getOverallPercentageStandardabweichung());
     }
 
-    public function testGetPercentageStandardAbweichungPerBlock(){
+    public function testGetPercentageStandardAbweichungPerBlock()
+    {
         self::assertEquals($this->getSdPerBlock(), $this->dataset->getPercentageStandardabweichungPerBlock());
     }
 }
-
-
-
