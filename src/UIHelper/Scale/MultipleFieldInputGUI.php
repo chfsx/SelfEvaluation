@@ -100,15 +100,18 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
              */
             $item->setValueByArray($value);
         }
-        $this->setValues(is_array($value[$this->getPostVar()]) ? $value[$this->getPostVar()] : []);
+        if(array_key_exists($this->getPostVar(), $value)) {
+            $this->setValues(is_array($value[$this->getPostVar()]) ? $value[$this->getPostVar()] : []);
+        }
     }
 
     public function checkInput(): bool
     {
         $lng = $this->lng;
 
-        if ($this->getPostVar()) {
-            $_POST[$this->getPostVar()] = ilUtil::stripSlashes($_POST[$this->getPostVar()]);
+        if ($this->http->wrapper()->post()->has($this->getPostVar())) {
+            $post = $this->http->wrapper()->post()->retrieve($this->getPostVar(), $this->refinery->kindlyTo()->string());
+            $_POST[$this->getPostVar()] = ilUtil::stripSlashes($post);
             if ($this->getRequired() && trim($_POST[$this->getPostVar()]) == "") {
                 $this->setAlert($lng->txt("msg_input_is_required"));
                 return false;

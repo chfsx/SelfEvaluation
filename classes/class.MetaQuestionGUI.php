@@ -83,16 +83,16 @@ class MetaQuestionGUI extends BaseQuestionGUI
         $item = $this->form->getItemByPostVar('short_title');
         $item->setValue($this->question->getShortTitle());
         $item = $this->form->getItemByPostVar('type');
-        $item->setValue($this->question->getTypeId());
+        $item->setValue((string)$this->question->getTypeId());
         $item = $this->form->getItemByPostVar('required');
         /**
          * @var ilCheckboxInputGUI $item
          */
-        $item->setChecked($this->question->isRequired());
+        $item->setChecked((bool)$this->question->isRequired());
 
         /** @var ilRadioGroupInputGUI $group */
         $group = $this->form->getItemByPostVar('type');
-        $option = $this->getValueDefinitionInputGuiByTypeId($group, $this->question->getTypeId());
+        $option = $this->getValueDefinitionInputGuiByTypeId($group, (int)$this->question->getTypeId());
         $type = $this->getTypes()[$this->question->getTypeId()];
         $type->setValues($option, $this->question->getValues());
     }
@@ -115,9 +115,9 @@ class MetaQuestionGUI extends BaseQuestionGUI
     {
         $this->question->setName($this->form->getInput('question'));
         $this->question->setShortTitle($this->form->getInput('short_title'));
-        $this->question->setTypeId($this->form->getInput('type'));
-        $this->question->setValues($this->getFormValuesByTypeId($this->form->getInput('type')));
-        $this->question->enableRequired($this->form->getInput('required'));
+        $this->question->setTypeId((int)$this->form->getInput('type'));
+        $this->question->setValues($this->getFormValuesByTypeId((int)$this->form->getInput('type')));
+        $this->question->enableRequired((bool)$this->form->getInput('required'));
     }
 
     protected function getFormValuesByTypeId(int $type_id): array

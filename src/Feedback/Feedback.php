@@ -267,7 +267,7 @@ class Feedback implements hasDBFields
             }
             $set = $db->query($q);
             $res = $db->fetchObject($set);
-            if (!$res->id) {
+            if ($res &&!$res->id) {
                 return $return;
             }
         }

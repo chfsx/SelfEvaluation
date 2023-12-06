@@ -202,7 +202,7 @@ class Scale implements hasDBFields
     {
         $set = $db->query("SELECT * FROM " . self::TABLE_NAME . " " . " WHERE parent_id = ".$parent_obj_id);
         while ($rec = $db->fetchObject($set)) {
-            return new self($db, $rec->id);
+            return new self($db, (int) $rec->id);
         }
         $obj = new self($db);
         $obj->setParentId($parent_obj_id);

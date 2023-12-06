@@ -113,7 +113,7 @@ class Identity implements hasDBFields
         }
 
         while ($rec = $db->fetchObject($set)) {
-            $return[] = new self($db, $rec->id);
+            $return[] = new self($db, (int) $rec->id);
         }
 
         return $return;
@@ -125,7 +125,7 @@ class Identity implements hasDBFields
             . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text'));
 
         while ($rec = $db->fetchObject($set)) {
-            return new self($db, $rec->id);
+            return new self($db, (int) $rec->id);
         }
         return self::_getNewInstanceForObjIdAndUserId($db, $obj_id, $identifier);
     }
@@ -189,7 +189,7 @@ class Identity implements hasDBFields
     {
         $set = $db->query('SELECT obj_id FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '.$identity_id);
         while ($rec = $db->fetchObject($set)) {
-            return $rec->obj_id;
+            return (int)$rec->obj_id;
         }
 
         return 0;

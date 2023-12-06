@@ -18,29 +18,29 @@ class Question extends BaseQuestion
     /**
      * @var string
      */
-    protected $title = '';
+    protected string $title = '';
     /**
      * @var string
      */
-    protected $question_body = '';
+    protected string $question_body = '';
     /**
      * @var bool
      */
-    protected $is_inverse = false;
+    protected bool $is_inverse = false;
     /**
      * @var int
      */
-    protected $parent_id = 0;
+    protected  $parent_id = 0;
 
     /**
      * @var array
      */
-    protected static $instances_for_parent_id_array = [];
+    protected static array $instances_for_parent_id_array = [];
 
     /**
      * @var array
      */
-    protected static $instances_for_parent_id = [];
+    protected static array $instances_for_parent_id = [];
 
     /**
      * @var int
@@ -91,27 +91,32 @@ class Question extends BaseQuestion
      */
     public static function _getAllInstancesForParentId(ilDBInterface $db, int $parent_id): array
     {
-        if (!self::$instances_for_parent_id[$parent_id]) {
+        if (!array_key_exists($parent_id, self::$instances_for_parent_id )) {
             self::$instances_for_parent_id[$parent_id] = [];
             $stmt = self::_getAllInstancesForParentIdQuery($db, $parent_id);
 
+
             while ($rec = $db->fetchObject($stmt)) {
                 $question = new self($db);
-                $question->setId($rec->id);
-                $question->setParentId($parent_id);
+                $question->setId((int)$rec->id);
+                $question->setParentId((int)$parent_id);
                 $question->setTitle((string)$rec->title);
                 $question->setQuestionBody((string)$rec->question_body);
-                $question->setIsInverse($rec->is_inverse);
+                $question->setIsInverse((bool)$rec->is_inverse);
                 $question->setPosition((int)$rec->position);
                 self::$instances_for_parent_id[$parent_id][$rec->id] = $question;
             }
+            return self::$instances_for_parent_id[$parent_id];
         }
-        return self::$instances_for_parent_id[$parent_id];
+
+        return [];
     }
 
     public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id): array
     {
-        if (!self::$instances_for_parent_id_array[$parent_id]) {
+
+        if (!array_key_exists($parent_id, self::$instances_for_parent_id_array)) {
+
             self::$instances_for_parent_id_array[$parent_id] = [];
             foreach (self::_getAllInstancesForParentId($db, $parent_id) as $question) {
                 self::$instances_for_parent_id_array[$parent_id][$question->getId()] = $question->getArray();

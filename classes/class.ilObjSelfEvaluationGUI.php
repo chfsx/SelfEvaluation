@@ -9,6 +9,7 @@ use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
 use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestion;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
 
 /**
  * Class ilObjSelfEvaluationGUI
@@ -33,23 +34,27 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
     public const FIELD_ORDER_BLOCK = 'block_option_block';
     public const FIELD_ORDER_BLOCK_RANDOM = 'shuffle_in_blocks';
 
-    public ?ilObject $object;
+    public ?ilObject $object = null;
     protected ilPropertyFormGUI $form;
-    protected ?ilPlugin $plugin;
+    protected ?ilPlugin $plugin = null;
     protected ilDBInterface $db;
+    public WrapperFactory $http;
+
 
     public function __construct(?int $a_ref_id = 0, ?int $a_id_type = self::REPOSITORY_NODE_ID, ?int $a_parent_node_id = 0)
     {
         global $DIC;
-
         $this->db = $DIC->database();
+        $this->refinery = $DIC->refinery();
+        $this->http = $DIC->http()->wrapper();
         parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
     }
 
     public function displayIdentifier()
     {
-        if ($_GET['uid']) {
-            $id = new Identity($this->db, $_GET['uid']);
+
+        if ($this->http->query()->has('uid')) {
+            $id = new Identity($this->db, $this->http->query()->retrieve('uid', $this->refinery->kindlyTo()->int()));
             if ($id->getType() == Identity::TYPE_EXTERNAL && $this->object->isIdentitySelection()) {
                 global $ilToolbar;
                 $ilToolbar->addText('<b>' . $this->txt('your_uid') . ' ' . $id->getIdentifier() . '</b>');
@@ -76,12 +81,16 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         $this->setTabs();
     }
 
+    /**
+     * @throws ilCtrlException
+     */
     public function executeCommand(): void
     {
         if (!$this->getCreationMode()) {
-            if ($this->access->checkAccess('read', '', $_GET['ref_id'])) {
+
+            if ($this->access->checkAccess('read', '',  $this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int()))) {
                 $this->nav_history->addItem(
-                    $_GET['ref_id'],
+                    $this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int()),
                     $this->ctrl->getLinkTarget($this, $this->getStandardCmd()),
                     $this->getType(),
                     ''
@@ -93,23 +102,16 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
             $this->ctrl->saveParameterByClass('PlayerGUI', 'uid');
             $this->ctrl->saveParameterByClass('DatasetGUI', 'uid');
             $this->ctrl->saveParameterByClass('FeedbackGUI', 'uid');
-            $this->initHeader();
+
+
             switch ($next_class) {
                 case 'ilcommonactiondispatchergui':
                     $gui = ilCommonActionDispatcherGUI::getInstanceFromAjaxCall();
                     $this->ctrl->forwardCommand($gui);
-                    break;
-                case 'ilpermissiongui':
-                    $perm_gui = new ilPermissionGUI($this);
-                    $this->tabs->activateTab('perm_settings');
-                    $this->ctrl->forwardCommand($perm_gui);
-                    break;
-                case 'ilinfoscreengui':
-                    $gui = new ilInfoScreenGUI($this);
-                    $this->tabs->activateTab('info_short');
-                    $this->ctrl->forwardCommand($gui);
+                    $this->tpl->printToStdout();
                     break;
                 case 'listblocksgui':
+                    $this->initHeader();
                     $gui = new ListBlocksGUI(
                         $this->db,
                         $this,
@@ -117,12 +119,16 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $this->ctrl,
                         $this->toolbar,
                         $this->access,
-                        $this->plugin
+                        $this->plugin,
+                        $this->http,
+                        $this->refinery
                     );
                     $this->tabs->activateTab('administration');
                     $this->ctrl->forwardCommand($gui);
+                    $this->tpl->printToStdout();
                     break;
                 case 'questionblockgui':
+                    $this->initHeader();
                     $block_gui = new QuestionBlockGUI(
                         $this->db,
                         $this->tpl,
@@ -133,8 +139,10 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                     );
                     $this->tabs->activateTab('administration');
                     $this->ctrl->forwardCommand($block_gui);
+                    $this->tpl->printToStdout();
                     break;
                 case 'metablockgui':
+                    $this->initHeader();
                     $block_gui = new MetaBlockGUI(
                         $this->db,
                         $this->tpl,
@@ -145,8 +153,10 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                     );
                     $this->tabs->activateTab('administration');
                     $this->ctrl->forwardCommand($block_gui);
+                    $this->tpl->printToStdout();
                     break;
                 case 'questiongui':
+                    $this->initHeader();
                     $this->tabs->activateTab('administration');
                     $block = new QuestionBlock($this->db, (int) $_REQUEST['block_id']);
                     $question = new Question($this->db, (int) $_REQUEST['question_id']);
@@ -162,8 +172,10 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $question
                     );
                     $this->ctrl->forwardCommand($container_gui);
+                    $this->tpl->printToStdout();
                     break;
                 case 'metaquestiongui':
+                    $this->initHeader();
                     $this->tabs->activateTab('administration');
 
                     $block = new MetaBlock($this->db, (int) $_REQUEST['block_id']);
@@ -180,8 +192,10 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $question
                     );
                     $this->ctrl->forwardCommand($container_gui);
+                    $this->tpl->printToStdout();
                     break;
                 case 'feedbackgui':
+                    $this->initHeader();
                     $gui = new FeedbackGUI(
                         $this->db,
                         $this,
@@ -193,24 +207,33 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                     );
                     $this->tabs->activateTab('administration');
                     $this->ctrl->forwardCommand($gui);
+                    $this->tpl->printToStdout();
                     break;
                 case 'identitygui':
+                    $this->initHeader();
                     $gui = new IdentityGUI($this->db, $this, $this->tpl, $this->ctrl, $this->plugin);
                     $this->tabs->activateTab('content');
                     $this->ctrl->forwardCommand($gui);
+                    $this->tpl->printToStdout();
                     break;
-                case 'ilexportgui':
-                    $this->tabs->activateTab("export");
-                    $exp = new ilExportGUI($this);
-                    $exp->addFormat('xml');
-                    $this->ctrl->forwardCommand($exp);
-                    break;
+
                 case 'playergui':
+                    $this->initHeader();
                     $this->tabs_gui->activateTab('content');
-                    $gui = new PlayerGUI($this->db, $this, $this->tpl, $this->ctrl, $this->plugin);
+                    $gui = new PlayerGUI(
+                        $this->db,
+                        $this,
+                        $this->tpl,
+                        $this->ctrl,
+                        $this->plugin,
+                        $this->http,
+                        $this->refinery
+                    );
                     $this->ctrl->forwardCommand($gui);
+                    $this->tpl->printToStdout();
                     break;
                 case 'datasetgui':
+                    $this->initHeader();
                     $this->tabs_gui->activateTab('all_results');
                     $gui = new DatasetGUI(
                         $this->db,
@@ -219,24 +242,25 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $this->ctrl,
                         $this->toolbar,
                         $this->access,
-                        $this->plugin
+                        $this->plugin,
+                        $this->http,
+                        $this->refinery
                     );
                     $this->ctrl->forwardCommand($gui);
+                    $this->tpl->printToStdout();
                     break;
                 case '':
                 default:
-                    $this->performCommand();
+                    // $this->performCommand('');
+                    parent::executeCommand();
                     break;
             }
-            if ($this->tpl->hide === false or $this->tpl->hide === null) {
-                $this->tpl->printToStdout();
-            }
 
-            /*
-            return true;
+
+
         } else {
-            return (bool)parent::executeCommand();
-             */
+             parent::executeCommand();
+
         }
 
     }
@@ -248,20 +272,17 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
 
     public function performCommand(string $cmd): void
     {
-        $cmd = $this->ctrl->getCmd();
-
+        if($cmd == '') {
+            $cmd = $this->ctrl->getCmd();
+        }
         switch ($cmd) {
             case 'editProperties':
             case 'updateProperties':
                 $this->checkPermission('write');
                 $this->$cmd();
                 break;
-            case 'infoScreen':
-                $this->checkPermission('visible');
-                $this->ctrl->setCmd("showSummary");
-                $this->ctrl->setCmdClass("ilinfoscreengui");
-                $this->infoScreen();
-                break;
+
+
             case 'showContent':
             default:
                 $this->checkPermission('read');
@@ -581,7 +602,6 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         $values['outro'] = $this->object->getOutro();
         $values['identity_selection_info'] = $this->object->getIdentitySelectionInfoText();
         $values['display_type'] = $this->object->getDisplayType();
-        $values['display_type'] = $this->object->getDisplayType();
         $values['show_fbs_overview'] = $this->object->isShowFeedbacksOverview();
         $values['show_fbs_overview_text'] = $this->object->isShowFbsOverviewText();
         $values['show_fbs_overview_statistics'] = $this->object->isShowFbsOverviewStatistics();
@@ -622,8 +642,8 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
 
             $this->object->setTitle($this->form->getInput('title'));
             $this->object->setDescription($this->form->getInput('desc'));
-            $this->object->setOnline($this->form->getInput('online'));
-            $this->object->setIdentitySelection($this->form->getInput('identity_selection'));
+            $this->object->setOnline((bool)$this->form->getInput('online'));
+            $this->object->setIdentitySelection((bool)$this->form->getInput('identity_selection'));
             $this->object->setIntro($this->form->getInput('intro'));
             $this->object->setOutroTitle($this->form->getInput('outro_title'));
             $this->object->setOutro($this->form->getInput('outro'));
@@ -639,28 +659,28 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
 
             $this->object->setSortRandomNrItemBlock($this->form->getInput('sort_random_nr_items_block'));
             $this->object->setBlockOptionRandomDesc($this->form->getInput('block_option_random_desc'));
-            $this->object->setShowBlockTitlesDuringEvaluation($this->form->getInput('show_block_titles_sev'));
-            $this->object->setShowBlockDescriptionsDuringEvaluation($this->form->getInput('show_block_desc_sev'));
+            $this->object->setShowBlockTitlesDuringEvaluation((bool)$this->form->getInput('show_block_titles_sev'));
+            $this->object->setShowBlockDescriptionsDuringEvaluation((bool)$this->form->getInput('show_block_desc_sev'));
 
-            $this->object->setDisplayType($this->form->getInput('display_type'));
+            $this->object->setDisplayType((int)$this->form->getInput('display_type'));
 
-            $this->object->setShowFeedbacksOverview($this->form->getInput('show_fbs_overview'));
-            $this->object->setShowFbsOverviewText($this->form->getInput('show_fbs_overview_text'));
-            $this->object->setShowFbsOverviewStatistics($this->form->getInput('show_fbs_overview_statistics'));
+            $this->object->setShowFeedbacksOverview((bool)$this->form->getInput('show_fbs_overview'));
+            $this->object->setShowFbsOverviewText((bool)$this->form->getInput('show_fbs_overview_text'));
+            $this->object->setShowFbsOverviewStatistics((bool)$this->form->getInput('show_fbs_overview_statistics'));
 
-            $this->object->setShowFeedbacks($this->form->getInput('show_fbs'));
-            $this->object->setShowFeedbacksCharts($this->form->getInput('show_fbs_charts'));
-            $this->object->setShowBlockTitlesDuringFeedback($this->form->getInput('show_block_titles_fb'));
-            $this->object->setShowBlockDescriptionsDuringFeedback($this->form->getInput('show_block_desc_fb'));
+            $this->object->setShowFeedbacks((bool)$this->form->getInput('show_fbs'));
+            $this->object->setShowFeedbacksCharts((bool)$this->form->getInput('show_fbs_charts'));
+            $this->object->setShowBlockTitlesDuringFeedback((bool)$this->form->getInput('show_block_titles_fb'));
+            $this->object->setShowBlockDescriptionsDuringFeedback((bool)$this->form->getInput('show_block_desc_fb'));
 
-            $this->object->setShowFbsOverviewBar($this->form->getInput('show_fbs_overview_bar'));
-            $this->object->setOverviewBarShowLabelAsPercentage($this->form->getInput('overview_bar_show_label_as_percentage'));
-            $this->object->setShowFbsOverviewSpider($this->form->getInput('show_fbs_overview_spider'));
-            $this->object->setShowFbsOverviewLeftRight($this->form->getInput('show_fbs_overview_left_right'));
+            $this->object->setShowFbsOverviewBar((bool)$this->form->getInput('show_fbs_overview_bar'));
+            $this->object->setOverviewBarShowLabelAsPercentage((bool)$this->form->getInput('overview_bar_show_label_as_percentage'));
+            $this->object->setShowFbsOverviewSpider((bool)$this->form->getInput('show_fbs_overview_spider'));
+            $this->object->setShowFbsOverviewLeftRight((bool)$this->form->getInput('show_fbs_overview_left_right'));
 
-            $this->object->setShowFbsChartBar($this->form->getInput('show_fbs_chart_bar'));
-            $this->object->setShowFbsChartSpider($this->form->getInput('show_fbs_chart_spider'));
-            $this->object->setShowFbsChartLeftRight($this->form->getInput('show_fbs_chart_left_right'));
+            $this->object->setShowFbsChartBar((bool)$this->form->getInput('show_fbs_chart_bar'));
+            $this->object->setShowFbsChartSpider((bool)$this->form->getInput('show_fbs_chart_spider'));
+            $this->object->setShowFbsChartLeftRight((bool)$this->form->getInput('show_fbs_chart_left_right'));
 
             $this->object->update();
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->txt('msg_obj_modified'), true);

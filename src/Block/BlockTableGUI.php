@@ -87,8 +87,12 @@ class BlockTableGUI extends ilTable2GUI
          * @var BlockTableAction[] $actions
          */
         $actions = unserialize($a_set['actions']);
+
         usort($actions, function (BlockTableAction $action_a, BlockTableAction $action_b) {
-            return $action_a->getPosition() > $action_b->getPosition();
+               $value =  $action_a->getPosition() > $action_b->getPosition();
+               if($value) {
+                   return 1 ;
+               } else {return -1;}
         });
         foreach ($actions as $action) {
             $ac->addItem($action->getTitle(), $action->getCmd(), $action->getLink());

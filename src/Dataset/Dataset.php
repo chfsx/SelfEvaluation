@@ -36,11 +36,11 @@ class Dataset implements hasDBFields
     /**
      * @var QuestionBlock[]
      */
-    protected array $question_blocks;
+    protected array $question_blocks = [];
     /**
      * @var Data[][]
      */
-    protected array $questions_data_for_blocks;
+    protected array $questions_data_for_blocks = [];
     protected Statistics $statistics;
 
     public function __construct(ilDBInterface $db, int $id = 0)
@@ -84,6 +84,7 @@ class Dataset implements hasDBFields
 
             return;
         }
+
         $this->setId($this->db->nextId(self::TABLE_NAME));
         $this->db->insert(self::TABLE_NAME, $this->getArrayForDb());
     }
@@ -117,7 +118,9 @@ class Dataset implements hasDBFields
      */
     protected function updateValuesByArray(array $array)
     {
+
         if ($this->getId() == 0) {
+
             $this->create();
         }
 
@@ -126,6 +129,7 @@ class Dataset implements hasDBFields
             if(is_array($item['value'])) {
                 $item['value'] = serialize($item['value']);
             }
+
             $da->setValue($item['value']);
             $da->setCreationDate(time());
             $da->update();
@@ -135,16 +139,18 @@ class Dataset implements hasDBFields
     protected function getDataFromPost(array $post): array
     {
         $data = [];
+
         foreach ($post as $k => $v) {
             $type = $this->determineQuestionType($k);
             if ($type !== "") {
                 $qid = $this->getQuestionId($type, $k);
-                if ($qid !== 0) {
+
                     $data[] = ['qid' => $qid, 'value' => $v, 'type' => $type];
-                }
+
             }
 
         }
+
         return $data;
     }
 
@@ -302,11 +308,14 @@ class Dataset implements hasDBFields
      */
     public function getQuestionBlocks(): array
     {
-        if (!is_array($this->question_blocks)) {
+
+        if (count($this->question_blocks)== 0) {
+
             foreach (QuestionBlock::_getAllInstancesByIdentifierId($this->db, (string) $this->getIdentifierId()) as $block) {
                 $this->question_blocks[$block->getId()] = $block;
             }
         }
+
         return $this->question_blocks;
     }
 
@@ -321,14 +330,15 @@ class Dataset implements hasDBFields
      */
     public function getQuestionsDataPerBlock(int $block_id): array
     {
-        if(!is_array($this->questions_data_for_blocks) || ! is_array($this->questions_data_for_blocks[$block_id])) {
+
+        if(!array_key_exists($block_id,$this->questions_data_for_blocks) || !is_array($this->questions_data_for_blocks[$block_id])) {
             foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
                 $data = Data::_getInstanceForQuestionId($this->db, $this->getId(), $qst->getId());
                 $this->questions_data_for_blocks[$block_id][$qst->getId()] = $data;
             }
         }
 
-        return $this->questions_data_for_blocks[$block_id];
+        return $this->questions_data_for_blocks[$block_id] ?? [];
     }
 
 

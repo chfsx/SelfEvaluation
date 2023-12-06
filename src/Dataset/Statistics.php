@@ -36,21 +36,21 @@ class Statistics
         return $this->valueToPercentage($this->fractionOf($value, $max));
     }
 
-    public function arraySumFractionOfMaxSumPossible(array $values, $max)
+    public function arraySumFractionOfMaxSumPossible(array $values, $max): float
     {
         $max_possible = count($values) * $max;
         $sum = array_sum($values);
-        return $sum / $max_possible;
+        return $max_possible == 0 ? 0 : $sum / $max_possible;
     }
 
-    public function getMinKeyAndValueFromArray($values)
+    public function getMinKeyAndValueFromArray($values): array
     {
         $min_key = array_keys($values, min($values));
         $key = array_pop($min_key);
         return [$key, $values[$key]];
     }
 
-    public function getMaxKeyAndValueFromArray($values)
+    public function getMaxKeyAndValueFromArray($values): array
     {
         $min_key = array_keys($values, max($values));
         $key = array_pop($min_key);

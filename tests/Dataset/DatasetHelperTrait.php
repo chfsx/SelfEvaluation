@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/autoload.php';
 
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilub\plugin\SelfEvaluation\Question\Matrix\Question;

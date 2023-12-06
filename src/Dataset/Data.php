@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace ilub\plugin\SelfEvaluation\Dataset;
@@ -216,7 +215,11 @@ class Data implements hasDBFields
     public function getValue()
     {
         if(is_string($this->value)) {
-            $unserialized = unserialize($this->value);
+            try{
+            $unserialized = unserialize($this->value);}
+            catch(\ErrorException $e){
+                $unserialized = false;
+            }
             if ($unserialized !== false) {
                 return $unserialized;
             }

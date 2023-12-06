@@ -56,7 +56,7 @@ class QuestionGUI extends BaseQuestionGUI
     {
         $this->question->setTitle($this->form->getInput('title'));
         $this->question->setQuestionBody($this->form->getInput('question_body'));
-        $this->question->setIsInverse($this->form->getInput('is_inverse'));
+        $this->question->setIsInverse((bool)$this->form->getInput('is_inverse'));
         $this->question->setParentId($this->block->getId());
     }
 }

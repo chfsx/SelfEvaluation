@@ -18,17 +18,10 @@ class ScaleFormGUI extends ilPropertyFormGUI
 {
     public const FIELD_NAME = 'scale';
 
-    /**
-     * @var Scale
-     */
-    protected $scale;
+    protected Scale $scale;
+    protected ilRepositoryObjectPlugin $plugin;
 
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
-
-    protected \ilTemplate $tpl;
+    protected ilGlobalTemplateInterface $tmpl;
 
     /**
      * @var ilDBInterface
@@ -47,22 +40,22 @@ class ScaleFormGUI extends ilPropertyFormGUI
 
     public function __construct(
         ilDBInterface $db,
-        ilGlobalTemplateInterface $tpl,
-        ilRepositoryObjectPlugin $plugin,
+        ilGlobalTemplateInterface $tmpl,
+        \ilSelfEvaluationPlugin $plugin,
         $parent_obj_id,
         $locked = false
     ) {
         parent::__construct();
 
         $this->plugin = $plugin;
-        $this->tpl = $tpl;
+        $this->tmpl = $tmpl;
         $this->locked = $locked;
         $this->parent_id = $parent_obj_id;
         $this->db = $db;
 
         $this->scale = Scale::_getInstanceByObjId($db, $this->parent_id);
         $this->initForm();
-        $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/sortable.js');
+        $this->tmpl->addJavaScript($this->plugin->getDirectory() . '/templates/sortable.js');
     }
 
     protected function initForm()
@@ -141,10 +134,10 @@ class ScaleFormGUI extends ilPropertyFormGUI
         if (is_array($_POST[self::FIELD_NAME . '_old']['value'])) {
             foreach ($_POST[self::FIELD_NAME . '_old']['value'] as $k => $v) {
                 if ($v !== false and $v !== null and $v !== '') {
-                    $obj = new ScaleUnit($this->db, str_replace('id_', '', $k));
+                    $obj = new ScaleUnit($this->db, str_replace('id_', '', (string)$k));
                     $obj->setTitle($_POST['scale_old']['title'][$k]);
-                    $obj->setValue($v);
-                    $obj->setPosition($positions[str_replace('id_', '', $k)]);
+                    $obj->setValue((int)$v);
+                    $obj->setPosition($positions[str_replace('id_', '', (string)$k)]);
                     $obj->update();
                     $units[] = $obj;
 

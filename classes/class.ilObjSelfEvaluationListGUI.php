@@ -7,7 +7,7 @@ class ilObjSelfEvaluationListGUI extends ilObjectPluginListGUI
     /**
      * @var ilSelfEvaluationPlugin
      */
-    protected ?ilRepositoryObjectPlugin $plugin;
+    protected ?ilRepositoryObjectPlugin $plugin = null;
 
     /**
      *

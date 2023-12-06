@@ -148,6 +148,7 @@ abstract class BaseQuestionGUI
         $this->toolbar->addButton($this->plugin->txt("add_question"), $this->ctrl->getLinkTarget($this, 'addQuestion'));
 
         $table = $this->createTableGUI();
+        //var_dump($this->question::_getAllInstancesForParentIdAsArray($this->db, $this->block->getId()));exit;
         $table->setData($this->question::_getAllInstancesForParentIdAsArray($this->db, $this->block->getId()));
         $this->tpl->setContent($table->getHTML());
         $table->setTitle($this->block->getTitle() . ': ' . $this->plugin->txt('question_table_title'));
@@ -232,6 +233,7 @@ abstract class BaseQuestionGUI
     {
         $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_QUESTION, $this->plugin->txt('qst_delete_question'));
         $conf = new ilConfirmationGUI();
+        $conf->setHeaderText($this->plugin->txt('qst_delete_question'));
         $conf->setFormAction($this->ctrl->getFormAction($this));
         $conf->setCancel($this->plugin->txt('cancel'), 'cancel');
         $conf->setConfirm($this->plugin->txt('delete_question'), 'deleteQuestion');

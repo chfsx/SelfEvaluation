@@ -101,7 +101,7 @@ class QuestionBlock extends Block implements QuestionBlockInterface
 
     public function getAbbreviation(): string
     {
-        return $this->abbreviation;
+        return (string) $this->abbreviation;
     }
 
     public function getLabel(): string

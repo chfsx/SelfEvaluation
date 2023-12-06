@@ -94,6 +94,7 @@ class MetaQuestion extends BaseQuestion
 
     public function getTypeId(): int
     {
+
         return $this->type_id;
     }
 
@@ -137,7 +138,7 @@ class MetaQuestion extends BaseQuestion
         $this->values = $values;
     }
 
-    public function isRequired(): bool
+    public function isRequired(): ?bool
     {
         return $this->required;
     }
@@ -158,8 +159,8 @@ class MetaQuestion extends BaseQuestion
         $stmt = self::_getAllInstancesForParentIdQuery($db, $parent_id);
         while ($rec = $db->fetchObject($stmt)) {
             $question = new self($db);
-            $question->setId((int)$rec->field_id);
-            $question->setParentId($rec->parent_id);
+           // $question->setId((int)$rec->field_id);
+            $question->setParentId((int)$rec->parent_id);
             $question->setName((string)$rec->name);
             $question->setShortTitle((string)$rec->short_title);
             $question->setTypeId((int)$rec->type_id);
@@ -178,6 +179,7 @@ class MetaQuestion extends BaseQuestion
         foreach (self::_getAllInstancesForParentId($db, $parent_id) as $question) {
             $questions[] = $question->getArray();
         }
+
         return $questions;
     }
 }

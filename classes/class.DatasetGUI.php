@@ -8,6 +8,8 @@ use ilub\plugin\SelfEvaluation\Identity\Identity;
 use ilub\plugin\SelfEvaluation\Dataset\Dataset;
 use ilub\plugin\SelfEvaluation\Dataset\DatasetTableGUI;
 use ilub\plugin\SelfEvaluation\Dataset\DatasetCsvExport;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Refinery\Factory;
 
 class DatasetGUI
 {
@@ -19,6 +21,8 @@ class DatasetGUI
     protected ilAccessHandler $access;
     protected ilSelfEvaluationPlugin $plugin;
     protected Dataset $dataset;
+    protected WrapperFactory $http;
+    protected Factory $refinery;
 
     public function __construct(
         ilDBInterface $db,
@@ -27,7 +31,9 @@ class DatasetGUI
         ilCtrl $ilCtrl,
         ilToolbarGUI $ilToolbar,
         ilAccessHandler $access,
-        ilSelfEvaluationPlugin $plugin
+        ilSelfEvaluationPlugin $plugin,
+         WrapperFactory $http,
+         Factory $refinery
     ) {
         $this->db = $db;
         $this->tpl = $tpl;
@@ -36,8 +42,11 @@ class DatasetGUI
         $this->toolbar = $ilToolbar;
         $this->plugin = $plugin;
         $this->access = $access;
+        $this->http = $http;
+        $this->refinery = $refinery;
 
-        $this->dataset = new Dataset($this->db, $_GET['dataset_id'] ? $_GET['dataset_id'] : 0);
+
+        $this->dataset = new Dataset($this->db, $this->http->query()->has('dataset_id')? $this->http->query()->retrieve('dataset_id', $this->refinery->kindlyTo()->int()): 0);
     }
 
     public function executeCommand()
@@ -98,8 +107,9 @@ class DatasetGUI
         $content->setVariable('INTRO_HEADER', $this->parent->object->getOutroTitle());
         $content->setVariable('INTRO_BODY', $this->parent->object->getOutro());
         $feedback = '';
+
         if ($this->parent->object->isAllowShowResults()) {
-            $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/bar_spider_chart_toggle.js');
+          //  $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/bar_spider_chart_toggle.js');
             $charts = new FeedbackChartGUI($this->db, $this->tpl, $this->plugin, $this->toolbar, $this->parent->object);
             $feedback = $charts->getPresentationOfFeedback($this->dataset);
         }

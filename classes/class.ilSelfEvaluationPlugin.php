@@ -8,6 +8,7 @@ class ilSelfEvaluationPlugin extends ilRepositoryObjectPlugin
     {
         global $DIC;
         $this->db = $DIC->database();
+
         parent::__construct($this->db, $DIC["component.repository"], 'xsev');
     }
 

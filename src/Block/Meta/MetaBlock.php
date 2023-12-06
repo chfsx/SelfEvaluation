@@ -14,22 +14,10 @@ use ilub\plugin\SelfEvaluation\Block\BlockTableRow;
 
 class MetaBlock extends Block
 {
-    /**
-     * @var string
-     */
-    protected $title = '';
-    /**
-     * @var string
-     */
-    protected $description = '';
-    /**
-     * @var int
-     */
-    protected $position = 99;
-    /**
-     * @var int
-     */
-    protected $parent_id = 0;
+    protected string $title = '';
+    protected string $description = '';
+    protected int $position = 99;
+    protected int $parent_id = 0;
 
     public function cloneTo($parent_id): self
     {

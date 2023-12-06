@@ -60,6 +60,7 @@ trait ArrayForDB
     public function fromArray(array $array): self
     {
         foreach ($array as $k => $v) {
+
             $serialized = unserialize($v);
             if(is_array($serialized)) {
                 $this->{$k} = $serialized;
@@ -85,12 +86,29 @@ trait ArrayForDB
 
     protected function setObjectValuesFromRecord(hasDBFields $data, stdClass $rec)
     {
+        //Problematisch
         foreach ($data->getArrayForDb() as $k => $v) {
-            $serialized = unserialize($rec->{$k});
+            try {
+                $serialized = unserialize((string) $rec->{$k});
+            } catch(\ErrorException $e) {
+                $serialized = "false";
+            }
             if(is_array($serialized)) {
                 $this->{$k} = $serialized;
             } else {
-                $this->{$k} = $rec->{$k};
+                $type = getType($this->$k);
+                switch($type) {
+                    case 'string':
+                        $this->{$k} = (string) $rec->{$k};
+                        break;
+                    case 'bool':
+                        $this->{$k} = (bool) $rec->{$k};
+                        break;
+                    case 'integer':
+                        $this->{$k} = (int) $rec->{$k};
+                        break;
+
+                }
             }
 
         }

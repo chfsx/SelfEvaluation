@@ -58,7 +58,7 @@ class DatasetTableGUI extends ilTable2GUI
 
     public function fillRow(array $a_set): void
     {
-        $obj = new Dataset($this->db, $a_set['id']);
+        $obj = new Dataset($this->db, (int)$a_set['id']);
         $identifier = new Identity($this->db, $obj->getIdentifierId());
         $this->ctrl->setParameterByClass('DatasetGUI', 'dataset_id', $obj->getId());
         // Row
@@ -90,8 +90,8 @@ class DatasetTableGUI extends ilTable2GUI
         $ac->addItem(
             $this->plugin->txt('show_feedback'),
             'show_dataset',
-            $this->ctrl->getLinkTargetByClass('DatasetGUI', 'show'),
-            true
+            $this->ctrl->getLinkTargetByClass('DatasetGUI', 'show')
+
         );
         $ac->addItem(
             $this->plugin->txt('delete_dataset'),

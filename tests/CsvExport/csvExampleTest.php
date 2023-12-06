@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/autoload.php';
 
 use ilub\plugin\SelfEvaluation\CsvExport\csvExport;
 use ilub\plugin\SelfEvaluation\CsvExport\csvExportRow;

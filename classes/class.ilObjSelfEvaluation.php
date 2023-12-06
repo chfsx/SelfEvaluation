@@ -56,7 +56,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
     protected bool $show_fbs_chart_bar = true;
     protected bool $show_fbs_chart_spider = true;
     protected bool $show_fbs_chart_left_right = true;
-    protected int $sort_random_nr_item_block = 10;
+    protected float $sort_random_nr_item_block = 10;
     protected bool $overview_bar_show_label_as_percentage = false;
     protected string $block_option_random_desc = "";
 
@@ -492,12 +492,12 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $this->show_fbs_chart_left_right = $show_fbs_chart_left_right;
     }
 
-    public function getSortRandomNrItemBlock(): int
+    public function getSortRandomNrItemBlock(): float
     {
         return $this->sort_random_nr_item_block;
     }
 
-    public function setSortRandomNrItemBlock(int $sort_random_nr_item_block): void
+    public function setSortRandomNrItemBlock(float $sort_random_nr_item_block): void
     {
         $this->sort_random_nr_item_block = $sort_random_nr_item_block;
     }
@@ -529,7 +529,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
             . $this->db->quote($this->getId(), 'integer'));
         while ($rec = $this->db->fetchObject($set)) {
-            $this->setOnline($rec->is_online);
+            $this->setOnline((bool)$rec->is_online);
             $this->setIdentitySelection((bool)$rec->identity_selection);
             $this->setEvaluationType((int)$rec->evaluation_type);
             $this->setSortType((int)$rec->sort_type);

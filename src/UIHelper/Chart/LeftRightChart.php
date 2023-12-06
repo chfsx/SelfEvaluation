@@ -38,7 +38,6 @@ class LeftRightChart extends ilChartGrid
         $a_options->{"yaxis"}->labelWidth = 0;
 
         $a_options->{"yaxis"}->min = min($y_tick_key);
-        $a_options->{"yaxis"}->max = max($y_tick_key);
 
         $a_options->{"xaxis"}->min = min($x_tick_key);
         $a_options->{"xaxis"}->max = max($x_tick_key);

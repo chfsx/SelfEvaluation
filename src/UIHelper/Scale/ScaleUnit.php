@@ -166,7 +166,7 @@ class ScaleUnit implements hasDBFields
 
     public function getId(): int
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     public function setParentId(int $parent_id)
@@ -186,7 +186,7 @@ class ScaleUnit implements hasDBFields
 
     public function getTitle(): string
     {
-        return $this->title;
+        return (string) $this->title;
     }
 
     public function setValue(int $value)

@@ -16,81 +16,54 @@ use ilub\plugin\SelfEvaluation\Player\Block\MetaBlockPlayerGUI;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
 use ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestion;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Refinery\Factory;
 
 class PlayerGUI
 {
-    /**
-     * @var PlayerFormContainer
-     */
-    protected $form;
+    protected PlayerFormContainer $form;
+    protected int $ref_id = 0;
+    protected ilGlobalTemplateInterface $tpl;
+    protected ilCtrl $ctrl;
+    protected ilObjSelfEvaluationGUI $parent;
+    protected ilSelfEvaluationPlugin $plugin;
+    protected ilDBInterface $db;
+    protected Identity $identity;
+    protected Dataset|bool $dataset;
+    protected WrapperFactory $http;
+    protected Factory $refinery;
 
-    /**
-     * @var int
-     */
-    protected $ref_id = 0;
-
-    /**
-     * @var ilGlobalTemplateInterface
-     */
-    protected $tpl;
-
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-
-    /**
-     * @var ilObjSelfEvaluationGUI
-     */
-    protected $parent;
-
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
-
-    /**
-     * @var Identity
-     */
-    protected $identity;
-
-    /**
-     * @var Dataset
-     */
-    protected $dataset;
 
     public function __construct(
         ilDBInterface $db,
         ilObjSelfEvaluationGUI $parent,
         ilGlobalTemplateInterface $tpl,
         ilCtrl $ilCtrl,
-        ilSelfEvaluationPlugin $plugin
+        ilSelfEvaluationPlugin $plugin,
+        WrapperFactory $http,
+        Factory $refinery
     ) {
         $this->db = $db;
         $this->tpl = $tpl;
         $this->ctrl = $ilCtrl;
         $this->parent = $parent;
         $this->plugin = $plugin;
-
+        $this->http = $http;
+        $this->refinery = $refinery;
         $this->ref_id = $this->parent->object->getRefId();
     }
 
     public function executeCommand()
     {
-        if (!$_GET['uid']) {
+        if (!$this->http->query()->has('uid')) {
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('uid_not_given'), true);
             $this->ctrl->redirect($this->parent);
         } else {
-            $this->identity = new Identity($this->db, $_GET['uid']);
+            $this->identity = new Identity($this->db, $this->http->query()->retrieve('uid', $this->refinery->kindlyTo()->int()));
         }
 
-        if($_GET['dataset_id']) {
-            $this->dataset = new Dataset($this->db, $_GET['dataset_id']);
+        if($this->http->query()->has('dataset_id')) {
+            $this->dataset = new Dataset($this->db, (int) $this->http->query()->retrieve('dataset_id', $this->refinery->kindlyTo()->string()));
             $this->ctrl->setParameter($this, "dataset_id", $this->dataset->getId());
         } else {
             $this->dataset = new Dataset($this->db);
@@ -133,8 +106,13 @@ class PlayerGUI
         $this->ctrl->redirect($this->parent);
     }
 
+    /**
+     * @throws ilCtrlException
+     * @throws ilTemplateException
+     */
     public function startScreen()
     {
+
         $this->tpl->addCss($this->plugin->getStyleSheetLocation("css/player.css"));
         $content = $this->plugin->getTemplate('default/Dataset/tpl.dataset_presentation.html');
         $content->setVariable('INTRO_HEADER', $this->plugin->txt('intro_header'));
@@ -178,12 +156,18 @@ class PlayerGUI
         $this->tpl->setContent($this->form->getHTML());
     }
 
+    /**
+     * @throws ilCtrlException
+     */
     public function nextPage()
     {
         $this->initPresentationForm();
 
         if ($this->form->checkinput()) {
-            $this->dataset->updateValuesByPost($_POST);
+
+            $post_data = $this->getDataFromPost();
+            $this->dataset->updateValuesByPost($post_data);
+
             $this->ctrl->setParameter($this, 'page', $_GET['page'] + 1);
             $this->ctrl->redirect($this, 'doEvaluationStep');
         }
@@ -192,12 +176,40 @@ class PlayerGUI
         $this->tpl->setContent($this->form->getHTML());
     }
 
+
+    private function getDataFromPost(): array
+    {
+        global $DIC;
+        $items = count($DIC->http()->request()->getParsedBody())-1;
+        if($items == 0){
+            return [];
+        }
+        $found_question = 0;
+        $data = [];
+        $i = 0;
+        while ($found_question < $items) {
+            if ($this->http->post()->has("qst_" . $i) || $this->http->post()->has("mqst_" . $i)) {
+                if ($this->http->post()->has("qst_" . $i)) {
+                    $qid = "qst_" . $i;
+                    $type = 'qst';
+                } else {
+                    $qid = "mqst_" . $i;
+                    $type = 'mqst';
+                }
+                $value = $this->http->post()->retrieve($qid, $this->refinery->kindlyTo()->string());
+                $data[$qid] =   $value;
+                $found_question++;
+            }
+            $i++;
+        }
+        return $data;
+    }
     public function finishEvaluation()
     {
         $this->initPresentationForm();
 
         if ($this->form->checkinput()) {
-            $this->dataset->updateValuesByPost($_POST);
+            $this->dataset->updateValuesByPost($this->getDataFromPost());
             $this->dataset->setComplete(true);
             $this->dataset->update();
             $this->redirectToResults($this->dataset);
@@ -301,7 +313,7 @@ class PlayerGUI
 
     protected function displaySingleBlock($blocks, $mode = 'new')
     {
-        $page = $_GET['page'] ? $_GET['page'] : 1;
+        $page = $this->http->query()->has('page') ? $this->http->query()->retrieve('page', $this->refinery->kindlyTo()->int()) + 1 : 1;
         $last_page = count($blocks);
 
         if ($last_page > 1) {
@@ -313,7 +325,10 @@ class PlayerGUI
         } else {
             $this->form->addCommandButton("finishEvaluation", $this->plugin->txt('send_' . $mode));
         }
-        $this->addBlockHtmlToForm($blocks[$page - 1]);
+        if(array_key_exists($page-1, $blocks)){
+            $this->addBlockHtmlToForm($blocks[$page - 1]);
+        }
+
 
     }
 
@@ -353,10 +368,13 @@ class PlayerGUI
             if($question_data->getQuestionType() == DATA::QUESTION_TYPE) {
                 $values[MatrixQuestion::POSTVAR_PREFIX . $question_data->getQuestionId()] = $question_data->getValue();
             } else {
+
                 $values[MetaQuestion::POSTVAR_PREFIX . $question_data->getQuestionId()] = $question_data->getValue();
             }
         }
+        if(!empty($values)) {
 
-        $this->form->setValuesByArray($values);
+            $this->form->setValuesByArray($values);
+        }
     }
 }

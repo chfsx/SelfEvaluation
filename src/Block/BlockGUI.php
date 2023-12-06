@@ -16,6 +16,7 @@ use ilTextAreaInputGUI;
 use ilUtil;
 use ilConfirmationGUI;
 use ilAccessHandler;
+use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
 
 abstract class BlockGUI
 {
@@ -33,7 +34,7 @@ abstract class BlockGUI
 
     protected ilSelfEvaluationPlugin $plugin;
 
-    protected QuestionBlock $object;
+    protected QuestionBlock|Metablock $object;
 
     public function __construct(
         ilDBInterface $db,

@@ -14,14 +14,14 @@ class BlockTableRow
     protected ilSelfEvaluationPlugin $plugin;
     protected int $block_id;
     protected string $title;
-    protected string $abbreviation;
+    protected string $abbreviation ='';
     protected string $description;
     protected int $question_count;
-    protected int $feedback_count;
+    protected int $feedback_count = 0;
     protected string $status_img;
     protected string $block_edit_link;
     protected string $questions_link;
-    protected string $feedback_link;
+    protected string $feedback_link = '';
     protected string $position_id;
     /**
      * @var BlockTableAction[]

@@ -17,31 +17,12 @@ abstract class Block implements hasDBFields, BlockType
 {
     use ArrayForDB;
 
-    /**
-     * @var int
-     */
-    public $id = 0;
-    /**
-     * @var string
-     */
-    protected $title = '';
-    /**
-     * @var string
-     */
-    protected $description = '';
-    /**
-     * @var int
-     */
-    protected $position = 99;
-    /**
-     * @var int
-     */
-    protected $parent_id = 0;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    public int $id = 0;
+    protected string $title = '';
+    protected string $description = '';
+    protected int $position = 99;
+    protected int $parent_id = 0;
+    protected ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, $id = 0)
     {
@@ -179,7 +160,7 @@ abstract class Block implements hasDBFields, BlockType
 
     public function getDescription(): string
     {
-        return $this->description;
+        return (string)$this->description;
     }
 
     public function setParentId(int $parent_id)
@@ -209,7 +190,7 @@ abstract class Block implements hasDBFields, BlockType
 
     public function getTitle(): string
     {
-        return $this->title;
+        return (string) $this->title;
     }
 
     public function getPositionId(): string

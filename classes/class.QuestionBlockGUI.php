@@ -6,7 +6,7 @@ use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 
 class QuestionBlockGUI extends BlockGUI
 {
-    protected QuestionBlock $object;
+    protected QuestionBlock|\ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock $object;
 
     public function __construct(
         ilDBInterface $db,

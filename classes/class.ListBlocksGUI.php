@@ -4,37 +4,21 @@ declare(strict_types=1);
 
 use ilub\plugin\SelfEvaluation\Block\BlockTableGUI;
 use ilub\plugin\SelfEvaluation\Block\BlockFactory;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Refinery\Factory;
 
 class ListBlocksGUI
 {
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilObjSelfEvaluationGUI
-     */
-    protected $parent;
-    /**
-     * @var ilToolbarGUI
-     */
-    protected $toolbar;
-    /**
-     * @var ilGlobalTemplateInterface
-     */
-    protected $tpl;
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
-    /**
-     * @var ilAccessHandler
-     */
-    protected $access;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected ilCtrl $ctrl;
+    protected ilObjSelfEvaluationGUI $parent;
+    protected ilToolbarGUI $toolbar;
+    protected ilGlobalTemplateInterface $tpl;
+    protected ilSelfEvaluationPlugin $plugin;
+    protected ilAccessHandler $access;
+    protected ilDBInterface $db;
+
+    protected WrapperFactory $http;
+    protected Factory $refinery;
 
     public function __construct(
         ilDBInterface $db,
@@ -43,7 +27,9 @@ class ListBlocksGUI
         ilCtrl $ilCtrl,
         ilToolbarGUI $ilToolbar,
         ilAccessHandler $access,
-        ilSelfEvaluationPlugin $plugin
+        ilSelfEvaluationPlugin $plugin,
+        WrapperFactory $http,
+        Factory $refinery
     ) {
         $this->db = $db;
         $this->ctrl = $ilCtrl;
@@ -52,8 +38,14 @@ class ListBlocksGUI
         $this->toolbar = $ilToolbar;
         $this->access = $access;
         $this->plugin = $plugin;
+        $this->http = $http;
+        $this->refinery = $refinery;
     }
 
+    /**
+     * @throws ilObjectException
+     * @throws ilCtrlException
+     */
     public function executeCommand()
     {
         $this->ctrl->saveParameter($this, 'block_id');
@@ -122,14 +114,16 @@ class ListBlocksGUI
         }
 
         $table->setData($table_data);
+
         $this->tpl->setContent($table->getHTML());
+
     }
 
     public function saveSorting()
     {
         $factory = new BlockFactory($this->db, $this->getSelfEvalId());
         $blocks = $factory->getAllBlocks();
-        $positions = $_POST['position'];
+        $positions = $this->http->post()->retrieve('position', $this->refinery->kindlyTo()->string());
         foreach ($blocks as $block) {
             $position = (int) array_search($block->getPositionId(), $positions) + 1;
             if ($position) {

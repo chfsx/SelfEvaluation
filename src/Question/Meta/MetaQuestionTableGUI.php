@@ -47,7 +47,6 @@ class MetaQuestionTableGUI extends ilTable2GUI
         $this->plugin = $plugin;
         $this->sortable = $sortable;
         $this->types = $types;
-        $this->sortable = $sortable;
 
         $this->setTitle($block->getTitle() . ': ' . $this->plugin->txt('question_table_title'));
 
@@ -110,7 +109,7 @@ class MetaQuestionTableGUI extends ilTable2GUI
 
         // actions
         $ac = new ilAdvancedSelectionListGUI();
-        $ac->setId($row['id']);
+        $ac->setId((string)$row['id']);
         $ac->setListTitle($this->lng->txt('actions'));
 
         $edit_link = $this->ctrl->getLinkTarget($this->getParentObject(), 'editQuestion');
