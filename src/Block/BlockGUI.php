@@ -182,12 +182,12 @@ abstract class BlockGUI
 
     protected function deleteBlock()
     {
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('qst_delete_block'), true);
         $conf = new ilConfirmationGUI();
         $conf->setFormAction($this->ctrl->getFormAction($this));
         $conf->setCancel($this->plugin->txt('cancel'), 'cancel');
         $conf->setConfirm($this->plugin->txt('delete_block'), 'deleteObject');
         $conf->addItem('block_id', (string) $this->object->getId(), $this->object->getTitle());
+        $conf->setHeaderText($this->plugin->txt('qst_delete_block'));
         $this->tpl->setContent($conf->getHTML());
     }
 

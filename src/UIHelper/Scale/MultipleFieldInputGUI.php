@@ -112,7 +112,8 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         if ($this->http->wrapper()->post()->has($this->getPostVar())) {
             $post = $this->http->wrapper()->post()->retrieve($this->getPostVar(), $this->refinery->kindlyTo()->string());
             $_POST[$this->getPostVar()] = ilUtil::stripSlashes($post);
-            if ($this->getRequired() && trim($_POST[$this->getPostVar()]) == "") {
+
+            if ($this->getRequired() && trim($post) == "") {
                 $this->setAlert($lng->txt("msg_input_is_required"));
                 return false;
             }

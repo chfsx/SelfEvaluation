@@ -241,7 +241,7 @@ class Feedback implements hasDBFields
         $set = $db->query($q);
 
         while ($rec = $db->fetchObject($set)) {
-            $feedback = new self($db, $rec->id);
+            $feedback = new self($db, (int) $rec->id);
             return $feedback;
         }
         return null;
@@ -254,6 +254,7 @@ class Feedback implements hasDBFields
         int $ignore = 0,
         bool $is_overall = false
     ): int {
+        $res =null;
         for ($return = $value; $return < 100; $return++) {
             $q =
                 'SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE parent_id = ' . $db->quote($parent_id, 'integer')
@@ -267,12 +268,12 @@ class Feedback implements hasDBFields
             }
             $set = $db->query($q);
             $res = $db->fetchObject($set);
-            if ($res &&!$res->id) {
+            if (is_null($res)) {
                 return $return;
             }
         }
 
-        return 100;
+        return 0;
     }
 
     public static function _getNextMaxValueForParentId(
@@ -295,7 +296,7 @@ class Feedback implements hasDBFields
             }
             $set = $db->query($q);
             $res = $db->fetchObject($set);
-            if ($res->id) {
+            if ($res && $res->id) {
                 return $return;
             }
 

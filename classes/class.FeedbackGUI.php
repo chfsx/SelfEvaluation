@@ -15,7 +15,7 @@ class FeedbackGUI
 {
     protected ilPropertyFormGUI $form;
     protected ilTemplate $overview;
-    protected int $total;
+    protected int $total = 0;
     protected QuestionBlockInterface $block;
     protected Feedback $feedback;
     protected ilDBInterface $db;
@@ -33,6 +33,8 @@ class FeedbackGUI
         ilCtrl $ilCtrl,
         ilToolbarGUI $ilToolbar,
         ilAccessHandler $access,
+        \ILIAS\HTTP\Wrapper\WrapperFactory $http,
+        $refinery,
         ilSelfEvaluationPlugin $plugin
     ) {
         $this->db = $db;
@@ -42,6 +44,8 @@ class FeedbackGUI
         $this->toolbar = $ilToolbar;
         $this->access = $access;
         $this->plugin = $plugin;
+        $this->refinery = $refinery;
+        $this->http = $http;
     }
 
     public function executeCommand()
@@ -131,7 +135,7 @@ class FeedbackGUI
         $this->feedback->setStartValue(Feedback::_getNextMinValueForParentId(
             $this->db,
             $this->block->getId(),
-            $_GET['start_value'] ? $_GET['start_value'] : 0,
+            $this->http->query()->has('start_value') ? $this->http->query()->retrieve('start_value', $this->refinery->kindlyTo()->int()) : 0,
             0,
             $this->feedback->isParentTypeOverall()
         ));
@@ -150,7 +154,8 @@ class FeedbackGUI
     {
         header('Cache-Control: no-cache, must-revalidate');
         header('Content-type: application/json');
-        $ignore = ($_GET['feedback_id'] ? $_GET['feedback_id'] : 0);
+        $ignore = $this->http->query()->has('feedback_id') ? $this->http->query()->retrieve('feedback_id', $this->refinery->kindlyTo()->int()) : 0;
+        //$ignore = ($_GET['feedback_id'] ? $_GET['feedback_id'] : 0);
         $start = Feedback::_getNextMinValueForParentId(
             $this->db,
             $this->block->getId(),
@@ -260,9 +265,8 @@ class FeedbackGUI
                 $obj->setStartValue(100 - $range);
                 $obj->setEndValue(100);
             } else {
-                $slider = $this->form->getInput('slider');
-                $obj->setStartValue($slider[0]);
-                $obj->setEndValue($slider[1]);
+                $obj->setStartValue((int)$this->form->getInput("slider_slider_from"));
+                $obj->setEndValue((int)$this->form->getInput("slider_slider_to"));
             }
 
             $obj->setFeedbackText($this->form->getInput('feedback_text'));
@@ -338,11 +342,13 @@ class FeedbackGUI
         $conf->setFormAction($this->ctrl->getFormAction($this));
         $conf->setCancel($this->plugin->txt('cancel'), 'cancel');
         $conf->setConfirm($this->plugin->txt('delete_feedback'), 'deleteObject');
+        $conf->setHeaderText($this->plugin->txt('qst_delete_feedback'), 'deleteObject');
         foreach ($ids as $id) {
-            $obj = new Feedback($this->db, $id);
+            $obj = new Feedback($this->db, (int)$id);
             $conf->addItem('id[]', (string) $obj->getId(), $obj->getTitle());
 
         }
+
         $this->tpl->setContent($conf->getHTML());
     }
 
@@ -352,7 +358,7 @@ class FeedbackGUI
 
         $ids = $_POST["id"];
         foreach ($ids as $id) {
-            $obj = new Feedback($this->db, $id);
+            $obj = new Feedback($this->db, (int)$id);
             $obj->delete();
         }
         $this->cancel();

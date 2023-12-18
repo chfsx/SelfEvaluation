@@ -36,6 +36,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
      * @var ilGlobalTemplateInterface
      */
     protected $tpl;
+    protected $check = [];
 
     /**
      * @var ilRepositoryObjectPlugin
@@ -96,14 +97,18 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
     public function checkInput(): bool
     {
         global $lng;
-        $_POST[$this->getPostVar()] = [
-            $_POST[self::PREFIX . $this->getPostVar() . '_from'],
-            $_POST[self::PREFIX . $this->getPostVar() . '_to']
+
+        $this->check[$this->getPostVar()] = [
+            $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_from', $this->refinery->kindlyTo()->string()),
+            $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_to', $this->refinery->kindlyTo()->string())
         ];
 
         if ($this->getRequired() and
-            trim($_POST[self::PREFIX . $this->getPostVar() . '_from']) == '' and
-            trim($_POST[self::PREFIX . $this->getPostVar() . '_to']) == ''
+            trim($this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_from', $this->refinery->kindlyTo()->string()))
+ == '' and
+            trim(
+                $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . 'to', $this->refinery->kindlyTo()->string()),
+            ) == ''
         ) {
             $this->setAlert($lng->txt('msg_input_is_required'));
 
@@ -115,13 +120,17 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
 
     public function setValueByArray(array $array)
     {
+
         foreach ($this->getSubItems() as $item) {
             /**
              * @var SliderInputGUI $item
              */
             $item->setValueByArray($array);
         }
-        $this->setValues((array)$array[$this->getPostVar()]);
+
+        if(array_key_exists($this->getPostVar(), $array)) {
+            $this->setValues((array) $array[$this->getPostVar()]);
+        }
     }
 
     public function setValues(array $values)

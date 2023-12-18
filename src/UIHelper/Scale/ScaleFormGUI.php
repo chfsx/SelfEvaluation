@@ -9,6 +9,7 @@ use ilGlobalTemplateInterface;
 use ilRepositoryObjectPlugin;
 use ilDBInterface;
 use ilFormSectionHeaderGUI;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
 
 /**
  * @ilCtrl_Calls      ilSelfEvaluationScaleGUI: ilObjSelfEvaluationGUI
@@ -55,7 +56,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
 
         $this->scale = Scale::_getInstanceByObjId($db, $this->parent_id);
         $this->initForm();
-        $this->tmpl->addJavaScript($this->plugin->getDirectory() . '/templates/sortable.js');
+        $this->tmpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
     }
 
     protected function initForm()
@@ -110,42 +111,77 @@ class ScaleFormGUI extends ilPropertyFormGUI
     public function updateObject()
     {
         $this->scale->update();
-        if (!is_array($_POST[self::FIELD_NAME . '_new'])) {
-
-            return;
+        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_new')) {
+            if (!is_array($this->http->wrapper()->post()->retrieve(
+                self::FIELD_NAME . '_new',
+                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string()))
+            ))) {
+                return;
+            }
         }
         $units = [];
+        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_position')) {
+            if (is_array($this->getArrayFromPost(self::FIELD_NAME . '_position'))) {
+                $positions = array_flip($this->getArrayFromPost(self::FIELD_NAME . '_position'));
+            }
 
-        if (is_array($_POST[self::FIELD_NAME . '_position'])) {
-            $positions = array_flip($_POST[self::FIELD_NAME . '_position']);
-        }
-        if (is_array($_POST[self::FIELD_NAME . '_new']['value'])) {
-            foreach ($_POST[self::FIELD_NAME . '_new']['value'] as $k => $v) {
-                if ($v !== false and $v !== null and $v !== '') {
-                    $obj = new ScaleUnit($this->db);
-                    $obj->setParentId($this->scale->getId());
-                    $obj->setTitle($_POST['scale_new']['title'][$k]);
-                    $obj->setValue((int)$v);
-                    $obj->create();
-                    $units[] = $obj;
+            $new = $this->getArrayFromPostComplex(self::FIELD_NAME . '_new');
+            if (is_array($new['value'])) {
+                foreach ($new['value'] as $k => $v) {
+                    if ($v !== false and $v !== null and $v !== '') {
+                        $obj = new ScaleUnit($this->db);
+                        $obj->setParentId($this->scale->getId());
+                        $obj->setTitle($new['title'][$k]);
+                        $obj->setValue((int) $v);
+                        $obj->create();
+                        $units[] = $obj;
+                    }
+                }
+            }
+
+            if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_old')) {
+                $old = $this->getArrayFromPostComplex(self::FIELD_NAME . '_old');
+                if (is_array($old['value'])) {
+                    foreach ($old['value'] as $k => $v) {
+                        if ($v !== false and $v !== null and $v !== '') {
+                            $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
+                            $obj->setTitle($old['title'][$k]);
+                            $obj->setValue((int) $v);
+                            $obj->setPosition((int)$positions[str_replace('id_', '', (string)$k)]);
+                            $obj->update();
+                            $units[] = $obj;
+                        } else {
+                            $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
+                            $obj->delete();
+                        }
+                    }
                 }
             }
         }
-        if (is_array($_POST[self::FIELD_NAME . '_old']['value'])) {
-            foreach ($_POST[self::FIELD_NAME . '_old']['value'] as $k => $v) {
-                if ($v !== false and $v !== null and $v !== '') {
-                    $obj = new ScaleUnit($this->db, str_replace('id_', '', (string)$k));
-                    $obj->setTitle($_POST['scale_old']['title'][$k]);
-                    $obj->setValue((int)$v);
-                    $obj->setPosition($positions[str_replace('id_', '', (string)$k)]);
-                    $obj->update();
-                    $units[] = $obj;
+    }
 
-                } else {
-                    $obj = new ScaleUnit($this->db, str_replace('id_', '', $k));
-                    $obj->delete();
-                }
-            }
+    public function getArrayFromPost(string $string): ?array
+    {
+        try {
+            return $this->http->wrapper()->post()->retrieve(
+                $string,
+                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string())
+            );
+        } catch (Exception $e) {
+            return null;
+        }
+
+    }
+
+    public function getArrayFromPostComplex(string $string): ?array
+    {
+        try {
+            return $this->http->wrapper()->post()->retrieve(
+                $string,
+                $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()))
+            );
+        } catch (Exception $e) {
+            return null;
         }
     }
 }

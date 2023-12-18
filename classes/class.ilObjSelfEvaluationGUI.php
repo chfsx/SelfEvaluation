@@ -203,6 +203,8 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $this->ctrl,
                         $this->toolbar,
                         $this->access,
+                        $this->http,
+                        $this->refinery,
                         $this->plugin
                     );
                     $this->tabs->activateTab('administration');

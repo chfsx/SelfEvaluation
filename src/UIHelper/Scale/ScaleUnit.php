@@ -87,8 +87,10 @@ class ScaleUnit implements hasDBFields
     {
         $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
             . $this->db->quote($this->getId(), 'integer'));
-
-        $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
+        $set = $this->db->fetchObject($set);
+        if(!is_null($set) ) {
+            $this->setObjectValuesFromRecord($this, ($set));
+        }
     }
 
 

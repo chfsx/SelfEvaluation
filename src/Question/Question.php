@@ -189,7 +189,7 @@ abstract class Question implements hasDBFields
 
     abstract public function getTitle(): string;
 
-    public function getPosition(): int
+    public function getPosition(): ?int
     {
         return $this->position;
     }
