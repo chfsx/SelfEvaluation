@@ -20,7 +20,13 @@ class MetaBlockGUI extends BlockGUI
         ilObjSelfEvaluationGUI $parent
     ) {
         parent::__construct($db, $tpl, $ilCtrl, $access, $plugin, $parent);
-        $this->object = new MetaBlock($this->db, $parent->http->query()->retrieve('block_id', $parent->refinery->kindlyTo()->int()));
+        if ($parent->http->query()->has('block_id')) {
+            $this->object = new MetaBlock($this->db,
+                $parent->http->query()->retrieve('block_id', $parent->refinery->kindlyTo()->int()));
+        }
+        else {
+            $this->object = new MetaBlock($this->db);
+        }
         $this->object->setParentId($this->parent->getObjId());
     }
 }
