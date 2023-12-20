@@ -127,7 +127,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
         }
 
         $new = $this->getArrayFromPostComplex(self::FIELD_NAME . '_new');
-        if (is_array($new['value'])) {
+        if (!is_null($new) &&is_array($new['value'])) {
             foreach ($new['value'] as $k => $v) {
                 if ($v !== false and $v !== null and $v !== '') {
                     $obj = new ScaleUnit($this->db);
@@ -167,7 +167,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
                 $string,
                 $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string())
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return null;
         }
 
@@ -180,7 +180,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
                 $string,
                 $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()))
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return null;
         }
     }
