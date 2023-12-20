@@ -18,7 +18,7 @@ class QuestionBlockGUI extends BlockGUI
     ) {
         parent::__construct($db, $tpl, $ilCtrl, $access, $plugin, $parent);
 
-        $this->object = new QuestionBlock($this->db, (int) $_GET['block_id']);
+        $this->object = new QuestionBlock($this->db, $parent->http->query()->retrieve('block_id', $parent->refinery->kindlyTo()->int()));
         $this->object->setParentId($this->parent->getObjId());
     }
 

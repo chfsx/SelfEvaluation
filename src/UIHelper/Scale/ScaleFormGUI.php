@@ -124,36 +124,36 @@ class ScaleFormGUI extends ilPropertyFormGUI
             if (is_array($this->getArrayFromPost(self::FIELD_NAME . '_position'))) {
                 $positions = array_flip($this->getArrayFromPost(self::FIELD_NAME . '_position'));
             }
+        }
 
-            $new = $this->getArrayFromPostComplex(self::FIELD_NAME . '_new');
-            if (is_array($new['value'])) {
-                foreach ($new['value'] as $k => $v) {
-                    if ($v !== false and $v !== null and $v !== '') {
-                        $obj = new ScaleUnit($this->db);
-                        $obj->setParentId($this->scale->getId());
-                        $obj->setTitle($new['title'][$k]);
-                        $obj->setValue((int) $v);
-                        $obj->create();
-                        $units[] = $obj;
-                    }
+        $new = $this->getArrayFromPostComplex(self::FIELD_NAME . '_new');
+        if (is_array($new['value'])) {
+            foreach ($new['value'] as $k => $v) {
+                if ($v !== false and $v !== null and $v !== '') {
+                    $obj = new ScaleUnit($this->db);
+                    $obj->setParentId($this->scale->getId());
+                    $obj->setTitle($new['title'][$k]);
+                    $obj->setValue((int) $v);
+                    $obj->create();
+                    $units[] = $obj;
                 }
             }
+        }
 
-            if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_old')) {
-                $old = $this->getArrayFromPostComplex(self::FIELD_NAME . '_old');
-                if (is_array($old['value'])) {
-                    foreach ($old['value'] as $k => $v) {
-                        if ($v !== false and $v !== null and $v !== '') {
-                            $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
-                            $obj->setTitle($old['title'][$k]);
-                            $obj->setValue((int) $v);
-                            $obj->setPosition((int)$positions[str_replace('id_', '', (string)$k)]);
-                            $obj->update();
-                            $units[] = $obj;
-                        } else {
-                            $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
-                            $obj->delete();
-                        }
+        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_old')) {
+            $old = $this->getArrayFromPostComplex(self::FIELD_NAME . '_old');
+            if (is_array($old['value'])) {
+                foreach ($old['value'] as $k => $v) {
+                    if ($v !== false and $v !== null and $v !== '') {
+                        $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
+                        $obj->setTitle($old['title'][$k]);
+                        $obj->setValue((int) $v);
+                        $obj->setPosition((int)$positions[str_replace('id_', '', (string)$k)]);
+                        $obj->update();
+                        $units[] = $obj;
+                    } else {
+                        $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
+                        $obj->delete();
                     }
                 }
             }

@@ -34,7 +34,7 @@ class FeedbackGUI
         ilToolbarGUI $ilToolbar,
         ilAccessHandler $access,
         \ILIAS\HTTP\Wrapper\WrapperFactory $http,
-        $refinery,
+        \ILIAS\Refinery\Factory $refinery,
         ilSelfEvaluationPlugin $plugin
     ) {
         $this->db = $db;
@@ -325,7 +325,7 @@ class FeedbackGUI
 
     protected function deleteFeedbacks()
     {
-        $ids = $_POST["id"];
+        $ids =  $this->http->post()->retrieve('id', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()));
         if(!is_array($ids)) {
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('msg_no_feedback_selected'));
             $this->listObjects();
@@ -355,7 +355,7 @@ class FeedbackGUI
     {
         $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_deleted'), true);
 
-        $ids = $_POST["id"];
+        $ids =  $this->http->post()->retrieve('id', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()));
         foreach ($ids as $id) {
             $obj = new Feedback($this->db, (int)$id);
             $obj->delete();

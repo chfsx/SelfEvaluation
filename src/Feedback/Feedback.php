@@ -254,8 +254,9 @@ class Feedback implements hasDBFields
         int $ignore = 0,
         bool $is_overall = false
     ): int {
-        $res =null;
+        $res = null;
         for ($return = $value; $return < 100; $return++) {
+
             $q =
                 'SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE parent_id = ' . $db->quote($parent_id, 'integer')
                 . ' AND start_value <= ' . $db->quote($return, 'integer')

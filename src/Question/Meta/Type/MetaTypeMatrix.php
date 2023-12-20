@@ -70,7 +70,7 @@ class MetaTypeMatrix extends MetaQuestionType
         $questions = [];
 
         foreach ($data as $key => $value) {
-            if (strpos($key, 'question_') !== false) {
+            if (strpos((string)$key, 'question_') !== false) {
                 $questions[$key] = $value;
             }
         }
@@ -82,7 +82,7 @@ class MetaTypeMatrix extends MetaQuestionType
         $scale = [];
 
         foreach ($data as $key => $value) {
-            if (strpos($key, 'scale_') !== false) {
+            if (strpos((string)$key, 'scale_') !== false) {
                 $scale[$key] = $value;
             }
         }

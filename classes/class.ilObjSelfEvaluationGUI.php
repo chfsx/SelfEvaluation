@@ -39,6 +39,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
     protected ?ilPlugin $plugin = null;
     protected ilDBInterface $db;
     public WrapperFactory $http;
+    public ILIAS\Refinery\Factory $refinery;
 
 
     public function __construct(?int $a_ref_id = 0, ?int $a_id_type = self::REPOSITORY_NODE_ID, ?int $a_parent_node_id = 0)

@@ -32,8 +32,8 @@ class DatasetGUI
         ilToolbarGUI $ilToolbar,
         ilAccessHandler $access,
         ilSelfEvaluationPlugin $plugin,
-         WrapperFactory $http,
-         Factory $refinery
+        WrapperFactory $http,
+        Factory $refinery
     ) {
         $this->db = $db;
         $this->tpl = $tpl;
@@ -46,7 +46,7 @@ class DatasetGUI
         $this->refinery = $refinery;
 
 
-        $this->dataset = new Dataset($this->db, $this->http->query()->has('dataset_id')? $this->http->query()->retrieve('dataset_id', $this->refinery->kindlyTo()->int()): 0);
+        $this->dataset = new Dataset($this->db, $this->http->query()->has('dataset_id') ? $this->http->query()->retrieve('dataset_id', $this->refinery->kindlyTo()->int()) : 0);
     }
 
     public function executeCommand()
@@ -109,7 +109,7 @@ class DatasetGUI
         $feedback = '';
 
         if ($this->parent->object->isAllowShowResults()) {
-          //  $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/bar_spider_chart_toggle.js');
+            //  $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/bar_spider_chart_toggle.js');
             $charts = new FeedbackChartGUI($this->db, $this->tpl, $this->plugin, $this->toolbar, $this->parent->object);
             $feedback = $charts->getPresentationOfFeedback($this->dataset);
         }
@@ -124,12 +124,12 @@ class DatasetGUI
 
     public function deleteDatasets()
     {
-        if(!is_array($_POST["id"])) {
+        if($this->http->post()->has('id')) {
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('no_dataset_selected'));
             $this->index();
             return;
         }
-        $this->confirmDelete($_POST["id"]);
+        $this->confirmDelete($this->http->post()->retrieve('id', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int())));
     }
 
     /**
@@ -138,7 +138,7 @@ class DatasetGUI
     public function confirmDelete(array $ids = [])
     {
         $conf = new ilConfirmationGUI();
-        $conf->setHeaderText( $this->plugin->txt('qst_delete_dataset'));
+        $conf->setHeaderText($this->plugin->txt('qst_delete_dataset'));
         $conf->setFormAction($this->ctrl->getFormAction($this));
         $conf->setCancel($this->plugin->txt('cancel'), 'index');
         $conf->setConfirm($this->plugin->txt('delete_dataset'), 'delete');
@@ -178,14 +178,14 @@ class DatasetGUI
 
     public function deleteAll()
     {
-        Dataset::_deleteAllInstancesByObjectId($this->db, ilObject2::_lookupObjectId($_GET['ref_id']));
+        Dataset::_deleteAllInstancesByObjectId($this->db, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int)));
         $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('all_datasets_deleted'));
         $this->ctrl->redirect($this, 'index');
     }
 
     public function exportCsv()
     {
-        $csvExport = new DatasetCsvExport($this->db, $this->plugin, ilObject2::_lookupObjectId($_GET['ref_id']));
+        $csvExport = new DatasetCsvExport($this->db, $this->plugin, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int)));
         $csvExport->getCsvExport();
         exit;
     }
