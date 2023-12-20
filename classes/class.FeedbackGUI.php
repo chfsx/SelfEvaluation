@@ -307,9 +307,8 @@ class FeedbackGUI
         if ($this->form->checkInput()) {
             $this->feedback->setTitle($this->form->getInput('title'));
             $this->feedback->setDescription($this->form->getInput('description'));
-            $slider = $this->form->getInput('slider');
-            $this->feedback->setStartValue($slider[0]);
-            $this->feedback->setEndValue($slider[1]);
+            $this->feedback->setStartValue((int)$this->form->getInput('slider_slider_from'));
+            $this->feedback->setEndValue((int)$this->form->getInput('slider_slider_to'));
             $this->feedback->setFeedbackText($this->form->getInput('feedback_text'));
             $this->feedback->update();
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_created'));

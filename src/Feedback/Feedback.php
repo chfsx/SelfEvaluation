@@ -273,7 +273,7 @@ class Feedback implements hasDBFields
             }
         }
 
-        return 0;
+        return 100;
     }
 
     public static function _getNextMaxValueForParentId(

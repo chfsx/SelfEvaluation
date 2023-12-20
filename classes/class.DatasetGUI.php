@@ -138,12 +138,12 @@ class DatasetGUI
     public function confirmDelete(array $ids = [])
     {
         $conf = new ilConfirmationGUI();
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_QUESTION, $this->plugin->txt('qst_delete_dataset'));
+        $conf->setHeaderText( $this->plugin->txt('qst_delete_dataset'));
         $conf->setFormAction($this->ctrl->getFormAction($this));
         $conf->setCancel($this->plugin->txt('cancel'), 'index');
         $conf->setConfirm($this->plugin->txt('delete_dataset'), 'delete');
         foreach ($ids as $id) {
-            $dataset = new Dataset($this->db, $id);
+            $dataset = new Dataset($this->db, (int)$id);
             $identifier = new Identity($this->db, $dataset->getIdentifierId());
             $user = $identifier->getIdentifier();
             if ($identifier->getType() == $identifier::TYPE_LOGIN) {
@@ -157,7 +157,8 @@ class DatasetGUI
     public function delete()
     {
         $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_dataset_deleted'), true);
-        foreach ($_POST['dataset_ids'] as $id) {
+        $post = $this->http->post()->retrieve('dataset_ids', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()));
+        foreach ($post as $id) {
             $dataset = new Dataset($this->db, $id);
             $dataset->delete();
         }
