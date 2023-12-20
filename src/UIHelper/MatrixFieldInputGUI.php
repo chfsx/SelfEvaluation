@@ -74,7 +74,10 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
             $this->setValue($values[$this->getPostVar()]);
             return;
         }
-        list($matrix_key, $question_key) = explode("[", str_replace("]", "", $this->getPostVar()));
+        try {
+            list($matrix_key, $question_key) = explode("[", str_replace("]", "", $this->getPostVar()));
+        }
+        catch(\Exception $e){}
 
         if(array_key_exists($matrix_key, $values)) {
             $meta_question_values = $values[$matrix_key];
@@ -82,11 +85,6 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
                 $this->setValue($meta_question_values[$question_key]);
             }
         }
-    }
-
-    public function setValueByArray2($values)
-    {
-
     }
 
     public function setScale(array $scale)
