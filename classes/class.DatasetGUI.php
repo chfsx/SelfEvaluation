@@ -171,6 +171,7 @@ class DatasetGUI
         $conf = new ilConfirmationGUI();
         $conf->setFormAction($this->ctrl->getFormAction($this));
         $conf->setCancel($this->plugin->txt('cancel'), 'index');
+        $conf->setHeaderText($this->plugin->txt('delete_all_datasets'));
         $conf->setConfirm($this->plugin->txt('delete_all_datasets'), 'deleteAll');
         $conf->addItem('dataset_id', '', $this->plugin->txt('confirm_delete_all_datasets'));
         $this->tpl->setContent($conf->getHTML());
@@ -178,14 +179,14 @@ class DatasetGUI
 
     public function deleteAll()
     {
-        Dataset::_deleteAllInstancesByObjectId($this->db, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int)));
+        Dataset::_deleteAllInstancesByObjectId($this->db, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int())));
         $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('all_datasets_deleted'));
         $this->ctrl->redirect($this, 'index');
     }
 
     public function exportCsv()
     {
-        $csvExport = new DatasetCsvExport($this->db, $this->plugin, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int)));
+        $csvExport = new DatasetCsvExport($this->db, $this->plugin, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int())));
         $csvExport->getCsvExport();
         exit;
     }
