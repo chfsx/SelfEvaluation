@@ -109,7 +109,6 @@ class DatasetGUI
         $feedback = '';
 
         if ($this->parent->object->isAllowShowResults()) {
-            //  $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/bar_spider_chart_toggle.js');
             $charts = new FeedbackChartGUI($this->db, $this->tpl, $this->plugin, $this->toolbar, $this->parent->object);
             $feedback = $charts->getPresentationOfFeedback($this->dataset);
         }

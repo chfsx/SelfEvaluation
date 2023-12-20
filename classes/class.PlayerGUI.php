@@ -196,7 +196,12 @@ class PlayerGUI
                     $qid = "mqst_" . $i;
                     $type = 'mqst';
                 }
-                $value = $this->http->post()->retrieve($qid, $this->refinery->kindlyTo()->string());
+                try {
+                    $value = $this->http->post()->retrieve($qid, $this->refinery->kindlyTo()->string());
+                }
+                catch(\Exception $e){
+                    $value = $this->http->post()->retrieve($qid, $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()));
+                }
                 $data[$qid] =   $value;
                 $found_question++;
             }

@@ -28,7 +28,7 @@ class MetaTypeSingleChoice extends MetaTypeSelect
 
         foreach ($values as $key => $value) {
 
-            $select->addOption(new ilRadioOption($value, $key));
+            $select->addOption(new ilRadioOption($value, (string)$key));
         }
 
         return $select;

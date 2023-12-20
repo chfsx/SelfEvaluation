@@ -123,7 +123,7 @@ class ListBlocksGUI
     {
         $factory = new BlockFactory($this->db, $this->getSelfEvalId());
         $blocks = $factory->getAllBlocks();
-        $positions = $this->http->post()->retrieve('position', $this->refinery->kindlyTo()->string());
+        $positions = $this->http->post()->retrieve('position', $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()));
         foreach ($blocks as $block) {
             $position = (int) array_search($block->getPositionId(), $positions) + 1;
             if ($position) {

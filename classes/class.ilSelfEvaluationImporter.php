@@ -22,7 +22,7 @@ class ilSelfEvaluationImporter extends ilXmlImporter
             }
         }
 
-        $obj_self_eval = new ilObjSelfEvaluation($ref_id);
+        $obj_self_eval = new ilObjSelfEvaluation((int)$ref_id);
         $obj_self_eval->fromXML($xml);
         //return $obj_self_eval->getId();
     }
