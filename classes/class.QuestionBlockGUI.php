@@ -20,6 +20,9 @@ class QuestionBlockGUI extends BlockGUI
         if( $parent->http->query()->has('block_id')){
             $this->object = new QuestionBlock($this->db, $parent->http->query()->retrieve('block_id', $parent->refinery->kindlyTo()->int()));
         }
+        else{
+            $this->object = new QuestionBlock($this->db);
+        }
         $this->object->setParentId($this->parent->getObjId());
     }
 
