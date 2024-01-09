@@ -325,8 +325,12 @@ class FeedbackGUI
 
     protected function deleteFeedbacks()
     {
-        $ids =  $this->http->post()->retrieve('id', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()));
-        if(!is_array($ids)) {
+        if($this->http->post()->has('id')) {
+            $ids = $this->http->post()->retrieve(
+                'id',
+                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int())
+            );
+        } else {
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('msg_no_feedback_selected'));
             $this->listObjects();
             return;
