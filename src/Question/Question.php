@@ -34,7 +34,7 @@ abstract class Question implements hasDBFields
     /**
      * @var int
      */
-    protected $position;
+    protected $position = 99;
 
     /**
      * @var int
