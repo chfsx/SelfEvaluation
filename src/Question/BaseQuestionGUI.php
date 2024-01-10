@@ -163,13 +163,18 @@ abstract class BaseQuestionGUI
 
     protected function saveSorting()
     {
-        foreach ($_POST['position'] as $position => $question_id) {
-            $this->question->setId($question_id);
-            $this->question->read();
-            $this->question->setPosition($position + 1);
-            $this->question->update();
-        }
 
+        if($this->parent->http->post()->has('position')) {
+            $post_array = $this->parent->http->post()->retrieve('position',
+                $this->parent->refinery->kindlyTo()->listOf($this->parent->refinery->kindlyTo()->int()));
+
+            foreach ($post_array as $position => $question_id) {
+                $this->question->setId((int) $question_id);
+                $this->question->read();
+                $this->question->setPosition($position + 1);
+                $this->question->update();
+            }
+        }
         $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt("sorting_saved"), true);
         $this->ctrl->redirect($this, 'showContent');
     }
