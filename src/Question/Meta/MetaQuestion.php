@@ -47,7 +47,7 @@ class MetaQuestion extends BaseQuestion
     /**
      * @var bool
      */
-    protected $required;
+    protected int $required = 0;
 
 
     public function cloneTo(int $parent_id): BaseQuestion
@@ -138,12 +138,12 @@ class MetaQuestion extends BaseQuestion
         $this->values = $values;
     }
 
-    public function isRequired(): ?bool
+    public function isRequired(): ?int
     {
         return $this->required;
     }
 
-    public function enableRequired(bool $status)
+    public function enableRequired(int $status)
     {
         $this->required = $status;
     }
@@ -165,7 +165,7 @@ class MetaQuestion extends BaseQuestion
             $question->setShortTitle((string)$rec->short_title);
             $question->setTypeId((int)$rec->type_id);
             $question->setValues((array)unserialize($rec->values));
-            $question->enableRequired((bool)$rec->required);
+            $question->enableRequired((int)$rec->required);
             $question->setPosition((int)$rec->position);
             $questions[$question->getId()] = $question;
         }

@@ -121,7 +121,7 @@ abstract class Question implements hasDBFields
         $this->parent_id = $parent_id;
     }
 
-    public function getParentId(): int
+    public function getParentId(): ?int
     {
         return $this->parent_id;
     }

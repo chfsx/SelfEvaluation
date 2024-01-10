@@ -41,7 +41,6 @@ trait ArrayForDB
                 $array[$property] = [$this->getDBFieldType($value), $value];
             }
         }
-
         return $array;
     }
 
@@ -96,7 +95,11 @@ trait ArrayForDB
             if(is_array($serialized)) {
                 $this->{$k} = $serialized;
             } else {
+
                 $type = getType($this->$k);
+                if($type == 'NULL'){
+                    $type = getType($rec->{$k});
+                }
                 switch($type) {
                     case 'string':
                         $this->{$k} = (string) $rec->{$k};
@@ -105,9 +108,6 @@ trait ArrayForDB
                         $this->{$k} = (bool) $rec->{$k};
                         break;
                     case 'integer':
-                        $this->{$k} = (int) $rec->{$k};
-                        break;
-                    default:
                         $this->{$k} = (int) $rec->{$k};
                         break;
                 }

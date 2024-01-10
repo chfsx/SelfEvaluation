@@ -117,7 +117,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
         $this->question->setShortTitle($this->form->getInput('short_title'));
         $this->question->setTypeId((int)$this->form->getInput('type'));
         $this->question->setValues($this->getFormValuesByTypeId((int)$this->form->getInput('type')));
-        $this->question->enableRequired((bool)$this->form->getInput('required'));
+        $this->question->enableRequired((int)$this->form->getInput('required'));
     }
 
     protected function getFormValuesByTypeId(int $type_id): array
@@ -150,7 +150,13 @@ class MetaQuestionGUI extends BaseQuestionGUI
     protected function saveRequired()
     {
         foreach (MetaQuestion::_getAllInstancesForParentId($this->db, $this->block->getId()) as $question) {
-            $question->enableRequired(isset($_POST['required'][$question->getId()]));
+            if($this->parent->http->post()->has('required')) {
+                $required_array = $this->parent->http->post()->retrieve('required',
+                    $this->parent->refinery->kindlyTo()->dictOf($this->parent->refinery->kindlyTo()->int()));
+                $question->enableRequired((int) isset($required_array[$question->getId()]));
+            }else{
+                $question->enableRequired(0);
+            }
             $question->update();
         }
 
