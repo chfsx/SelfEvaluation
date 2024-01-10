@@ -107,7 +107,9 @@ trait ArrayForDB
                     case 'integer':
                         $this->{$k} = (int) $rec->{$k};
                         break;
-
+                    default:
+                        $this->{$k} = (int) $rec->{$k};
+                        break;
                 }
             }
 
