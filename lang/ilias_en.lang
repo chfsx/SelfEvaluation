@@ -1,269 +1,269 @@
-obj_xsev#:#Selbstevaluation
-objs_xsev#:#Selbstevaluationen
-obj_xsev_duplicate#:#Kopieren
-objs_xsev_duplicate#:#Selbstevaluation kopieren
-obj_xsev_select#:#Selbstevaluation auswählen
-obj_xsev_copy#:#Selbstevaluation kopieren
-xsev_copy#:#Selbstevaluation kopieren
-xsev_add#:#Selbstevaluation hinzufügen
-xsev_new#:#Neue Selbstevaluation hinzufügen
-xsev_read#:#Lesezugriff zu Selbstevaluation
-xsev_write#:#Selbstevaluation bearbeiten
-xsev_delete#:#Selbstevaluation löschen
-xsev_visible#:#Selbstevaluation ist sichtbar
-xsev_edit_permission#:#Rechteeinstellungen ändern
-crs_create_xsev#:#Selbstevaluation erstellen
-grp_create_xsev#:#Selbstevaluation erstellen
-fold_create_xsev#:#Selbstevaluation erstellen
-root_create_xsev#:#Selbstevaluation erstellen
-cat_create_xsev#:#Selbstevaluation erstellen
-content#:#Selbstevaluation
-properties#:#Einstellungen
-edit_properties#:#Einstellungen bearbeiten
-title#:#Titel
-short_title#:#Kurztitel
-description#:#Beschreibung
-abbreviation#:#Abkürzung
-save#:#Speichern
-cancel#:#Abbrechen
-edit#:#Bearbeiten
+obj_xsev#:#Self-evaluation
+objs_xsev#:#Self-evaluation
+obj_xsev_duplicate#:#Copy
+objs_xsev_duplicate#:#Copy self-evaluation
+obj_xsev_select#:#Self-evaluation select
+obj_xsev_copy#:#Copy self-evaluation
+xsev_copy#:#Copy self-evaluation
+xsev_add#:#Add self-evaluation
+xsev_new#:#Copy new self-evaluation
+xsev_read#:#Reading permission for self-evaluation
+xsev_write#:#Edit self-evaluation
+xsev_delete#:#Delete self-evaluation
+xsev_visible#:#Self-evaluation is visible
+xsev_edit_permission#:#Change permissions
+crs_create_xsev#:#Create self-evaluation
+grp_create_xsev#:#Create self-evaluation
+fold_create_xsev#:#Create self-evaluation
+root_create_xsev#:#Create self-evaluation
+cat_create_xsev#:#Create self-evaluation
+content#:#Self-evaluation
+properties#:#Settings
+edit_properties#:#Edit settings
+title#:#Title
+short_title#:#Short title
+description#:#Description
+abbreviation#:#Abbreviation
+save#:#Save
+cancel#:#Cancel
+edit#:#Edit
 status#:#Status
 offline#:#Offline
 online#:#Online
 start_button#:#Start
-intro_header#:#Einleitung
-administration#:#Fragen und Feedback
-actions#:#Aktionen
-edit_block#:#Blockinformationen bearbeiten
-duplicate_block#:#Block duplizieren
-delete_block#:#Block löschen
-update_block#:#Block bearbeiten
-update_block_button#:#Speichern
-qst_delete_block#:#Sind Sie sicher, dass folgender Fragenblock mit allen dazugehörigen Fragen aus der Selbstevaluation entfernt werden soll?
-msg_block_deleted#:#Block wurde gelöscht
-create_block#:#Block erstellen
-create_block_button#:#Block erstellen
-msg_block_created#:#Der Block wurde erstellt.
-msg_block_duplicated#:#Der Block wurde dupliziert. Der neue Block wurde zuunterst in der Frageblock-Liste hinzugefügt. Der Name des neuen Frageblocks ist mit dem Namen des Original-Frageblocks identisch.
-edit_questions#:#Fragen bearbeiten
-edit_feedback#:#Feedback bearbeiten
+intro_header#:#Introduction
+administration#:#Questions and Feedback
+actions#:#Actions
+edit_block#:#Edit block info
+duplicate_block#:#Duplicate block
+delete_block#:#Delete block
+update_block#:#Edit block
+update_block_button#:#Save
+qst_delete_block#:#Are you sure that you want to delete the following question block and all associated questions from the self-evaluation?
+msg_block_deleted#:#Block has been deleted
+create_block#:#Create block
+create_block_button#:#Create block
+msg_block_created#:#The block has been created.
+msg_block_duplicated#:#The block has been duplicated. The new block has been added to the bottom of the question block list. The name of the new question block is identical to the name of the original question block.
+edit_questions#:#Edit questions
+edit_feedback#:#Edit feedback
 
-help_text_section#:#Hilfstexte
-intro#:#Einleitungstext
-intro_info#:#Erster Text, der beim Öffnen einer Selbstevaluation angezeigt wird.
-outro_title#:#Abschliessender Titel
-outro_title_info#:#Titel, der nach Beendigung der Selbstevaluation angezeigt wird.
-outro#:#Abschliessende Beschreibung
-outro_info#:#Beschreibung, die nach Beendigung der Selbstevaluation angezeigt wird.
-identity_selection#:#Identitätsauswahl
-identity_selection_info#:#Für anonyme Selbstevaluationen kann eine Identitätsauswahl angeboten werden, um eine Evaluation zu unterbrechen und später fortsetzen zu können.
-identity_selection_text#:#Standardtext zur Identitätsauswahl bei anonymen Selbstevaluationen
-identity_selection_text_info#:#Dieser Text wird den anonymen Nutzern des Selbstevaluations Plugins angezeigt.
+help_text_section#:#Guidance texts
+intro#:#Introduction
+intro_info#:#First text that is displayed when opening a self-evaluation.
+outro_title#:#Outro title
+outro_title_info#:#Title that is displayed after the self-evaluation has been completed.
+outro#:#Outro
+outro_info#:#Last text that is displayed after the self-evaluation has been completed.
+identity_selection#:#Offer coded identity
+identity_selection_info#:#For anonymous self-evaluations, you can offer a coded identity to pause the self-evaluation and resume it later.
+identity_selection_text#:#Default text for coded identities in anonymous self-evaluations
+identity_selection_text_info#:#This text is displayed to anonymous users of the self-evaluation.
 
-block_section#:#Darstellung im Fragebogen
-block_presentation_type#:#Blockaufteilung der Fragen
-block_option_random#:#Fragen zufällig auf verschiedene Blöcke aufteilen.
-block_option_random_info#:#Die Fragen werden während dem Bearbeiten der Selbstevaluation zufällig auf künstliche Blöcke aufgeteilt. </br>Die Reihenfolge dieser künstlichen Blöcke ist zufällig. Generische Titel für diese Blöcke werden automatisch erstellt.</br> In der Auswertung werden die Antworten dann wieder den originalen Blöcken zugeordnet.
-sort_random_nr_items_block#:#Anzahl der Fragen pro Block bei zufälliger Aufteilung
-block_option_random_desc#:#Blockbeschreibung
-block_option_random_desc_info#:#Beschreibung welche unterhalb des generischen Titel der künstlichen Blöcke angezeigt wird.
-block_option_block#:#Fragendarstellung und Fragenauswertung in denselben Blöcken.
-block_option_block_info#:#Reihenfolge, Titel und Beschreibungen der Blöcke werden übernommen.
-display_type#:#Darstellung der Blöcke
-single_page#:#Alle Blöcke auf einer Seite
-multiple_pages#:#Eine Seite pro Block
-display_type_info#:#Darstellung der Blöcke beim Ausfüllen der Selbstevaluation.
-show_block_titles_sev#:#Titel der Frageblöcke während der Selbstevaluation anzeigen
-show_block_desc_sev#:#Beschreibung der Frageblöcke während der Selbstevaluation anzeigen
+block_section#:#Questionnaire layout
+block_presentation_type#:#Block allocation of questions
+block_option_random#:#Questions are allocated randomly to different blocks.
+block_option_random_info#:#Questions are allocated randomly to dummy blocks during the self-evaluation. </br>The order of these dummy blocks is random and generic titles are created automatically for these blocks.</br>In the results, the answers are reassigned to the original blocks.
+sort_random_nr_items_block#:#Number of questions per block with random allocation
+block_option_random_desc#:#Block description
+block_option_random_desc_info#:#Description which is displayed below the generic title of the dummy blocks.
+block_option_block#:#Display of questions and results in the same block.
+block_option_block_info#:#The order, titles and descriptions of the blocks are retained.
+display_type#:#Block layout
+single_page#:#All blocks on one page
+multiple_pages#:#One page per block
+display_type_info#:#Layout of the blocks when completing the self-evaluation.
+show_block_titles_sev#:#Show question block titles during the self-evaluation
+show_block_desc_sev#:#Show question block descriptions during self-evaluation
 
-feedback_section#:#Darstellung in der Auswertung
-show_block_titles_fb#:#Titel der Frageblöcke im Feedback anzeigen
-show_block_desc_fb#:#Beschreibung der Frageblöcke im Feedback anzeigen
-show_fbs_overview#:#Feedback-Übersichtsbereich anzeigen
-show_bar#:#Balkendiagramm anzeigen
-overview_bar_show_label_as_percentage#:#Werte in %
-show_spider#:#Spinnengrafik anzeigen
-show_left_right#:#Links-Rechts-Profil anzeigen
-show_fbs#:#Einzelfeedback-Texte anzeigen
-show_fbs_charts#:#Einzelfeedback-Grafiken anzeigen
+feedback_section#:#Results layout
+show_block_titles_fb#:#Show question block titles in the feedback
+show_block_desc_fb#:#Show question block descriptions in the feedback
+show_fbs_overview#:#Show feedback overview section
+show_bar#:#Show bar chart
+overview_bar_show_label_as_percentage#:#Values in %
+show_spider#:#Show spider chart
+show_left_right#:#Show left-right profile
+show_fbs#:#Show individual feedback texts
+show_fbs_charts#:#Show individual feedback graphics
 
-multinput_value#:#Numerischer Wert
-multinput_title#:#Bezeichnung
-multinput_description#:#Es empfiehlt sich, als ersten numerischen Wert die 0 zu wählen, damit die Einstellungen der Prozentbereiche bei Feedbacktexten mit den Ergebnissen der Selbstevaluation übereinstimmen.
-sort_type#:#Sortierung
+multinput_value#:#Numerical value
+multinput_title#:#Label
+multinput_description#:#We recommend setting the first numerical value to 0 so that the percentage range for feedback texts matches the results of the self-evaluation.
+sort_type#:#Order
 
-field_added#:#Eine neues Datenfeld wurde angelegt.
-confirm_delete#:#'Sind Sie sicher, dass Sie dieses Datenfeld löschen möchten?'
-add_question#:#Frage hinzufügen
-sorting_saved#:#Reihenfolge gespeichert
-required_field#:#Erforderliche Angabe
-matrix_scale#:#Skala
-matrix_scale_description#:#Skala der Matrixfrage (horizontal)
-matrix_scale_question#:#Fragen
-matrix_scale_question_description#:#Liste mit Fragen (vertikal)
+field_added#:#A new data field has been added.
+confirm_delete#:#'Are you sure you want to delete this data field?'
+add_question#:#Add question
+sorting_saved#:#Order saved
+required_field#:#Required information
+matrix_scale#:#Scale
+matrix_scale_description#:#Matrix question scale (horizontal)
+matrix_scale_question#:#Questions
+matrix_scale_question_description#:#List of questions (vertical)
 
-shuffle_in_blocks#:#Fragen pro Block mischen
-no_questions_per_page#:#Anzahl Fragen pro Seite
+shuffle_in_blocks#:#Randomize questions per block
+no_questions_per_page#:#Number of questions per page
 
-next_new#:#Weiter
-locked#:#Felder sind gesperrt
-feedback_status#:#Feedback-Block vollständig
+next_new#:#Next
+locked#:#Fields are locked
+feedback_status#:#Feedback block complete
 
-scale_form#:#Skalierung
+scale_form#:#Scaling
 
-create_question#:#Frage erstellen
-create_question_button#:#Frage erstellen
-question_body#:#Frage
-question_title_info#:#Die Abkürzung wird für die Benennung der Feedback Grafiken und den CSV-Export verwendet (max. 8 Zeichen).
-add_new_question#:#Frage hinzufügen
-block_table_title#:#Frageblöcke
-add_new_question_block#:#Frageblock hinzufügen
-block_abbreviation_info#:#Die Abkürzung wird für die Benennung der Feedback Grafiken verwendet (max. 8 Zeichen).
-overall_feedback_block#:#Gesamtfeedback
-add_new_meta_block#:#Stammdatenblock hinzufügen
-edit_question#:#Frage bearbeiten
-delete_question#:#Frage löschen
-sorting_saved#:#Reihenfolge gespeichert
-save_positions#:#Reihenfolge speichern
-cont_save_positions#:#Reihenfolge speichern
-msg_block_updated#:#Änderungen gespeichert
-msg_question_updated#:#Änderungen gespeichert
-question_table_title#:#Fragen bearbeiten
-feedback_table_title#:#Feedback bearbeiten
-update_question_button#:#Speichern
-qst_delete_question#:#Sind Sie sicher, dass folgende Frage aus der Selbstevaluation entfernt werden soll?
-msg_question_deleted#:#Frage wurde gelöscht
-msg_obj_modified#:#Änderungen gespeichert
-scale#:#Skala
-send_new#:#Speichern
-anonymous_access_failed#:#Kein Zugriff. Bitte loggen sie sich ein.
-back_to_blocks#:#Zurück zu den Frageblöcken
-is_inverse#:#Skala umkehren
-update_question#:#Frage bearbeiten
-resume_button#:#Antworten bearbeiten
-data_saved#:#Daten wurden gespeichert.
-send_update#:#Änderungen speichern
-not_active#:#Die Selbstevaluation kann nicht gestartet werden, da sie noch keine Fragen oder Skala enthält, das Feedback unvollständig oder die Selbstevaluation offline ist.
-count_questions#:#Anzahl Fragen
-is_inverted#:#Umgekehrte Skala
-outro_header#:#Selbstevaluation beendet
-save_sorting#:#Sortierung speichern
+create_question#:#Add question
+create_question_button#:#Add question
+question_body#:#Question
+question_title_info#:#The short title is used for labeling the feedback graphics and the CSV export (max. 8 characters).
+add_new_question#:#Add question
+block_table_title#:#Question blocks
+add_new_question_block#:#Add question block
+block_abbreviation_info#:#The short title is used for labeling the feedback graphics (max. 8 characters).
+overall_feedback_block#:#Overall feedback
+add_new_meta_block#:#Add reference data block
+edit_question#:#Edit question
+delete_question#:#Delete question
+sorting_saved#:#Order saved
+save_positions#:#Save order
+cont_save_positions#:#Save order
+msg_block_updated#:#Changes saved
+msg_question_updated#:#Changes saved
+question_table_title#:#Edit question
+feedback_table_title#:#Edit feedback
+update_question_button#:#Save
+qst_delete_question#:#Are you sure that you want to delete the following question from the self-evaluation?
+msg_question_deleted#:#Question has been deleted
+msg_obj_modified#:#Changes saved
+scale#:#Scale
+send_new#:#Save
+anonymous_access_failed#:#Access denied. Please log in.
+back_to_blocks#:#Back to question blocks
+is_inverse#:#Invert scale
+update_question#:#Edit question
+resume_button#:#Edit responses
+data_saved#:#Data has been saved.
+send_update#:#Save changes
+not_active#:#The self-evaluation cannot be started because it does not yet contain any questions or a scale, the feedback is incomplete or the self-evaluation is offline..
+count_questions#:#Number of questions
+is_inverted#:#Inverted scale
+outro_header#:#Self-evaluation completed
+save_sorting#:#Save order
 
-scale_cannot_be_edited#:#Diese Selbstevaluation enthält bereits Datensätze von Nutzern, daher kann die Skalierung nicht mehr verändert werden. Änderungen an der Selbstevaluation können unerwartete Auswirkungen auf vorhandene Resultate haben.
-msg_has_datasets#:#Diese Selbstevaluation enthält bereits Datensätze von Nutzern. Fragen sollten daher nicht mehr verändert werden.
+scale_cannot_be_edited#:#The scale cannot be changed because this self-evaluation already contains data sets from users. Changes to the self-evaluation can have unexpected effects on existing results.
+msg_has_datasets#:#This self-evaluation already contains data sets from users. Questions should therefore no longer be changed.
 
-create_feedback_form#:#Neues Feedback erfassen
-create_feedback_button#:#Erstellen
-start_value#:#Startwert
-end_value#:#Endwert
-feedback_text#:#Feedbacktext
-msg_feedback_created#:#Feedback angelegt
-edit_feedbacks#:#Feedbacks bearbeiten
-delete_feedback#:#Feedback löschen
-qst_delete_feedback#:#Sind Sie sicher, dass folgendes Feedback aus der Selbstevaluation entfernt werden soll?
-add_new_feedback#:#Feedback hinzufügen
-edit_overal_feedback#:#Gesamtfeedback bearbeiten
-update_feedback_form#:#Feedback bearbeiten
-update_feedback_button#:#Speichern
-count_feedbacks#:#Anzahl Feedbacks
-option_auto#:#Lineare Bereichzuordnung
-option_auto_info#:#Der Prozentbereich wird linear auf die vorhandenen Feedbacks aufgeteilt. Achtung: Bereits vorhandene Bereiche werden dadurch angepasst!
-option_slider#:#Manuelle Zuordnung
-feedback_range_type#:#Prozentbereich
+create_feedback_form#:#Create new feedback
+create_feedback_button#:#Create
+start_value#:#Lower limit
+end_value#:#Upper limit
+feedback_text#:#Feedback text
+msg_feedback_created#:#Create feedback
+edit_feedbacks#:#Edit feedback
+delete_feedback#:#Delete feedback
+qst_delete_feedback#:#Are you sure that you want to delete the following feedback from the self-evaluation?
+add_new_feedback#:#Add feedback
+edit_overal_feedback#:#Edit overall feedback
+update_feedback_form#:#Edit feedback
+update_feedback_button#:#Save
+count_feedbacks#:#Number of feedbacks
+option_auto#:#Linear range allocation
+option_auto_info#:#All existing feedbacks are distributed linearly over the percentage range. Please note: Existing ranges are automatically adjusted!
+option_slider#:#Manual allocation
+feedback_range_type#:#Percentage range
 
-block_overview_title#:#Übersicht
-overview_statistics_median#:#Arithmetisches Mittel über alle Fragenblöcke hinweg:
-overview_statistics_max#:#Höchste Einschätzung Frageblock
-overview_statistics_min#:#Tiefste Einschätzung Frageblock
-overview_statistics_varianz#:#Varianz (n) der Werte in %
-overview_statistics_standardabweichung_per_plock#:#Standardabweichung (n) pro Block der Werte in % (siehe Säulendiagramm)
-overview_statistics_standardabweichung#:#Standardabweichung (n) pro Block der Werte in %
-fb_title#:#Titel
+block_overview_title#:#Overview
+overview_statistics_median#:#Arithmetic mean across all question blocks:
+overview_statistics_max#:#Highest score in question block
+overview_statistics_min#:#Lowest score in question block
+overview_statistics_varianz#:#Variance (n) of the values in %
+overview_statistics_standardabweichung_per_plock#:#Standard deviation (n) per block of values in % (see bar chart)
+overview_statistics_standardabweichung#:#Standard deviation (n) per block of values in %
+fb_title#:#Title
 fb_body#:#Feedback
-fb_start#:#Ab
-fb_end#:#Bis
-warning_overlap#:#Die eingegeben Werte überschneiden sich mit einem anderen Feedback.<br>Die nächst möglichen Werte werden gewählt.
-feedback_complete#:#Dieser Feedback-Block ist bereits komplett (100%). Es können keine weiteren Feedbacks hinzugefügt werden.
-qst_delete_feedback#:#Möchten Sie das folgende Feedback wirklich löschen?
-msg_feedback_deleted#:#Das Feedback wurde gelöscht
-msg_no_feedback_selected#:#Es wurde kein Feedback ausgewählt.
-delete_feedback#:#Feedback löschen
-slider#:#Prozentbereich
-start_new_button#:#Neuen Durchgang starten
+fb_start#:#From
+fb_end#:#To
+warning_overlap#:#The values overlap with existing feedback.<br>The values have been set to the nearest possible values.
+feedback_complete#:#This feedback block is already complete (100%). No further feedback can be added.
+qst_delete_feedback#:#Are you sure you want to delete the following feedback?
+msg_feedback_deleted#:#The feedback has been deleted
+msg_no_feedback_selected#:#No feedback has been selected.
+delete_feedback#:#Delete feedback
+slider#:#Percentage range
+start_new_button#:#Start a new round
 
-show_spider_chart#:#Spinnengrafik anzeigen
-show_bar_chart#:#Balkendiagramm anzeigen
-show_left_right_chart#:#Links-Rechts-Profil anzeigen
-show_fbs_overview_text#:#Gesamtfeedback anzeigen
-show_fbs_overview_text_info#:#Gesamtfeedback über den Mittelwert aller Fragenblöcke anzeigen. Dieses kann unter 'Fragen und Feedback bearbeiten' erstellt werden.
-show_fbs_overview_statistics#:#Statistik anzeigen
-show_fbs_overview_statistics_info#:#Für die Gesamtübersicht, werden Mittelwert in %, Standardabweichung, Varianz sowie höchster und tiefster Wert angezeigt.
+show_spider_chart#:#Show spider chart
+show_bar_chart#:#Show bar chart
+show_left_right_chart#:#Show left-right profile
+show_fbs_overview_text#:#Show overall feedback
+show_fbs_overview_text_info#:#Display overall feedback across the mean value of all question blocks. The overall feedback can be added under 'Questions and Feedback'.
+show_fbs_overview_statistics#:#Show statistics
+show_fbs_overview_statistics_info#:#For the overview, the mean value in %, standard deviation, variance and the highest and lowest value are displayed.
 
-msg_already_filled#:#Sie haben diese Selbstevaluation bereits ausgefüllt. Es kann kein weiterer Durchgang gestartet werden.
-msg_not_allowd_view_results#:#Sie sind nicht berechtigt, diese Seite zu sehen.
-show_results#:#Resultate
-select_result_button#:#Datensatz auswählen
-no_dataset_selected#:#Es wurde kein Datensatz ausgewählt.
-dataset_from#:#Datensatz vom
+msg_already_filled#:#You have already completed this self-evaluation. You cannot complete the self-evaluation again.
+msg_not_allowd_view_results#:#You do not have permission to view this page.
+show_results#:#Results
+select_result_button#:#Select data set
+no_dataset_selected#:#No data set has been selected.
+dataset_from#:#Data set from
 
 block#:#Block
-mixed_block_title#:#Gemischter Block
+mixed_block_title#:#Mixed block
 
-insert_feedback#:#Neu
-start_with_new_identity#:#Mit neuer Identifikation starten
-start_with_existing_identity#:#Mit bestehender Identifikation starten
-uid#:#Identifikation
-start#:#Starten
-new_uid#:#Neue Identifikation generieren
-uid_not_exists#:#Die eingegebene Identifikation existiert nicht
-question#:#Frage
-your_uid#:#Ihre Identifikation:
+insert_feedback#:#New
+start_with_new_identity#:#Start with new coded identity
+start_with_existing_identity#:#Start with existing coded identity
+uid#:#Identity code
+start#:#Start
+new_uid#:#Generate new identity code
+uid_not_exists#:#This identity does not exist
+question#:#Question
+your_uid#:#Your identity code
 
 
 
-async#:#Asynchrone Darstellung der Input-Masken
-configuration#:#Konfiguration
+async#:#Non-synchronous display of the input masks
+configuration#:#Configuration
 
-identity_type_1#:#ILIAS-Benutzer
-identity_type_2#:#Anonym
-identity_type#:#Typ
-type#:#Typ
-dataset_table_title#:#Datensätze
-identity#:#Benutzer-Kennung
+identity_type_1#:#ILIAS user
+identity_type_2#:#Anonymous
+identity_type#:#Type
+type#:#Type
+dataset_table_title#:#Data sets
+identity#:#User ID
 
-show_my_results#:#Meine Resultate
-show_all_results#:#Alle Resultate
-show_results#:#Resultate
-percentage#:#Prozent
-average_all#:#Arithmetisches Mittel in %
-date#:#Datum
-delete_dataset#:#Datensatz löschen
-show_feedback#:#Feedback anzeigen
-qst_delete_dataset#:#Möchten Sie den Datensatz wirklich löschen?
-qst_delete_dataset#:#Sind Sie sicher, dass folgender Datensatz entfernt werden soll?
-msg_dataset_deleted#:#Datensatz gelöscht
-show_questions#:#Grafiken für einzelne Fragen anzeigen
+show_my_results#:#My results
+show_all_results#:#Al results
+show_results#:#Results
+percentage#:#Percent
+average_all#:#Arithmetic mean in %
+date#:#Date
+delete_dataset#:#Delete data set
+show_feedback#:#Show feedback
+qst_delete_dataset#:#Are you sure that you want to delete the data set?
+qst_delete_dataset#:#Are you sure that you want to delete the following data set?
+msg_dataset_deleted#:#Data set has been deleted
+show_questions#:#Show graphics for individual questions
 
-delete_all_datasets#:#Alle Datensätze löschen
-confirm_delete_all_datasets#:#Möchten Sie alle Datensätze löschen?
-all_datasets_deleted#:#Alle Datensätze wurden gelöscht
+delete_all_datasets#:#Delete all data sets
+confirm_delete_all_datasets#:#Are you sure that you want to delete the data sets?
+all_datasets_deleted#:#Data sets have been deleted
 
-export_csv#:#Als csv exportieren
-export_csv#:#Als csv exportieren
-starting_date#:#Startdatum
-ending_date#:#Enddatum
-duration#:#Bearbeitungsdauer (s)
-print_pdf#:#Drucken (PDF)
+export_csv#:#Export as csv
+export_csv#:#Export as csv
+starting_date#:#Started
+ending_date#:#Finished
+duration#:#Time spent (s)
+print_pdf#:#Print (PDF)
 
-MetaTypeSelect#:#Auswahlliste (feste Werte)
-MetaTypeText#:#Textfeld (beliebige Werte)
-MetaTypeSingleChoice#:#Single Choice Frage
-MatrixQuestion#:#Matrixfrage
+MetaTypeSelect#:#Selection list (fixed values)
+MetaTypeText#:#Text box (any values)
+MetaTypeSingleChoice#:#Single choice question
+MatrixQuestion#:#Matrix question
 name#:#Name
-value#:#Wert
-matrix_question#:#Fragen
-select_one#:#Bitte treffen Sie eine Auswahl
-msg_invalid_post_input#:#Dieses Feld muss ausgefüllt werden. Bitte geben Sie etwas ein.
-msg_input_is_required#:#Dieses Feld muss ausgefüllt werden. Bitte geben Sie etwas ein.
+value#:#Value
+matrix_question#:#Question
+select_one#:#Please select your resonse
+msg_invalid_post_input#:#This question has to be answered. Please enter your response.
+msg_input_is_required#:#This question has to be answered. Please enter your response.
 
-complete#:#Abgeschlossen
+complete#:#Completed
