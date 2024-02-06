@@ -740,7 +740,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
     {
         $return = true;
         foreach (QuestionBlock::_getAllInstancesByParentId($this->db, $this->getId()) as $block) {
-            $return = Feedback::_isComplete($this->db, $this->getId()) ? $return : false;
+            $return = Feedback::_isComplete($this->db, $block->getId()) ? $return : false;
         }
         return $return;
     }
