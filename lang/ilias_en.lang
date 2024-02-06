@@ -44,7 +44,7 @@ msg_block_deleted#:#Block has been deleted
 create_block#:#Create block
 create_block_button#:#Create block
 msg_block_created#:#The block has been created.
-msg_block_duplicated#:#The block has been duplicated. The new block has been added to the bottom of the question block list. The name of the new question block is identical to the name of the original question block.
+msg_block_duplicated#:#The block has been duplicated. The new block has been added to the bottom of the question block list. The name of the new block is identical to the name of the original block.
 edit_questions#:#Edit questions
 edit_feedback#:#Edit feedback
 

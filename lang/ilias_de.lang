@@ -44,7 +44,7 @@ msg_block_deleted#:#Block wurde gelöscht
 create_block#:#Block erstellen
 create_block_button#:#Block erstellen
 msg_block_created#:#Der Block wurde erstellt.
-msg_block_duplicated#:#Der Block wurde dupliziert. Der neue Block wurde zuunterst in der Frageblock-Liste hinzugefügt. Der Name des neuen Frageblocks ist mit dem Namen des Original-Frageblocks identisch.
+msg_block_duplicated#:#Der Block wurde dupliziert. Der neue Block wurde zuunterst in der Frageblock-Liste hinzugefügt. Der Name des neuen Blocks ist mit dem Namen des Original-Blocks identisch.
 edit_questions#:#Fragen bearbeiten
 edit_feedback#:#Feedback bearbeiten
 
