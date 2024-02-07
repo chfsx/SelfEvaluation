@@ -139,6 +139,7 @@ send_new#:#Save
 anonymous_access_failed#:#Access denied. Please log in.
 back_to_blocks#:#Back to question blocks
 is_inverse#:#Invert scale
+is_inverse_info#:#For negatively worded questions (e.g. "The task was NOT difficult")
 update_question#:#Edit question
 resume_button#:#Edit responses
 data_saved#:#Data has been saved.

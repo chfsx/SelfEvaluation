@@ -40,6 +40,7 @@ class QuestionGUI extends BaseQuestionGUI
         $te->setRequired(false);
         $this->form->addItem($te);
         $cb = new ilCheckboxInputGUI($this->plugin->txt('is_inverse'), 'is_inverse');
+        $cb->setInfo($this->plugin->txt('is_inverse_info'));
         $cb->setValue('1');
         $this->form->addItem($cb);
     }

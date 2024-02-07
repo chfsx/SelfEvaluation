@@ -139,6 +139,7 @@ send_new#:#Speichern
 anonymous_access_failed#:#Kein Zugriff. Bitte loggen sie sich ein.
 back_to_blocks#:#Zurück zu den Frageblöcken
 is_inverse#:#Skala umkehren
+is_inverse_info#:#Bei negativ formulierten Fragen (z.B. "Die Aufgabe war NICHT schwierig")
 update_question#:#Frage bearbeiten
 resume_button#:#Antworten bearbeiten
 data_saved#:#Daten wurden gespeichert.
