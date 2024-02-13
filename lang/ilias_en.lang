@@ -23,7 +23,7 @@ edit_properties#:#Edit settings
 title#:#Title
 short_title#:#Short title
 description#:#Description
-abbreviation#:#Abbreviation
+abbreviation#:#Short title
 save#:#Save
 cancel#:#Cancel
 edit#:#Edit
@@ -44,7 +44,7 @@ msg_block_deleted#:#Block has been deleted
 create_block#:#Create block
 create_block_button#:#Create block
 msg_block_created#:#The block has been created.
-msg_block_duplicated#:#The block has been duplicated. The new block has been added to the bottom of the question block list. The name of the new block is identical to the name of the original block.
+msg_block_duplicated#:#The block has been duplicated. The new block has been added to the bottom of the question block list. The name of the new question block is identical to the name of the original question block.
 edit_questions#:#Edit questions
 edit_feedback#:#Edit feedback
 
@@ -139,7 +139,6 @@ send_new#:#Save
 anonymous_access_failed#:#Access denied. Please log in.
 back_to_blocks#:#Back to question blocks
 is_inverse#:#Invert scale
-is_inverse_info#:#For negatively worded questions (e.g. "The task was NOT difficult")
 update_question#:#Edit question
 resume_button#:#Edit responses
 data_saved#:#Data has been saved.
@@ -210,7 +209,7 @@ dataset_from#:#Data set from
 block#:#Block
 mixed_block_title#:#Mixed block
 
-insert_feedback#:#New
+insert_feedback#:#Add
 start_with_new_identity#:#Start with new coded identity
 start_with_existing_identity#:#Start with existing coded identity
 uid#:#Identity code
@@ -263,7 +262,7 @@ MatrixQuestion#:#Matrix question
 name#:#Name
 value#:#Value
 matrix_question#:#Question
-select_one#:#Please select your resonse
+select_one#:#Please select your response
 msg_invalid_post_input#:#This question has to be answered. Please enter your response.
 msg_input_is_required#:#This question has to be answered. Please enter your response.
 
