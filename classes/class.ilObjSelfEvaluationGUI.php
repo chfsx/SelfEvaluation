@@ -104,6 +104,30 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
             $this->ctrl->saveParameterByClass('DatasetGUI', 'uid');
             $this->ctrl->saveParameterByClass('FeedbackGUI', 'uid');
 
+            // Try to determine the block_id and request_id from POST or GET
+            $block_id = $this->http->query()->has('block_id')
+                ? $this->http->query()->retrieve('block_id', $this->refinery->kindlyTo()->int())
+                : null;
+
+            if ($block_id === null) {
+                $block_id = $this->http->post()->has('block_id')
+                    ? $this->http->post()->retrieve('block_id', $this->refinery->kindlyTo()->int())
+                    : null;
+            }
+
+            $block_id = $block_id ?? 0;
+
+            $request_id = $this->http->query()->has('request_id')
+                ? $this->http->query()->retrieve('request_id', $this->refinery->kindlyTo()->int())
+                : null;
+
+            if ($request_id === null) {
+                $request_id = $this->http->post()->has('request_id')
+                    ? $this->http->post()->retrieve('request_id', $this->refinery->kindlyTo()->int())
+                    : null;
+            }
+
+            $request_id = $request_id ?? 0;
 
             switch ($next_class) {
                 case 'ilcommonactiondispatchergui':
@@ -159,8 +183,8 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                 case 'questiongui':
                     $this->initHeader();
                     $this->tabs->activateTab('administration');
-                    $block = new QuestionBlock($this->db, (int) $_REQUEST['block_id']);
-                    $question = new Question($this->db, (int) $_REQUEST['question_id']);
+                    $block = new QuestionBlock($this->db, $block_id);
+                    $question = new Question($this->db, $request_id);
                     $container_gui = new QuestionGUI(
                         $this->db,
                         $this,
@@ -179,8 +203,8 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                     $this->initHeader();
                     $this->tabs->activateTab('administration');
 
-                    $block = new MetaBlock($this->db, (int) $_REQUEST['block_id']);
-                    $question = new MetaQuestion($this->db, (int) $_REQUEST['question_id']);
+                    $block = new MetaBlock($this->db, $block_id);
+                    $question = new MetaQuestion($this->db, $request_id);
                     $container_gui = new MetaQuestionGUI(
                         $this->db,
                         $this,
