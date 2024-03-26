@@ -30,7 +30,8 @@ class ilSelfEvaluationExporter extends ilXmlExporter
             "5.3.0" => [
                 "uses_dataset" => false,
                 "min" => "5.3.0",
-                "max" => ""
+                "max" => "",
+                "namespace" => ""
             ]
         ];
     }
