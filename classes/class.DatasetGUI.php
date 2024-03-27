@@ -148,7 +148,7 @@ class DatasetGUI
             if ($identifier->getType() == $identifier::TYPE_LOGIN) {
                 $user = (new ilObjUser($identifier->getIdentifier()))->getPublicName();
             }
-            $conf->addItem('dataset_ids[]', (int) $id, $user . " " . date('d.m.Y - H:i:s', $dataset->getCreationDate()));
+            $conf->addItem('dataset_ids[]', (string) $id, $user . " " . date('d.m.Y - H:i:s', $dataset->getCreationDate()));
         }
         $this->tpl->setContent($conf->getHTML());
     }
