@@ -99,7 +99,7 @@ class IdentityGUI
                 $id = Identity::_getInstanceForObjIdAndIdentifier(
                     $this->db,
                     $this->parent->object->getId(),
-                    $identifier
+                    (int) $identifier
                 );
                 $this->ctrl->setParameterByClass('PlayerGUI', 'uid', $id->getId());
                 $this->ctrl->redirectByClass('PlayerGUI', 'startScreen');
