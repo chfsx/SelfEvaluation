@@ -107,6 +107,9 @@ trait ArrayForDB
                     case 'bool':
                         $this->{$k} = (bool) $rec->{$k};
                         break;
+                    case 'boolean':
+                        $this->{$k} = (bool) $rec->{$k};
+                        break;
                     case 'integer':
                         $this->{$k} = (int) $rec->{$k};
                         break;
