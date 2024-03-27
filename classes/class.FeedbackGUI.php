@@ -54,7 +54,7 @@ class FeedbackGUI
         if ($parent_overall) {
             $this->block = new VirtualOverallBlock($this->parent->object->getId(), $this->plugin);
         } else {
-            $this->block = new QuestionBlock($this->db, $this->http->query()->retrieve('parent_overall', $this->refinery->kindlyTo()->int()));
+            $this->block = new QuestionBlock($this->db, $this->http->query()->retrieve('block_id', $this->refinery->kindlyTo()->int()));
         }
         $feedback_id = $this->http->query()->has('feedback_id') ? $this->http->query()->retrieve('feedback_id', $this->refinery->kindlyTo()->int()) : null;
         if ($feedback_id) {
