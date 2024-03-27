@@ -123,7 +123,7 @@ class DatasetGUI
 
     public function deleteDatasets()
     {
-        if($this->http->post()->has('id')) {
+        if(!$this->http->post()->has('id')) {
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('no_dataset_selected'));
             $this->index();
             return;
