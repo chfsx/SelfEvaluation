@@ -447,9 +447,13 @@ class DatasetCsvExport extends csvExport
 
     public function getMetaQuestion(int $id): ?MetaQuestion
     {
-        return $this->meta_questions[$id];
+        if (array_key_exists($id, $this->meta_questions)) {
+            return $this->meta_questions[$id];
+        }
+        else{
+            return null;
+        }
     }
-
     /**
      * @param Question[] $questions
      */

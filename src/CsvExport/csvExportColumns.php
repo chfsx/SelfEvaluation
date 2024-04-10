@@ -126,7 +126,7 @@ class csvExportColumns
             if ($column_a->getPosition() == $column_b->getPosition()) {
                 return strcmp($column_a->getColumnId(), $column_b->getColumnId());
             }
-            return $column_a->getPosition() > $column_b->getPosition();
+            return $column_a->getPosition() > $column_b->getPosition()? 1:-1;
         });
     }
 

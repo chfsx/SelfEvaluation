@@ -190,7 +190,7 @@ class csvExportTable
                 if (is_string($row_a->getValue($sort_column))) {
                     return strcmp($row_a->getValue($sort_column)->getValue(), $row_b->getValue($sort_column)->getValue());
                 } else {
-                    return $row_a->getValue($sort_column) > $row_b->getValue($sort_column);
+                    return $row_a->getValue($sort_column)->getValue() > $row_b->getValue($sort_column)->getValue()? 1:-1;
                 }
             });
         }
