@@ -318,7 +318,7 @@ class PlayerGUI
 
     protected function displaySingleBlock($blocks, $mode = 'new')
     {
-        $page = $this->http->query()->has('page') ? $this->http->query()->retrieve('page', $this->refinery->kindlyTo()->int()) + 1 : 1;
+        $page = $this->http->query()->has('page') ? $this->http->query()->retrieve('page', $this->refinery->kindlyTo()->int())  : 1;
         $last_page = count($blocks);
 
         if ($last_page > 1) {
