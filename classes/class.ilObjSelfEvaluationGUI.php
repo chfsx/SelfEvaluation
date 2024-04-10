@@ -117,13 +117,13 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
 
             $block_id = $block_id ?? 0;
 
-            $request_id = $this->http->query()->has('request_id')
-                ? $this->http->query()->retrieve('request_id', $this->refinery->kindlyTo()->int())
+            $request_id = $this->http->query()->has('question_id')
+                ? $this->http->query()->retrieve('question_id', $this->refinery->kindlyTo()->int())
                 : null;
 
             if ($request_id === null) {
-                $request_id = $this->http->post()->has('request_id')
-                    ? $this->http->post()->retrieve('request_id', $this->refinery->kindlyTo()->int())
+                $request_id = $this->http->post()->has('question_id')
+                    ? $this->http->post()->retrieve('question_id', $this->refinery->kindlyTo()->int())
                     : null;
             }
 
