@@ -127,12 +127,12 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
 
             $pass = true;
             foreach ($post_var_parts as $part) {
-                if (!is_array($value) || !array_key_exists($part, $value)) {
+                if (!$this->http->wrapper()->post()->has($part)) {
                     $pass = false;
                     $this->setAlert($this->plugin->txt('msg_input_is_required'));
 
                 } else {
-                    $value = $value[$part];
+                    $value = $this->http->wrapper()->post()->retrieve($part, $this->refinery->kindlyTo()->string());
                 }
             }
 
