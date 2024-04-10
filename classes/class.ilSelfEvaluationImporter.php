@@ -24,6 +24,6 @@ class ilSelfEvaluationImporter extends ilXmlImporter
 
         $obj_self_eval = new ilObjSelfEvaluation((int)$ref_id);
         $obj_self_eval->fromXML($xml);
-        //return $obj_self_eval->getId();
+        $mapping->addMapping('Plugins/xsev', 'xsev', $id, (string)$obj_self_eval->getId());
     }
 }

@@ -86,7 +86,7 @@ class MetaQuestion extends BaseQuestion
         $question->setShortTitle((string) $attributes["shortTitle"]);
         $question->setTypeId((int) $attributes["typeId"]);
         $question->setValues(unserialize((string) $attributes["values"]));
-        $question->enableRequired($attributes["enableRequired"] == "1" ? true : false);
+        $question->enableRequired($attributes["enableRequired"] == "1" ? 1 : 0);
         $question->setPosition((int) $attributes["position"]);
         $question->update();
         return $xml;
