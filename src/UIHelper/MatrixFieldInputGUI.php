@@ -7,6 +7,7 @@ namespace ilub\plugin\SelfEvaluation\UIHelper;
 use ilSubEnabledFormPropertyGUI;
 use ilRepositoryObjectPlugin;
 use ilTemplate;
+use ILIAS\Refinery\ConstraintViolationException;
 
 class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
 {
@@ -81,7 +82,7 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
 
         if(array_key_exists($matrix_key, $values)) {
             $meta_question_values = $values[$matrix_key];
-            if($meta_question_values[$question_key]) {
+            if(array_key_exists($question_key, $meta_question_values)) {
                 $this->setValue($meta_question_values[$question_key]);
             }
         }
@@ -120,28 +121,34 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
     public function checkInput(): bool
     {
         if ($this->getRequired()) {
-
             $post_var_parts = explode("[", str_replace("]", "", $this->getPostVar()));
-
-            $value = $_POST;
-
-            $pass = true;
-            foreach ($post_var_parts as $part) {
-                if (!$this->http->wrapper()->post()->has($part)) {
-                    $pass = false;
-                    $this->setAlert($this->plugin->txt('msg_input_is_required'));
-
-                } else {
-                    $value = $this->http->wrapper()->post()->retrieve($part, $this->refinery->kindlyTo()->string());
-                }
-            }
-
-            if (!$pass || trim($value) == '') {
+            if (!$this->http->wrapper()->post()->has($post_var_parts[0])) {
                 $this->setAlert($this->plugin->txt('msg_input_is_required'));
                 return false;
+            } else {
+                try {
+                    $value = $this->http->wrapper()->post()->retrieve(
+                        $post_var_parts[0],
+                        $this->refinery->kindlyTo()->string()
+                    );
+                } catch (ConstraintViolationException $e) {
+                    $value = $this->http->wrapper()->post()->retrieve(
+                        $post_var_parts[0],
+                        $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string())
+                    );
+                }
+
+                if (is_array($value)) {
+                    if (!array_key_exists($post_var_parts[1], $value)) {
+                        $this->setAlert($this->plugin->txt('msg_input_is_required'));
+                        return false;
+                    }
+                } elseif (trim($value) == '') {
+                    $this->setAlert($this->plugin->txt('msg_input_is_required'));
+                    return false;
+                }
             }
         }
-
         return true;
     }
 }
