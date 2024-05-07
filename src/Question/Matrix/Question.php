@@ -30,7 +30,7 @@ class Question extends BaseQuestion
     /**
      * @var int
      */
-    protected  $parent_id = 0;
+    protected $parent_id = 0;
 
     /**
      * @var array
@@ -91,25 +91,23 @@ class Question extends BaseQuestion
      */
     public static function _getAllInstancesForParentId(ilDBInterface $db, int $parent_id): array
     {
-        if (!array_key_exists($parent_id, self::$instances_for_parent_id )) {
+        if (!array_key_exists($parent_id, self::$instances_for_parent_id)) {
             self::$instances_for_parent_id[$parent_id] = [];
             $stmt = self::_getAllInstancesForParentIdQuery($db, $parent_id);
 
-
             while ($rec = $db->fetchObject($stmt)) {
                 $question = new self($db);
-                $question->setId((int)$rec->id);
-                $question->setParentId((int)$parent_id);
-                $question->setTitle((string)$rec->title);
-                $question->setQuestionBody((string)$rec->question_body);
-                $question->setIsInverse((bool)$rec->is_inverse);
-                $question->setPosition((int)$rec->position);
+                $question->setId((int) $rec->id);
+                $question->setParentId((int) $parent_id);
+                $question->setTitle((string) $rec->title);
+                $question->setQuestionBody((string) $rec->question_body);
+                $question->setIsInverse((bool) $rec->is_inverse);
+                $question->setPosition((int) $rec->position);
                 self::$instances_for_parent_id[$parent_id][$rec->id] = $question;
             }
-            return self::$instances_for_parent_id[$parent_id];
         }
+        return self::$instances_for_parent_id[$parent_id];
 
-        return [];
     }
 
     public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id): array

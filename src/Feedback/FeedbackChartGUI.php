@@ -273,7 +273,7 @@ class FeedbackChartGUI
         foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
             $value = Data::_getInstanceForQuestionId($this->db, $dataset->getId(), $qst->getId())->getValue();
             $data = $chart->getDataInstance();
-            $data->addPoint($x, $value);
+            $data->addPoint($x, (float)$value);
             $ticks[$x] = $qst->getTitle() ? $qst->getTitle() : $this->plugin->txt('question') . ' ' . $x;
             $x++;
             $chart->addData($data);
@@ -297,7 +297,7 @@ class FeedbackChartGUI
         $x = 1;
         foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
             $value = Data::_getInstanceForQuestionId($this->db, $dataset->getId(), $qst->getId())->getValue();
-            $data->addPoint($value, $x);
+            $data->addPoint((float)$value, $x);
             $ticks[$x] = $qst->getTitle() ? $qst->getTitle() : $this->plugin->txt('question') . ' ' . $x;
             $x++;
 
@@ -321,7 +321,7 @@ class FeedbackChartGUI
         $cnt = 0;
         foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
             $value = Data::_getInstanceForQuestionId($this->db, $dataset->getId(), $qst->getId())->getValue();
-            $data->addPoint($cnt, $value);
+            $data->addPoint($cnt, (float)$value);
             $leg_labels[] = $qst->getTitle() ? $qst->getTitle() : $this->plugin->txt('question') . ' ' . ($cnt + 1);
             $cnt++;
         }
