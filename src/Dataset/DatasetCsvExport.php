@@ -233,7 +233,7 @@ class DatasetCsvExport extends csvExport
             $id = $username['login'];
         }
 
-        return new csvExportValue("identity", $id);
+        return new csvExportValue("identity", (string)$id);
     }
 
     protected function getDateValues(Dataset $dataset): array
