@@ -666,7 +666,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $this->setTitle($xml_attributes["title"]->__toString());
         $this->setDescription($xml_attributes["description"]->__toString());
         $this->setOnline(false);
-        $this->setIdentitySelection($xml_attributes["identitySelection"]->__toString() == "1");
+        $this->setIdentitySelection($xml_attributes["identitySelection"]->__toString() == true);
         $this->setEvaluationType((int) $xml_attributes["evaluationType"]);
         $this->setSortType((int) $xml_attributes["sortType"]);
         $this->setDisplayType((int) $xml_attributes["displayType"]);
