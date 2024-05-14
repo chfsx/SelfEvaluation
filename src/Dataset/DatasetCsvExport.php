@@ -480,7 +480,11 @@ class DatasetCsvExport extends csvExport
 
     public function getQuestion(int $id): ?Question
     {
-        return $this->questions[$id];
+        if (array_key_exists($id, $this->questions)) {
+            return $this->questions[$id];
+        } else {
+            return null;
+        }
     }
 
     /**
