@@ -18,7 +18,7 @@ class Identity implements hasDBFields
     public const TYPE_EXTERNAL = 2;
 
     protected int $id = 0;
-    protected int $identifier = 0;
+    protected string $identifier = '';
     protected int $obj_id = 0;
     protected int $type = self::TYPE_LOGIN;
     protected ilDBInterface $db;
@@ -119,7 +119,7 @@ class Identity implements hasDBFields
         return $return;
     }
 
-    public static function _getInstanceForObjIdAndIdentifier(ilDBInterface $db, int $obj_id, int $identifier): Identity
+    public static function _getInstanceForObjIdAndIdentifier(ilDBInterface $db, int $obj_id, string $identifier): Identity
     {
         $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
             . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text'));
@@ -149,14 +149,14 @@ class Identity implements hasDBFields
 
         $obj = new self($db);
         $obj->setObjId($obj_id);
-        $obj->setIdentifier((int) $identifier);
+        $obj->setIdentifier((string) $identifier);
         $obj->setType(self::TYPE_EXTERNAL);
         $obj->create();
 
         return $obj;
     }
 
-    public static function _getNewInstanceForObjIdAndUserId(ilDBInterface $db, int $obj_id, int $user_id): Identity
+    public static function _getNewInstanceForObjIdAndUserId(ilDBInterface $db, int $obj_id, string $user_id): Identity
     {
         $obj = new self($db);
         $obj->setObjId($obj_id);
@@ -227,12 +227,12 @@ class Identity implements hasDBFields
         return $this->obj_id;
     }
 
-    public function setIdentifier(int $identifier)
+    public function setIdentifier(string $identifier)
     {
         $this->identifier = $identifier;
     }
 
-    public function getIdentifier(): int
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }

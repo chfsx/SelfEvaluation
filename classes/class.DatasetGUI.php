@@ -91,9 +91,9 @@ class DatasetGUI
             );
             $table = new DatasetTableGUI($this->db, $this->ctrl, $this, 'index', $this->plugin, $this->parent->object->getId());
         } else {
-            $id = Identity::_getInstanceForObjIdAndIdentifier($this->db, (int)$this->plugin->getId(), $DIC->user()->getId());
+            $id = Identity::_getInstanceForObjIdAndIdentifier($this->db, (int)$this->plugin->getId(), (string)$DIC->user()->getId());
             if (!$id) {
-                $id = Identity::_getNewInstanceForObjIdAndUserId($this->db, (int)$this->plugin->getId(), $DIC->user()->getId());
+                $id = Identity::_getNewInstanceForObjIdAndUserId($this->db, (int)$this->plugin->getId(), (string)$DIC->user()->getId());
             }
             $table = new DatasetTableGUI($this->db, $this->ctrl, $this, 'index', $this->plugin, $this->parent->object->getId(), (string) $id->getIdentifier());
         }
@@ -112,6 +112,7 @@ class DatasetGUI
             $charts = new FeedbackChartGUI($this->db, $this->tpl, $this->plugin, $this->toolbar, $this->parent->object);
             $feedback = $charts->getPresentationOfFeedback($this->dataset);
         }
+
 
         $this->tpl->setContent($content->get() . $feedback);
     }

@@ -735,13 +735,13 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
             $id = Identity::_getInstanceForObjIdAndIdentifier(
                 $this->db,
                 $this->object->getId(),
-                $DIC->user()->getId()
+                (string)$DIC->user()->getId()
             );
             if (!$id) {
                 $id = Identity::_getNewInstanceForObjIdAndUserId(
                     $this->db,
                     $this->object->getId(),
-                    $DIC->user()->getId()
+                    (string)$DIC->user()->getId()
                 );
             }
             $this->ctrl->setParameterByClass('PlayerGUI', 'uid', $id->getId());
