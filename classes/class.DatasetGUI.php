@@ -147,7 +147,7 @@ class DatasetGUI
             $identifier = new Identity($this->db, $dataset->getIdentifierId());
             $user = $identifier->getIdentifier();
             if ($identifier->getType() == $identifier::TYPE_LOGIN) {
-                $user = (new ilObjUser($identifier->getIdentifier()))->getPublicName();
+                $user = (new ilObjUser((int)$identifier->getIdentifier()))->getPublicName();
             }
             $conf->addItem('dataset_ids[]', (string) $id, $user . " " . date('d.m.Y - H:i:s', $dataset->getCreationDate()));
         }

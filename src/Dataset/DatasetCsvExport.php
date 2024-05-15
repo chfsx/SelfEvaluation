@@ -229,7 +229,7 @@ class DatasetCsvExport extends csvExport
         $identifier = new Identity($this->db, $dataset->getIdentifierId());
         $id = $identifier->getIdentifier();
         if ($identifier->getType() == Identity::TYPE_LOGIN) {
-            $username = ilObjUser::_lookupName($identifier->getIdentifier());
+            $username = ilObjUser::_lookupName((int)$identifier->getIdentifier());
             $id = $username['login'];
         }
 

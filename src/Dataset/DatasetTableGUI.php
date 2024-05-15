@@ -78,7 +78,7 @@ class DatasetTableGUI extends ilTable2GUI
             case Identity::TYPE_LOGIN:
                 $this->tpl->setVariable('TYPE', $this->plugin->txt('identity_type_'
                     . Identity::TYPE_LOGIN));
-                $username = ilObjUser::_lookupName($identifier->getIdentifier());
+                $username = ilObjUser::_lookupName((int)$identifier->getIdentifier());
                 $this->tpl->setVariable('IDENTITY', $username['login']);
                 break;
         }
