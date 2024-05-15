@@ -145,7 +145,7 @@ class FeedbackChartGUI
 
             if ($this->evaluation->isShowFbsOverviewText()) {
                 $feedback = Feedback::_getFeedbackForPercentage($this->db, $this->evaluation->getId(), $mean);
-                ;
+
                 if ($feedback) {
                     $tpl->setVariable('FEEDBACK_OVERVIEW_TITLE', $feedback->getTitle());
                     $tpl->setVariable('FEEDBACK_OVERVIEW_BODY', $feedback->getFeedbackText());
@@ -168,7 +168,7 @@ class FeedbackChartGUI
     {
         $any_overview_active = $this->evaluation->isShowFbsOverviewBar() || $this->evaluation->isShowFbsOverviewSpider() ||
             $this->evaluation->isShowFbsOverviewLeftRight() || $this->evaluation->isShowFbsOverviewStatistics();
-        return $this->evaluation->isShowFeedbacksOverview() && $any_overview_active;
+        return $this->evaluation->isShowFeedbacksOverview() || $any_overview_active;
     }
 
     protected function showAnyFeedback()
