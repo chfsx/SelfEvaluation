@@ -77,7 +77,7 @@ class Question extends BaseQuestion
         $question->setParentId($parent_id);
         $question->setTitle((string) $attributes["title"]);
         $question->setQuestionBody((string) $attributes["questionBody"]);
-        $question->setIsInverse((bool)$attributes["inverse"]);
+        $question->setIsInverse($attributes["inverse"] == '1' || $attributes["inverse"] == 'true');
         $question->create();
         $question->setPosition((int)$attributes["position"]);
         $question->update();
