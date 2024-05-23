@@ -56,9 +56,9 @@ class QuestionTableGUI extends ilTable2GUI
         }
 
         $this->addColumn($this->plugin->txt('question_body'), $this->sortable ? 'question_body' : false, 'auto');
-        $this->addColumn($this->plugin->txt('short_title'), $this->sortable ? 'short_title' : false, 'auto');
-        $this->addColumn($this->plugin->txt('is_inverted'), $this->sortable ? 'is_inverted' : false, 'auto');
-        $this->addColumn($this->plugin->txt('actions'), $this->sortable ? 'actions' : false, 'auto');
+        $this->addColumn($this->plugin->txt('short_title'), $this->sortable ? 'title' : false, 'auto');
+        $this->addColumn($this->plugin->txt('is_inverted'), $this->sortable ? 'is_inverse' : false, 'auto');
+        $this->addColumn($this->plugin->txt('actions'), '', 'auto');
     }
 
     /**

@@ -192,7 +192,7 @@ class Feedback implements hasDBFields
             $feedback->setObjectValuesFromRecord($feedback, $rec);
 
             if ($as_array) {
-                $return[] = (array) $feedback;
+                $return[] =  $feedback->getArray();
             } else {
                 $return[] = $feedback;
             }

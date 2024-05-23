@@ -41,10 +41,10 @@ class FeedbackTableGUI extends ilTable2GUI
         $this->setTitle($block->getTitle() . ': ' . $this->plugin->txt('feedback_table_title'));
         $this->addColumn("", "", "1");
         $this->addColumn($this->plugin->txt('fb_title'), 'title', 'auto');
-        $this->addColumn($this->plugin->txt('fb_body'), 'body', 'auto');
-        $this->addColumn($this->plugin->txt('fb_start'), 'start', 'auto');
-        $this->addColumn($this->plugin->txt('fb_end'), 'end', 'auto');
-        $this->addColumn($this->plugin->txt('actions'), 'asction', 'auto');
+        $this->addColumn($this->plugin->txt('fb_body'), 'feedback_text', 'auto');
+        $this->addColumn($this->plugin->txt('fb_start'), 'start_value', 'auto');
+        $this->addColumn($this->plugin->txt('fb_end'), 'end_value', 'auto');
+        $this->addColumn($this->plugin->txt('actions'));
 
         $this->ctrl->setParameter($this->parent_obj, 'feedback_id', null);
         $this->setFormAction($this->ctrl->getFormAction($a_parent_obj));

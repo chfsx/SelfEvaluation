@@ -74,11 +74,11 @@ class MetaQuestionTableGUI extends ilTable2GUI
             $this->setDefaultOrderDirection('asc');
         }
 
-        $this->addColumn($this->plugin->txt('question'), $this->sortable ? 'question' : false, 'auto');
+        $this->addColumn($this->plugin->txt('question'), $this->sortable ? 'name' : false, 'auto');
         $this->addColumn($this->plugin->txt('short_title'), $this->sortable ? 'short_title' : false, 'auto');
-        $this->addColumn($this->plugin->txt('type'), $this->sortable ? 'type' : false, 'auto');
-        $this->addColumn($this->plugin->txt('required_field'), $this->sortable ? 'required_field' : false, 'auto');
-        $this->addColumn($this->plugin->txt('actions'), $this->sortable ? 'actions' : false, 'auto');
+        $this->addColumn($this->plugin->txt('type'), $this->sortable ? 'type_id' : false, 'auto');
+        $this->addColumn($this->plugin->txt('required_field'), $this->sortable ? 'required' : false, 'auto');
+        $this->addColumn($this->plugin->txt('actions'));
     }
 
     /**
