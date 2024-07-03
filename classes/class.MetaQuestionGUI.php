@@ -20,7 +20,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
     /**
      * @var MetaQuestionType[]
      */
-    protected $types;
+    protected array $types;
 
     /**
      * @var MetaQuestion
@@ -151,16 +151,18 @@ class MetaQuestionGUI extends BaseQuestionGUI
     {
         foreach (MetaQuestion::_getAllInstancesForParentId($this->db, $this->block->getId()) as $question) {
             if($this->parent->http->post()->has('required')) {
-                $required_array = $this->parent->http->post()->retrieve('required',
-                    $this->parent->refinery->kindlyTo()->dictOf($this->parent->refinery->kindlyTo()->int()));
+                $required_array = $this->parent->http->post()->retrieve(
+                    'required',
+                    $this->parent->refinery->kindlyTo()->dictOf($this->parent->refinery->kindlyTo()->int())
+                );
                 $question->enableRequired((int) isset($required_array[$question->getId()]));
-            }else{
+            } else {
                 $question->enableRequired(0);
             }
             $question->update();
         }
 
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_question_updated'), true);
+        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_question_updated'), true);
         $this->cancel();
     }
 

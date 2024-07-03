@@ -11,42 +11,13 @@ use ilDBInterface;
 class MetaQuestion extends BaseQuestion
 {
     public const TABLE_NAME = 'rep_robj_xsev_mqst';
-
     public const POSTVAR_PREFIX = 'mqst_';
-
-    /**
-     * @var string
-     */
     public const PRIMARY_KEY = 'id';
-
-    /**
-     * @var int
-     */
     protected $parent_id;
-
-    /**
-     * @var string
-     */
-    protected $name = "";
-
-    /**
-     * @var string
-     */
-    protected $short_title = "";
-
-    /**
-     * @var int
-     */
-    protected $type_id = 0;
-
-    /**
-     * @var array
-     */
-    protected $values = [];
-
-    /**
-     * @var bool
-     */
+    protected string $name = "";
+    protected string $short_title = "";
+    protected int $type_id = 0;
+    protected array $values = [];
     protected int $required = 0;
 
 
@@ -72,7 +43,7 @@ class MetaQuestion extends BaseQuestion
         $child_xml->addAttribute("shortTitle", $this->getShortTitle());
         $child_xml->addAttribute("typeId", (string)$this->getTypeId());
         $child_xml->addAttribute("values", serialize($this->getValues()));
-        $child_xml->addAttribute("enableRequired",(string) $this->isRequired());
+        $child_xml->addAttribute("enableRequired", (string) $this->isRequired());
         $child_xml->addAttribute("position", (string) $this->getPosition());
         return $xml;
     }

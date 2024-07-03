@@ -15,18 +15,9 @@ use ilub\plugin\SelfEvaluation\Block\Block;
 
 class MetaQuestionTableGUI extends ilTable2GUI
 {
-    /**
-     * @var MetaQuestionType[]
-     */
-    protected $types;
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
-    /**
-     * @var bool
-     */
-    protected $sortable;
+    protected array $types;
+    protected ilSelfEvaluationPlugin $plugin;
+    protected bool $sortable;
 
     /**
      * MetaQuestionTableGUI constructor.

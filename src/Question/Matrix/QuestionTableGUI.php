@@ -13,20 +13,9 @@ use ilGlobalTemplateInterface;
 
 class QuestionTableGUI extends ilTable2GUI
 {
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
-
-    /**
-     * @var Block
-     */
-    protected $block;
-
-    /**
-     * @var bool
-     */
-    protected $sortable;
+    protected ilSelfEvaluationPlugin $plugin;
+    protected Block $block;
+    protected bool $sortable;
 
 
 
@@ -79,7 +68,7 @@ class QuestionTableGUI extends ilTable2GUI
             'EDIT_LINK',
             $this->ctrl->getLinkTargetByClass('QuestionGUI', 'editQuestion')
         );
-        $this->tpl->setVariable('BODY', $a_set['title'] ? $a_set['title'] :
+        $this->tpl->setVariable('BODY', $a_set['title'] ?:
             $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $a_set['position']);
         $this->tpl->setVariable(
             'IS_INVERTED',
