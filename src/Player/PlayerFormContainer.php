@@ -25,11 +25,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
      * @var int
      */
     protected $question_field_size = 6;
-
-    /**
-     * @var ilGlobalTemplateInterface
-     */
-    protected $global_tpl;
+    
 
     /**
      * @var ilRepositoryObjectPlugin
