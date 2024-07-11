@@ -29,7 +29,10 @@ class PlayerGUI
     protected ilSelfEvaluationPlugin $plugin;
     protected ilDBInterface $db;
     protected Identity $identity;
-    protected Dataset|bool $dataset;
+    /**
+     * @var \ilub\plugin\SelfEvaluation\Dataset\Dataset|bool
+     */
+    protected $dataset;
     protected WrapperFactory $http;
     protected Factory $refinery;
 

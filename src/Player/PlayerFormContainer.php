@@ -29,7 +29,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
     /**
      * @var ilGlobalTemplateInterface
      */
-    protected ilGlobalTemplateInterface|null $global_tpl;
+    protected $global_tpl;
 
     /**
      * @var ilRepositoryObjectPlugin

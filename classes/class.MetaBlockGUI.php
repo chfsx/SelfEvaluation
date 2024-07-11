@@ -9,7 +9,7 @@ class MetaBlockGUI extends BlockGUI
     /**
      * @var MetaBlock
      */
-    protected \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock|MetaBlock $object;
+    protected $object;
 
     public function __construct(
         ilDBInterface $db,

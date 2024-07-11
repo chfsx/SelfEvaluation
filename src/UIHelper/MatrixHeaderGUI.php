@@ -89,7 +89,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         $this->parentform = $parentform;
     }
 
-    public function getParentform(): \ilPropertyFormGUI|null
+    public function getParentform(): ?\ilPropertyFormGUI
     {
         return $this->parentform;
     }
