@@ -156,10 +156,10 @@ class Dataset implements hasDBFields
 
     protected function determineQuestionType(string $postvar_key): string
     {
-        if (str_starts_with($postvar_key, Question::POSTVAR_PREFIX)) {
+        if (strncmp($postvar_key, Question::POSTVAR_PREFIX, strlen(Question::POSTVAR_PREFIX)) === 0) {
             return Data::QUESTION_TYPE;
         }
-        if (str_starts_with($postvar_key, MetaQuestion::POSTVAR_PREFIX)) {
+        if (strncmp($postvar_key, MetaQuestion::POSTVAR_PREFIX, strlen(MetaQuestion::POSTVAR_PREFIX)) === 0) {
             return Data::META_QUESTION_TYPE;
         }
         return "";
