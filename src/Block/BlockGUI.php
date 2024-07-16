@@ -34,7 +34,10 @@ abstract class BlockGUI
 
     protected ilSelfEvaluationPlugin $plugin;
 
-    protected QuestionBlock|Metablock $object;
+    /**
+     * @var \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock|Metablock
+     */
+    protected $object;
 
     public function __construct(
         ilDBInterface $db,
