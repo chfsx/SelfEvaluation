@@ -9,28 +9,27 @@ use ilub\plugin\SelfEvaluation\Question\Meta\Type\MetaTypeFactory;
 use ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestion;
 use ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestionTableGUI;
 use ilub\plugin\SelfEvaluation\Question\BaseQuestionGUI;
+use ilub\plugin\SelfEvaluation\Block\Block;
+use ilub\plugin\SelfEvaluation\Question\Question;
 
 class MetaQuestionGUI extends BaseQuestionGUI
 {
     /**
      * @var MetaBlock
      */
-    protected $block;
+    protected Block $block;
 
     /**
      * @var MetaQuestionType[]
      */
-    protected $types;
+    protected array $types = [];
 
     /**
      * @var MetaQuestion
      */
-    protected $question;
+    protected Question $question;
 
-    /**
-     * @var bool
-     */
-    protected $enable_sorting = true;
+    protected bool $enable_sorting = true;
 
 
     protected function createTableGUI(): ilTable2GUI
@@ -138,7 +137,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
         $values = [];
         foreach ($post_values as $key => $value) {
             $value = trim(ilUtil::stripSlashes($value));
-            if (strlen($value)) {
+            if (strlen($value) !== 0) {
                 $values[$key] = $value;
             }
         }

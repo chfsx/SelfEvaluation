@@ -12,14 +12,8 @@ use ilub\plugin\SelfEvaluation\UIHelper\MatrixFieldInputGUI;
 
 class QuestionPlayerGUI
 {
-    /**
-     * @var Question
-     */
-    protected $question;
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+    protected Question $question;
+    protected \ilSelfEvaluationPlugin $plugin;
 
     public function __construct(ilSelfEvaluationPlugin $plugin, Question $question)
     {

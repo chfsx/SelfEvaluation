@@ -123,7 +123,7 @@ class Question extends BaseQuestion
         return self::$instances_for_parent_id_array[$parent_id];
     }
 
-    public function setIsInverse(bool $is_inverse)
+    public function setIsInverse(bool $is_inverse): void
     {
         $this->is_inverse = $is_inverse;
     }
@@ -134,7 +134,7 @@ class Question extends BaseQuestion
     }
 
 
-    public function setQuestionBody(string $question_body)
+    public function setQuestionBody(string $question_body): void
     {
         $this->question_body = $question_body;
     }
@@ -144,7 +144,7 @@ class Question extends BaseQuestion
         return $this->question_body;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }

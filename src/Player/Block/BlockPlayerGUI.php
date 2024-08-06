@@ -18,22 +18,13 @@ abstract class BlockPlayerGUI
     /**
      * @var Block
      */
-    protected $block;
+    protected BlockType $block;
 
-    /**
-     * @var ilObjSelfEvaluationGUI
-     */
-    protected $parent;
+    protected \ilObjSelfEvaluationGUI $parent;
 
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected \ilDBInterface $db;
 
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+    protected \ilSelfEvaluationPlugin $plugin;
 
     public function __construct(ilDBInterface $db, ilSelfEvaluationPlugin $plugin, ilObjSelfEvaluationGUI $parent, BlockType $block)
     {
@@ -45,11 +36,7 @@ abstract class BlockPlayerGUI
 
     public function getBlockForm(PlayerFormContainer $parent_form): PlayerFormContainer
     {
-        if ($parent_form) {
-            $form = $parent_form;
-        } else {
-            $form = new ilPropertyFormGUI();
-        }
+        $form = $parent_form ?: new ilPropertyFormGUI();
 
         $h = new FormSectionHeaderGUIFixed();
 

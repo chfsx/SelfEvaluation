@@ -44,7 +44,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         $this->setParentId($parent_id);
     }
 
-    public function setAbbreviation(string $abbreviation)
+    public function setAbbreviation(string $abbreviation): void
     {
         $this->abbreviation = $abbreviation;
     }
@@ -54,7 +54,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         return $this->abbreviation;
     }
 
-    public function setDescription(string $description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -64,7 +64,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         return $this->description;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -74,7 +74,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         return $this->id;
     }
 
-    public function setParentId(int $parent_id)
+    public function setParentId(int $parent_id): void
     {
         $this->parent_id = $parent_id;
     }
@@ -84,7 +84,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         return $this->parent_id;
     }
 
-    public function setPosition(int $position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
@@ -94,7 +94,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
         return $this->position;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -107,7 +107,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
     /**
      * @param Question $question
      */
-    public function addQuestion(Question $question)
+    public function addQuestion(Question $question): void
     {
         $this->questions[$question->getId()] = $question;
     }

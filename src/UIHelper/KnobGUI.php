@@ -12,10 +12,7 @@ class KnobGUI
     public const CAP_BUTT = '\'butt\'';
     public const CAP_ROUND = '\'round\'';
     public const CAP_GAUGE = '\'gauge\'';
-    /**
-     * @var int
-     */
-    private static $num = 1;
+    private static int $num = 1;
     /**
      * @var string
      */
@@ -81,7 +78,7 @@ class KnobGUI
      */
     protected $display_previous = false;
 
-    public function render(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin)
+    public function render(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin): void
     {
         self::$num++;
         $tpl->addJavaScript($plugin->getDirectory() . '/templates/js/jquery.knob.js');
@@ -105,7 +102,7 @@ class KnobGUI
         $this->setHtml($knob->get());
     }
 
-    public function setHtml(string $html)
+    public function setHtml(string $html): void
     {
         $this->html = $html;
     }
@@ -120,7 +117,7 @@ class KnobGUI
     /**
      * @param int $max
      */
-    public function setMax($max)
+    public function setMax($max): void
     {
         $this->max = $max;
     }
@@ -136,7 +133,7 @@ class KnobGUI
     /**
      * @param int $min
      */
-    public function setMin($min)
+    public function setMin($min): void
     {
         $this->min = $min;
     }
@@ -152,7 +149,7 @@ class KnobGUI
     /**
      * @param int $num
      */
-    public static function setNum($num)
+    public static function setNum(int $num): void
     {
         self::$num = $num;
     }
@@ -160,7 +157,7 @@ class KnobGUI
     /**
      * @return int
      */
-    public static function getNum()
+    public static function getNum(): int
     {
         return self::$num;
     }
@@ -168,7 +165,7 @@ class KnobGUI
     /**
      * @param int $value
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }
@@ -184,7 +181,7 @@ class KnobGUI
     /**
      * @param array $fg_color
      */
-    public function setFgColor($fg_color)
+    public function setFgColor($fg_color): void
     {
         $this->fg_color = $fg_color;
     }
@@ -200,7 +197,7 @@ class KnobGUI
     /**
      * @param array $in_color
      */
-    public function setInputColor($in_color)
+    public function setInputColor($in_color): void
     {
         $this->input_color = $in_color;
     }
@@ -216,7 +213,7 @@ class KnobGUI
     /**
      * @param boolean $read_only
      */
-    public function setReadOnly($read_only)
+    public function setReadOnly($read_only): void
     {
         $this->read_only = $read_only;
     }
@@ -232,7 +229,7 @@ class KnobGUI
     /**
      * @param int $angle_arc
      */
-    public function setAngleArc($angle_arc)
+    public function setAngleArc($angle_arc): void
     {
         $this->angle_arc = $angle_arc;
     }
@@ -248,7 +245,7 @@ class KnobGUI
     /**
      * @param int $angle_offset
      */
-    public function setAngleOffset($angle_offset)
+    public function setAngleOffset($angle_offset): void
     {
         $this->angle_offset = $angle_offset;
     }
@@ -264,7 +261,7 @@ class KnobGUI
     /**
      * @param array $bg_color
      */
-    public function setBgColor($bg_color)
+    public function setBgColor($bg_color): void
     {
         $this->bg_color = $bg_color;
     }
@@ -280,7 +277,7 @@ class KnobGUI
     /**
      * @param boolean $display_input
      */
-    public function setDisplayInput($display_input)
+    public function setDisplayInput($display_input): void
     {
         $this->display_input = $display_input;
     }
@@ -296,7 +293,7 @@ class KnobGUI
     /**
      * @param boolean $display_previous
      */
-    public function setDisplayPrevious($display_previous)
+    public function setDisplayPrevious($display_previous): void
     {
         $this->display_previous = $display_previous;
     }
@@ -312,7 +309,7 @@ class KnobGUI
     /**
      * @param string $line_cap
      */
-    public function setLineCap($line_cap)
+    public function setLineCap($line_cap): void
     {
         $this->line_cap = $line_cap;
     }
@@ -328,7 +325,7 @@ class KnobGUI
     /**
      * @param boolean $stopper
      */
-    public function setStopper($stopper)
+    public function setStopper($stopper): void
     {
         $this->stopper = $stopper;
     }
@@ -344,7 +341,7 @@ class KnobGUI
     /**
      * @param int $thickness
      */
-    public function setThickness($thickness)
+    public function setThickness($thickness): void
     {
         $this->thickness = $thickness;
     }
@@ -360,7 +357,7 @@ class KnobGUI
     /**
      * @param int $height
      */
-    public function setHeight($height)
+    public function setHeight($height): void
     {
         $this->height = $height;
     }

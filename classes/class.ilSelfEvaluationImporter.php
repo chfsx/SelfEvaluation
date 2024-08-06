@@ -16,7 +16,7 @@ class ilSelfEvaluationImporter extends ilXmlImporter
     {
         $ref_id = false;
         foreach ($mapping->getMappingsOfEntity('Services/Container', 'objs') as $old => $new) {
-            if (ilObject::_lookupType($new) == "xsev" && $id == $old) {
+            if (ilObject::_lookupType($new) === "xsev" && $id == $old) {
                 $ref_array = ilObject::_getAllReferences($new);
                 $ref_id = end($ref_array);
             }

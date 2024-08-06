@@ -24,10 +24,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
 
     protected ilGlobalTemplateInterface $tmpl;
 
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected \ilDBInterface $db;
 
     /**
      * @var bool
@@ -78,7 +75,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
     /**
      * @return array
      */
-    public function fillForm()
+    public function fillForm(): array
     {
         $array = [];
         foreach ($this->scale->getUnits() as $unit) {
@@ -99,7 +96,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
      * @param ilPropertyFormGUI $form_gui
      * @return ilPropertyFormGUI
      */
-    public function appendToForm(ilPropertyFormGUI $form_gui)
+    public function appendToForm(ilPropertyFormGUI $form_gui): ilPropertyFormGUI
     {
         foreach ($this->getItems() as $item) {
             $form_gui->addItem($item);
@@ -108,28 +105,24 @@ class ScaleFormGUI extends ilPropertyFormGUI
         return $form_gui;
     }
 
-    public function updateObject()
+    public function updateObject(): void
     {
         $this->scale->update();
-        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_new')) {
-            if (!is_array($this->http->wrapper()->post()->retrieve(
-                self::FIELD_NAME . '_new',
-                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string()))
-            ))) {
-                return;
-            }
+        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_new') && !is_array($this->http->wrapper()->post()->retrieve(
+            self::FIELD_NAME . '_new',
+            $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string()))
+        ))) {
+            return;
         }
         $units = [];
-        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_position')) {
-            if (is_array($this->getArrayFromPost(self::FIELD_NAME . '_position'))) {
-                $positions = array_flip($this->getArrayFromPost(self::FIELD_NAME . '_position'));
-            }
+        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_position') && is_array($this->getArrayFromPost(self::FIELD_NAME . '_position'))) {
+            $positions = array_flip($this->getArrayFromPost(self::FIELD_NAME . '_position'));
         }
 
         $new = $this->getArrayFromPostComplex(self::FIELD_NAME . '_new');
         if (!is_null($new) &&is_array($new['value'])) {
             foreach ($new['value'] as $k => $v) {
-                if ($v !== false and $v !== null and $v !== '') {
+                if ($v !== false && $v !== null && $v !== '') {
                     $obj = new ScaleUnit($this->db);
                     $obj->setParentId($this->scale->getId());
                     $obj->setTitle($new['title'][$k]);
@@ -144,7 +137,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
             $old = $this->getArrayFromPostComplex(self::FIELD_NAME . '_old');
             if (is_array($old['value'])) {
                 foreach ($old['value'] as $k => $v) {
-                    if ($v !== false and $v !== null and $v !== '') {
+                    if ($v !== false && $v !== null && $v !== '') {
                         $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
                         $obj->setTitle($old['title'][$k]);
                         $obj->setValue((int) $v);

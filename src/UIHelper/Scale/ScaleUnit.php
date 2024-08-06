@@ -34,10 +34,7 @@ class ScaleUnit implements hasDBFields
      * @var int
      */
     protected $position = 99;
-    /**
-     * @var \ilDBInterface
-     */
-    protected $db;
+    protected \ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, $id = 0)
     {
@@ -83,7 +80,7 @@ class ScaleUnit implements hasDBFields
         return $xml;
     }
 
-    public function read()
+    public function read(): void
     {
         $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
             . $this->db->quote($this->getId(), 'integer'));
@@ -94,7 +91,7 @@ class ScaleUnit implements hasDBFields
     }
 
 
-    final public function initDB()
+    final public function initDB(): void
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->db->createTable(self::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -103,7 +100,7 @@ class ScaleUnit implements hasDBFields
         }
     }
 
-    final public function updateDB()
+    final public function updateDB(): void
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->initDB();
@@ -116,7 +113,7 @@ class ScaleUnit implements hasDBFields
         }
     }
 
-    public function create()
+    public function create(): void
     {
         if ($this->getId() != 0) {
             $this->update();
@@ -130,12 +127,12 @@ class ScaleUnit implements hasDBFields
     /**
      * @return int
      */
-    public function delete()
+    public function delete(): int
     {
         return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ' . $this->getId());
     }
 
-    public function update()
+    public function update(): void
     {
         if ($this->getId() == 0) {
             $this->create();
@@ -161,7 +158,7 @@ class ScaleUnit implements hasDBFields
         return $return;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -171,7 +168,7 @@ class ScaleUnit implements hasDBFields
         return (int) $this->id;
     }
 
-    public function setParentId(int $parent_id)
+    public function setParentId(int $parent_id): void
     {
         $this->parent_id = $parent_id;
     }
@@ -181,7 +178,7 @@ class ScaleUnit implements hasDBFields
         return $this->parent_id;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -191,7 +188,7 @@ class ScaleUnit implements hasDBFields
         return (string) $this->title;
     }
 
-    public function setValue(int $value)
+    public function setValue(int $value): void
     {
         $this->value = $value;
     }
@@ -201,7 +198,7 @@ class ScaleUnit implements hasDBFields
         return $this->value;
     }
 
-    public function setPosition(int $position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }

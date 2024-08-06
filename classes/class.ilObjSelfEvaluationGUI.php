@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use ILIAS\Refinery\Factory;
 
 use ilub\plugin\SelfEvaluation\Identity\Identity;
 use ilub\plugin\SelfEvaluation\UIHelper\Scale\ScaleFormGUI;
@@ -39,7 +40,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
     protected ?ilPlugin $plugin = null;
     protected ilDBInterface $db;
     public WrapperFactory $http;
-    public ILIAS\Refinery\Factory $refinery;
+    public Factory $refinery;
 
 
     public function __construct(?int $a_ref_id = 0, ?int $a_id_type = self::REPOSITORY_NODE_ID, ?int $a_parent_node_id = 0)
@@ -51,7 +52,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
     }
 
-    public function displayIdentifier()
+    public function displayIdentifier(): void
     {
 
         if ($this->http->query()->has('uid')) {
@@ -63,7 +64,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         }
     }
 
-    public function initHeader()
+    public function initHeader(): void
     {
         $this->setTitleAndDescription();
         $this->displayIdentifier();
@@ -71,7 +72,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         $this->tpl->addCss($this->getPlugin()->getStyleSheetLocation('css/print.css'), 'print');
 
         $is_in_survey = $this->ctrl->getCmd() == "showContent" || $this->ctrl->getCmd() == "show" || $this->ctrl->getNextClass($this) == "palyergui";
-        $is_not_logged_in = $this->user->getLogin() == "anonymous";
+        $is_not_logged_in = $this->user->getLogin() === "anonymous";
 
         if ($is_in_survey && $is_not_logged_in) {
             $this->tpl->addCss("Customizing/global/plugins/Services/Repository/RepositoryObject/SelfEvaluation/templates/css/anonymous.css");
@@ -115,7 +116,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                     : null;
             }
 
-            $block_id = $block_id ?? 0;
+            $block_id ??= 0;
 
             $request_id = $this->http->query()->has('question_id')
                 ? $this->http->query()->retrieve('question_id', $this->refinery->kindlyTo()->int())
@@ -127,7 +128,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                     : null;
             }
 
-            $request_id = $request_id ?? 0;
+            $request_id ??= 0;
 
             switch ($next_class) {
                 case 'ilcommonactiondispatchergui':
@@ -299,7 +300,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
 
     public function performCommand(string $cmd): void
     {
-        if($cmd == '') {
+        if($cmd === '') {
             $cmd = $this->ctrl->getCmd();
         }
         switch ($cmd) {
@@ -363,7 +364,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         $this->addPermissionTab();
     }
 
-    public function editProperties()
+    public function editProperties(): void
     {
         if ($this->object->hasDatasets()) {
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_INFO, $this->txt('scale_cannot_be_edited'));
@@ -374,7 +375,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         $this->tpl->setContent($this->form->getHTML());
     }
 
-    public function initPropertiesForm()
+    public function initPropertiesForm(): void
     {
         $this->form = new ilPropertyFormGUI();
         // title
@@ -597,7 +598,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         $this->form->setFormAction($this->ctrl->getFormAction($this));
     }
 
-    public function getPropertiesValues()
+    public function getPropertiesValues(): void
     {
         $aform = new ScaleFormGUI(
             $this->db,
@@ -652,7 +653,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         $this->form->setValuesByArray($values);
     }
 
-    public function updateProperties()
+    public function updateProperties(): void
     {
         $this->initPropertiesForm();
         $this->form->setValuesByPost();
@@ -725,7 +726,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
     //
     // Show content
     //
-    public function showContent()
+    public function showContent(): void
     {
         global $DIC;
         if ($DIC->user()->isAnonymous()) {

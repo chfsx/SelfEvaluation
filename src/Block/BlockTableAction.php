@@ -34,7 +34,7 @@ class BlockTableAction
         return $this->title;
     }
 
-    public function setPosition(int  $position)
+    public function setPosition(int  $position): void
     {
         $this->position = $position;
     }

@@ -13,20 +13,11 @@ use ilGlobalTemplateInterface;
 
 class QuestionTableGUI extends ilTable2GUI
 {
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+    protected \ilSelfEvaluationPlugin $plugin;
 
-    /**
-     * @var Block
-     */
-    protected $block;
+    protected Block $block;
 
-    /**
-     * @var bool
-     */
-    protected $sortable;
+    protected bool $sortable;
 
 
 
@@ -79,8 +70,7 @@ class QuestionTableGUI extends ilTable2GUI
             'EDIT_LINK',
             $this->ctrl->getLinkTargetByClass('QuestionGUI', 'editQuestion')
         );
-        $this->tpl->setVariable('BODY', $a_set['title'] ? $a_set['title'] :
-            $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $a_set['position']);
+        $this->tpl->setVariable('BODY', $a_set['title'] ?: $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $a_set['position']);
         $this->tpl->setVariable(
             'IS_INVERTED',
             $a_set['is_inverse'] ? $this->plugin->getDirectory().'/templates/images/icon_ok.svg' : $this->plugin->getDirectory().'/templates/images/empty.png'

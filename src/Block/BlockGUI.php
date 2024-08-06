@@ -35,7 +35,7 @@ abstract class BlockGUI
     protected ilSelfEvaluationPlugin $plugin;
 
     /**
-     * @var \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock|Metablock
+     * @var QuestionBlock|Metablock
      */
     protected $object;
 
@@ -55,7 +55,7 @@ abstract class BlockGUI
         $this->parent = $parent;
     }
 
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $this->ctrl->saveParameter($this, 'block_id');
         $this->performCommand();
@@ -68,7 +68,7 @@ abstract class BlockGUI
 
     protected function performCommand()
     {
-        $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
+        $cmd = $this->ctrl->getCmd() ?: $this->getStandardCommand();
 
         switch ($cmd) {
             case 'addBlock':
@@ -92,7 +92,7 @@ abstract class BlockGUI
         }
     }
 
-    protected function checkAccess($permission, $cmd)
+    protected function checkAccess(string $permission, string $cmd)
     {
         return $this->access->checkAccess($permission, $cmd, $this->parent->getRefId(), $this->plugin->getId());
     }

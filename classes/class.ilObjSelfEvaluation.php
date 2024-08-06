@@ -607,9 +607,9 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $xml->addAttribute("description", $this->getDescription());
         $xml->addAttribute("online", $this->isOnline() ? 'true' : 'false');
         $xml->addAttribute("identitySelection", $this->isIdentitySelection() ? 'true' : 'false');
-        $xml->addAttribute("evaluationType", $this->getEvaluationType() ? 'true' : 'false');
-        $xml->addAttribute("sortType", $this->getSortType() ? 'true' : 'false');
-        $xml->addAttribute("displayType", $this->getDisplayType() ? 'true' : 'false');
+        $xml->addAttribute("evaluationType", $this->getEvaluationType() !== 0 ? 'true' : 'false');
+        $xml->addAttribute("sortType", $this->getSortType() !== 0 ? 'true' : 'false');
+        $xml->addAttribute("displayType", $this->getDisplayType() !== 0 ? 'true' : 'false');
         $xml->addAttribute("intro", $this->getIntro());
         $xml->addAttribute("outro", $this->getOutro());
         $xml->addAttribute("outroTitle", $this->getOutroTitle());
@@ -622,7 +622,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $xml->addAttribute("showBlockDescriptionsDuringEvaluation", $this->isShowBlockDescriptionsDuringEvaluation() ? 'true' : 'false');
         $xml->addAttribute("showBlockTitlesDuringFeedback", $this->isShowBlockTitlesDuringFeedback() ? 'true' : 'false');
         $xml->addAttribute("showBlockDescriptionsDuringFeedback", $this->isShowBlockDescriptionsDuringFeedback() ? 'true' : 'false');
-        $xml->addAttribute("sortRandomNrItemBlock", $this->getSortRandomNrItemBlock() ? 'true' : 'false');
+        $xml->addAttribute("sortRandomNrItemBlock", $this->getSortRandomNrItemBlock() !== 0.0 ? 'true' : 'false');
         $xml->addAttribute("blockOptionRandomDesc", $this->getBlockOptionRandomDesc());
         $xml->addAttribute("showFbsOverviewBar", $this->isShowFbsOverviewBar() ? 'true' : 'false');
         $xml->addAttribute("showFbsOverviewText", $this->isShowFbsOverviewText() ? 'true' : 'false');
@@ -652,10 +652,10 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
     }
 
-    public function fromXML(string $xml)
+    public function fromXML(string $xml): self
     {
 
-        if (!$this->getId()) {
+        if ($this->getId() === 0) {
             $this->create();
             $this->createReference();
         }
@@ -717,13 +717,13 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
     public function isActive(): bool
     {
-        return ($this->isOnline() and $this->hasBlocks() and $this->areFeedbacksComplete() and $this->hasScale()) ? true : false;
+        return $this->isOnline() && $this->hasBlocks() && $this->areFeedbacksComplete() && $this->hasScale();
     }
 
     public function hasBLocks(): bool
     {
         foreach (QuestionBlock::_getAllInstancesByParentId($this->db, $this->getId()) as $block) {
-            if (count(Question::_getAllInstancesForParentId($this->db, $block->getId())) > 0) {
+            if (Question::_getAllInstancesForParentId($this->db, $block->getId()) !== []) {
                 return true;
             }
         }
@@ -753,7 +753,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
     public function hasDatasets(): bool
     {
         foreach (Identity::_getAllInstancesByObjId($this->db, $this->getId()) as $id) {
-            if (count(Dataset::_getAllInstancesByIdentifierId($this->db, $id->getId())) > 0) {
+            if (Dataset::_getAllInstancesByIdentifierId($this->db, $id->getId()) !== []) {
                 return true;
             }
         }

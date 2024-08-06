@@ -98,7 +98,7 @@ class MetaQuestion extends BaseQuestion
         return $this->type_id;
     }
 
-    public function setTypeId(int $type)
+    public function setTypeId(int $type): void
     {
         $this->type_id = $type;
     }
@@ -113,7 +113,7 @@ class MetaQuestion extends BaseQuestion
         return $this->getName();
     }
 
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -123,17 +123,17 @@ class MetaQuestion extends BaseQuestion
         return $this->short_title;
     }
 
-    public function setShortTitle(string $short_title)
+    public function setShortTitle(string $short_title): void
     {
         $this->short_title = $short_title;
     }
 
     public function getValues(): array
     {
-        return $this->values ? $this->values : [];
+        return $this->values ?: [];
     }
 
-    public function setValues(array $values)
+    public function setValues(array $values): void
     {
         $this->values = $values;
     }
@@ -143,7 +143,7 @@ class MetaQuestion extends BaseQuestion
         return $this->required;
     }
 
-    public function enableRequired(int $status)
+    public function enableRequired(int $status): void
     {
         $this->required = $status;
     }

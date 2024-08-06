@@ -8,7 +8,7 @@ use ilTextAreaInputGUI;
 
 class TinyMceTextAreaInputGUI extends ilTextAreaInputGUI
 {
-    public function __construct(int $ref_id, string $plugin_id, $a_title = "", $a_postvar = "")
+    public function __construct(int $ref_id, string $plugin_id, string $a_title = "", string $a_postvar = "")
     {
         parent::__construct($a_title, $a_postvar);
         $this->setUseRte(true);

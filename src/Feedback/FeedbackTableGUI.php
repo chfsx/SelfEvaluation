@@ -16,12 +16,12 @@ class FeedbackTableGUI extends ilTable2GUI
     /**
      * @var ilRepositoryObjectPlugin;
      */
-    protected $plugin;
+    protected \ilRepositoryObjectPlugin $plugin;
 
     /**
      * @var
      */
-    protected $db;
+    protected \ilDBInterface $db;
 
     public function __construct(
         ilDBInterface $db,

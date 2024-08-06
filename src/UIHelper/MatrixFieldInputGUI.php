@@ -23,12 +23,9 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
      * @var array
      */
     protected $scale = [];
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
+    protected \ilRepositoryObjectPlugin $plugin;
 
-    public function __construct(ilRepositoryObjectPlugin $plugin, $a_title = '', $a_postvar = '')
+    public function __construct(ilRepositoryObjectPlugin $plugin, string $a_title = '', string $a_postvar = '')
     {
         parent::__construct($a_title, $a_postvar);
         $this->setType('matrix_field');
@@ -47,9 +44,9 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
 
         $even = false;
         $tpl->setVariable('ROW_NAME', $this->getPostVar());
-        foreach ($this->getScale() as $value => $title) {
+        foreach (array_keys($this->getScale()) as $value) {
             $tpl->setCurrentBlock('item');
-            if ($this->getValue() == $value and $this->getValue() !== null and $this->getValue() !== '') {
+            if ($this->getValue() == $value && $this->getValue() !== null && $this->getValue() !== '') {
                 $tpl->setVariable('SELECTED', 'checked="checked"');
             }
             $tpl->setVariable('CLASS', $even ? "ilUnitEven" : "ilUnitOdd");
@@ -62,21 +59,21 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         return $tpl->get();
     }
 
-    public function insert(ilTemplate $a_tpl)
+    public function insert(ilTemplate $a_tpl): void
     {
         $a_tpl->setCurrentBlock('prop_custom');
         $a_tpl->setVariable('CUSTOM_CONTENT', $this->getHtml());
         $a_tpl->parseCurrentBlock();
     }
 
-    public function setValueByArray($values)
+    public function setValueByArray(array $values): void
     {
         if(array_key_exists($this->getPostVar(), $values)) {
             $this->setValue($values[$this->getPostVar()]);
             return;
         }
         try {
-            list($matrix_key, $question_key) = explode("[", str_replace("]", "", $this->getPostVar()));
+            [$matrix_key, $question_key] = explode("[", str_replace("]", "", $this->getPostVar()));
         }
         catch(\Exception $e){}
 
@@ -88,7 +85,7 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         }
     }
 
-    public function setScale(array $scale)
+    public function setScale(array $scale): void
     {
         $this->scale = $scale;
     }
@@ -98,7 +95,7 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         return $this->scale;
     }
 
-    public function setValue(string $value)
+    public function setValue(string $value): void
     {
         $this->value = $value;
     }
@@ -108,7 +105,7 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         return $this->value;
     }
 
-    public function setValues(array $values)
+    public function setValues(array $values): void
     {
         $this->values = $values;
     }
@@ -125,28 +122,26 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
             if (!$this->http->wrapper()->post()->has($post_var_parts[0])) {
                 $this->setAlert($this->plugin->txt('msg_input_is_required'));
                 return false;
-            } else {
-                try {
-                    $value = $this->http->wrapper()->post()->retrieve(
-                        $post_var_parts[0],
-                        $this->refinery->kindlyTo()->string()
-                    );
-                } catch (ConstraintViolationException $e) {
-                    $value = $this->http->wrapper()->post()->retrieve(
-                        $post_var_parts[0],
-                        $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string())
-                    );
-                }
-
-                if (is_array($value)) {
-                    if (!array_key_exists($post_var_parts[1], $value)) {
-                        $this->setAlert($this->plugin->txt('msg_input_is_required'));
-                        return false;
-                    }
-                } elseif (trim($value) == '') {
+            }
+            try {
+                $value = $this->http->wrapper()->post()->retrieve(
+                    $post_var_parts[0],
+                    $this->refinery->kindlyTo()->string()
+                );
+            } catch (ConstraintViolationException $e) {
+                $value = $this->http->wrapper()->post()->retrieve(
+                    $post_var_parts[0],
+                    $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string())
+                );
+            }
+            if (is_array($value)) {
+                if (!array_key_exists($post_var_parts[1], $value)) {
                     $this->setAlert($this->plugin->txt('msg_input_is_required'));
                     return false;
                 }
+            } elseif (trim($value) === '') {
+                $this->setAlert($this->plugin->txt('msg_input_is_required'));
+                return false;
             }
         }
         return true;

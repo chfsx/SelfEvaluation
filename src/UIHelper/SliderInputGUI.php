@@ -32,16 +32,10 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
      * @var string
      */
     protected $ajax = '';
-    /**
-     * @var ilGlobalTemplateInterface
-     */
-    protected $tpl;
+    protected \ilGlobalTemplateInterface $tpl;
     protected $check = [];
 
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
+    protected \ilRepositoryObjectPlugin $plugin;
 
     public function __construct(
         ilGlobalTemplateInterface $tpl,
@@ -79,7 +73,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $tpl->setVariable('MAX', $this->getMax());
         $tpl->setVariable('POSTVAR', self::PREFIX . $this->getPostVar() . '');
         $tpl->setVariable('UNIT', $this->getUnit());
-        if ($this->getAjax()) {
+        if ($this->getAjax() !== '' && $this->getAjax() !== '0') {
             $tpl->setVariable('AJAX', $this->getAjax());
             $tpl->setVariable('WARNING', $this->plugin->txt('warning_overlap'));
         }
@@ -87,7 +81,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         return $tpl->get();
     }
 
-    public function insert(ilTemplate $a_tpl)
+    public function insert(ilTemplate $a_tpl): void
     {
         $a_tpl->setCurrentBlock("prop_custom");
         $a_tpl->setVariable("CUSTOM_CONTENT", $this->getHtml());
@@ -103,12 +97,9 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
             $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_to', $this->refinery->kindlyTo()->string())
         ];
 
-        if ($this->getRequired() and
-            trim($this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_from', $this->refinery->kindlyTo()->string()))
- == '' and
-            trim(
-                $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . 'to', $this->refinery->kindlyTo()->string()),
-            ) == ''
+        if ($this->getRequired() && trim($this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_from', $this->refinery->kindlyTo()->string())) === '' && trim(
+            $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . 'to', $this->refinery->kindlyTo()->string()),
+        ) === ''
         ) {
             $this->setAlert($lng->txt('msg_input_is_required'));
 
@@ -118,7 +109,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         return $this->checkSubItemsInput();
     }
 
-    public function setValueByArray(array $array)
+    public function setValueByArray(array $array): void
     {
 
         foreach ($this->getSubItems() as $item) {
@@ -133,7 +124,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         }
     }
 
-    public function setValues(array $values)
+    public function setValues(array $values): void
     {
         $this->values = $values;
     }
@@ -143,7 +134,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         return $this->values;
     }
 
-    public function setMax(int $max)
+    public function setMax(int $max): void
     {
         $this->max = $max;
     }
@@ -153,7 +144,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         return $this->max;
     }
 
-    public function setMin(int $min)
+    public function setMin(int $min): void
     {
         $this->min = $min;
     }
@@ -163,7 +154,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         return $this->min;
     }
 
-    public function setUnit(string $unit)
+    public function setUnit(string $unit): void
     {
         $this->unit = $unit;
     }
@@ -173,7 +164,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         return $this->unit;
     }
 
-    public function setAjax(string $ajax)
+    public function setAjax(string $ajax): void
     {
         $this->ajax = $ajax;
     }

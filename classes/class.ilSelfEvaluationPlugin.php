@@ -23,17 +23,15 @@ class ilSelfEvaluationPlugin extends ilRepositoryObjectPlugin
     /**
      * @return ilSelfEvaluationConfig
      */
-    public function getConfigObject()
+    public function getConfigObject(): \ilSelfEvaluationConfig
     {
-        $conf = new ilSelfEvaluationConfig($this->getConfigTableName());
-
-        return $conf;
+        return new ilSelfEvaluationConfig($this->getConfigTableName());
     }
 
     /**
      * @return string
      */
-    public function getConfigTableName()
+    public function getConfigTableName(): string
     {
         return 'rep_robj_xsev_c';
     }

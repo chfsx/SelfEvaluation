@@ -98,7 +98,7 @@ class BarChart extends ilChartGrid
         return $this->show_average_line;
     }
 
-    public function setShowAverageLine(bool $show_average_line)
+    public function setShowAverageLine(bool $show_average_line): void
     {
         $this->show_average_line = $show_average_line;
     }
@@ -108,7 +108,7 @@ class BarChart extends ilChartGrid
         return $this->average;
     }
 
-    public function setAverage(float $average)
+    public function setAverage(float $average): void
     {
         $this->average = $average;
     }
@@ -118,7 +118,7 @@ class BarChart extends ilChartGrid
         return $this->show_varianz;
     }
 
-    public function setShowVarianz(bool $show_varianz)
+    public function setShowVarianz(bool $show_varianz): void
     {
         $this->show_varianz = $show_varianz;
     }
@@ -128,7 +128,7 @@ class BarChart extends ilChartGrid
         return $this->standardabweichung_data;
     }
 
-    public function setStandardabweichungData(array $standardabweichung_data)
+    public function setStandardabweichungData(array $standardabweichung_data): void
     {
         $this->standardabweichung_data = $standardabweichung_data;
     }
@@ -138,7 +138,7 @@ class BarChart extends ilChartGrid
         return $this->values_for_standardabweichung;
     }
 
-    public function setValuesForStandardabweichung(array $values_for_standardabweichung)
+    public function setValuesForStandardabweichung(array $values_for_standardabweichung): void
     {
         $this->values_for_standardabweichung = $values_for_standardabweichung;
     }

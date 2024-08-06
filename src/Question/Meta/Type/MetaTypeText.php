@@ -22,7 +22,7 @@ class MetaTypeText extends MetaQuestionType
         return 'MetaTypeText';
     }
 
-    public function getValueDefinitionInputGUI(ilSelfEvaluationPlugin $plugin, MetaTypeOption $option)
+    public function getValueDefinitionInputGUI(ilSelfEvaluationPlugin $plugin, MetaTypeOption $option): MetaTypeOption
     {
         return $option;
     }
@@ -31,12 +31,12 @@ class MetaTypeText extends MetaQuestionType
     {
     }
 
-    public function getValues(ilPropertyFormGUI $form)
+    public function getValues(ilPropertyFormGUI $form): array
     {
         return [];
     }
 
-    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values)
+    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values): \ilTextInputGUI
     {
         $text = new ilTextInputGUI($title, $postvar);
         $text->setSize(32);

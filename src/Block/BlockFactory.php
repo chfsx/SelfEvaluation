@@ -15,10 +15,7 @@ class BlockFactory
      */
     protected $id;
 
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected \ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, $self_eval_id)
     {
@@ -45,25 +42,21 @@ class BlockFactory
         $block = new QuestionBlock($db);
         $pos = $block->getNextPosition($self_eval_id);
         $block = new MetaBlock($db);
-        $pos = max($block->getNextPosition($self_eval_id), $pos);
 
-        return $pos;
+        return max($block->getNextPosition($self_eval_id), $pos);
     }
 
     protected function positionSort(Block $a, Block $b): int
     {
-        if ($a->getPosition() == $b->getPosition()) {
-
-            return 0; // a and b are equal
-
+        if ($a->getPosition() === $b->getPosition()) {
+            return 0;
+            // a and b are equal
+        } elseif ($a->getPosition() > $b->getPosition()) {
+            return 1;
+            // a is after b
         } else {
-            if ($a->getPosition() > $b->getPosition()) {
 
-                return 1; // a is after b
-            } else {
-
-                return -1; // a is before b
-            }
+            return -1; // a is before b
         }
     }
 

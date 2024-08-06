@@ -49,7 +49,7 @@ class DatasetTableGUI extends ilTable2GUI
         $this->setRowTemplate($this->plugin->getDirectory() . '/templates/default/Dataset/tpl.template_dataset_row.html');
         $this->addMultiCommand("deleteDatasets", $this->plugin->txt("delete_dataset"));
 
-        if ($identifier != "") {
+        if ($identifier !== "") {
             $this->setData(Dataset::_getAllInstancesByObjectId($this->db, $obj_id, true, $identifier));
         } else {
             $this->setData(Dataset::_getAllInstancesByObjectId($this->db, $obj_id, true));

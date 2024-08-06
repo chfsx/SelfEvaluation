@@ -12,7 +12,7 @@ class ilObjSelfEvaluationListGUI extends ilObjectPluginListGUI
     /**
      *
      */
-    public function initType()
+    public function initType(): void
     {
         $this->enableTimings(false);
         $this->setType('xsev');

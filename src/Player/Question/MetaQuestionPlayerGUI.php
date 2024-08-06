@@ -11,14 +11,8 @@ use ilub\plugin\SelfEvaluation\Question\Meta\Type\MetaTypeFactory;
 
 class MetaQuestionPlayerGUI
 {
-    /**
-     * @var MetaQuestion
-     */
-    protected $question;
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+    protected MetaQuestion $question;
+    protected \ilSelfEvaluationPlugin $plugin;
 
     public function __construct(ilSelfEvaluationPlugin $plugin, MetaQuestion $question)
     {
@@ -26,7 +20,7 @@ class MetaQuestionPlayerGUI
         $this->plugin = $plugin;
     }
 
-    public function addItemsToForm(PlayerFormContainer $form)
+    public function addItemsToForm(PlayerFormContainer $form): PlayerFormContainer
     {
         $type = (new MetaTypeFactory())->getTypeByTypeId($this->question->getTypeId());
 

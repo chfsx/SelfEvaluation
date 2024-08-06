@@ -9,7 +9,7 @@ class Statistics
     public function getMeanFromData(array $data): ?float
     {
         $count = count($data);
-        if($count) {
+        if($count !== 0) {
             return array_sum($data) / $count;
         }
         return null;
@@ -43,14 +43,14 @@ class Statistics
         return $max_possible == 0 ? 0 : $sum / $max_possible;
     }
 
-    public function getMinKeyAndValueFromArray($values): array
+    public function getMinKeyAndValueFromArray(array $values): array
     {
         $min_key = array_keys($values, min($values));
         $key = array_pop($min_key);
         return [$key, $values[$key]];
     }
 
-    public function getMaxKeyAndValueFromArray($values): array
+    public function getMaxKeyAndValueFromArray(array $values): array
     {
         $min_key = array_keys($values, max($values));
         $key = array_pop($min_key);
@@ -63,7 +63,7 @@ class Statistics
         $varianz = 0;
         $nr_values = count($values);
         foreach ($values as $value) {
-            $varianz += pow($mean - $value, 2) / $nr_values;
+            $varianz += ($mean - $value) ** 2 / $nr_values;
         }
 
         return $varianz;

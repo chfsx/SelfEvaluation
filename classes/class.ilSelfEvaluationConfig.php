@@ -4,19 +4,10 @@ declare(strict_types=1);
 
 class ilSelfEvaluationConfig
 {
-    /**
-     * @var string
-     */
-    protected $table_name = '';
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected string $table_name = '';
+    protected ilDBInterface $db;
 
-    /**
-     * @param $table_name
-     */
-    public function __construct($table_name)
+    public function __construct(string $table_name)
     {
         global $DIC;
 
@@ -24,18 +15,14 @@ class ilSelfEvaluationConfig
         $this->table_name = $table_name;
     }
 
-    /**
-     * @param string $table_name
-     */
-    public function setTableName($table_name)
+
+    public function setTableName(string $table_name): void
     {
         $this->table_name = $table_name;
     }
 
-    /**
-     * @return string
-     */
-    public function getTableName()
+
+    public function getTableName(): string
     {
         return $this->table_name;
     }
@@ -47,24 +34,21 @@ class ilSelfEvaluationConfig
      */
     public function __call($method, $params)
     {
-        if (substr($method, 0, 3) == 'get') {
+        if (substr($method, 0, 3) === 'get') {
             return $this->getValue(self::_fromCamelCase(substr($method, 3)));
-        } else {
-            if (substr($method, 0, 3) == 'set') {
-                $this->setValue(self::_fromCamelCase(substr($method, 3)), $params[0]);
-
-                return true;
-            } else {
-                return null;
-            }
         }
+        if (substr($method, 0, 3) === 'set') {
+            $this->setValue(self::_fromCamelCase(substr($method, 3)), $params[0]);
+            return true;
+        }
+        return null;
     }
 
     /**
      * @param $key
      * @param $value
      */
-    public function setValue($key, $value)
+    public function setValue($key, $value): void
     {
         if (!is_string($this->getValue($key))) {
             $this->db->insert($this->getTableName(), [
@@ -118,17 +102,16 @@ class ilSelfEvaluationConfig
     public function getContainer()
     {
         $key = $this->getValue('container');
-        if ($key == '' or $key == 0) {
+        if ($key === '' || $key == 0) {
             return 1;
-        } else {
-            return $key;
         }
+        return $key;
     }
 
     /**
      * @return bool
      */
-    public function initDB()
+    public function initDB(): bool
     {
         if (!$this->db->tableExists($this->getTableName())) {
             $fields = [
@@ -157,15 +140,13 @@ class ilSelfEvaluationConfig
      * @param string $str
      * @return string
      */
-    public static function _fromCamelCase($str)
+    public static function _fromCamelCase($str): ?string
     {
         $str[0] = strtolower($str[0]);
 
         return preg_replace_callback(
             '/([A-Z])/',
-            function ($c) {
-                return "_" . strtolower($c[1]);
-            },
+            fn($c): string => "_" . strtolower($c[1]),
             $str
         );
     }
@@ -175,7 +156,7 @@ class ilSelfEvaluationConfig
      * @param bool   $capitalise_first_char
      * @return string
      */
-    public static function _toCamelCase($str, $capitalise_first_char = false)
+    public static function _toCamelCase($str, $capitalise_first_char = false): ?string
     {
         if ($capitalise_first_char) {
             $str[0] = strtoupper($str[0]);
@@ -183,9 +164,7 @@ class ilSelfEvaluationConfig
 
         return preg_replace_callback(
             '/-([a-z])/',
-            function ($c) {
-                return strtoupper($c[1]);
-            },
+            fn($c): string => strtoupper($c[1]),
             $str
         );
     }

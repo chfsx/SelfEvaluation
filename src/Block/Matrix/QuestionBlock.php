@@ -94,7 +94,7 @@ class QuestionBlock extends Block implements QuestionBlockInterface
         return array_merge(parent::getNonDbFields(), ['scale']);
     }
 
-    public function setAbbreviation(string $abbreviation)
+    public function setAbbreviation(string $abbreviation): void
     {
         $this->abbreviation = $abbreviation;
     }
@@ -106,7 +106,7 @@ class QuestionBlock extends Block implements QuestionBlockInterface
 
     public function getLabel(): string
     {
-        if($this->getAbbreviation() != '') {
+        if($this->getAbbreviation() !== '') {
             return $this->getAbbreviation();
         }
         return $this->getTitle();

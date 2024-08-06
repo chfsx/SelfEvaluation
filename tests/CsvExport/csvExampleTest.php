@@ -1,6 +1,7 @@
 <?php
 
 
+use ilub\plugin\SelfEvaluation\CsvExport\csvExportTable;
 use ilub\plugin\SelfEvaluation\CsvExport\csvExport;
 use ilub\plugin\SelfEvaluation\CsvExport\csvExportRow;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +43,7 @@ class csvExampleTest extends TestCase
         $this->csvExport = new csvExport();
     }
 
-    public function testInitTable()
+    public function testInitTable(): void
     {
         self::assertEquals($this->csvExport->getTable()->getColumns()->count(), 0);
         self::assertEquals($this->csvExport->getTable()->getColumns()->count(), 0);
@@ -51,7 +52,7 @@ class csvExampleTest extends TestCase
     /**
      * @depends testInitTable
      */
-    public function testAddFromArray()
+    public function testAddFromArray(): void
     {
         $this->csvExport->getTable()->addColumnsAndValuesFromArrays($this->columns, $this->rows_values);
         self::assertEquals($this->csvExport->getTable()->getColumns()->count(), 3);
@@ -73,7 +74,7 @@ class csvExampleTest extends TestCase
     /**
      * @depends testInitTable
      */
-    public function testPositioningOfColumns()
+    public function testPositioningOfColumns(): csvExportTable
     {
         $this->csvExport->getTable()->addColumnsAndValuesFromArrays($this->columns, $this->rows_values);
         $this->csvExport->getTable()->setPositionOfColumn('column1', 3);
@@ -94,7 +95,7 @@ class csvExampleTest extends TestCase
     /**
      * @depends testInitTable
      */
-    public function testOrderingOfRows()
+    public function testOrderingOfRows(): void
     {
         $this->csvExport->getTable()->addColumnsAndValuesFromArrays($this->columns, $this->rows_values);
         $this->csvExport->getTable()->setSortColumn("column1");
@@ -112,7 +113,7 @@ class csvExampleTest extends TestCase
     /**
      * @depends testInitTable
      */
-    public function testAddFromPairedArray()
+    public function testAddFromPairedArray(): void
     {
         foreach ($this->rows_paired as $row_paired) {
             $row = new csvExportRow();
@@ -133,7 +134,7 @@ class csvExampleTest extends TestCase
     /**
      * @depends testInitTable
      */
-    public function testJoinTable()
+    public function testJoinTable(): void
     {
         foreach ($this->rows_paired as $row_paired) {
             $row = new csvExportRow();
@@ -158,7 +159,7 @@ class csvExampleTest extends TestCase
     /**
      * @depends testInitTable
      */
-    public function testJoinTableReversed()
+    public function testJoinTableReversed(): void
     {
         $this->csvExport->getTable()->addColumnsAndValuesFromArrays($this->columns, $this->rows_values);
 
@@ -183,7 +184,7 @@ class csvExampleTest extends TestCase
     /**
      * @depends testInitTable
      */
-    public function testJoinSortOrderTable()
+    public function testJoinSortOrderTable(): void
     {
         $this->csvExport->getTable()->addColumnsAndValuesFromArrays($this->columns, $this->rows_values);
 

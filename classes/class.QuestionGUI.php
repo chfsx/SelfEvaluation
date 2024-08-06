@@ -6,6 +6,7 @@ use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
 use ilub\plugin\SelfEvaluation\Question\Matrix\QuestionTableGUI;
 use ilub\plugin\SelfEvaluation\Question\BaseQuestionGUI;
+use ilub\plugin\SelfEvaluation\Block\Block;
 
 class QuestionGUI extends BaseQuestionGUI
 {
@@ -17,18 +18,18 @@ class QuestionGUI extends BaseQuestionGUI
     /**
      * @var QuestionBlock
      */
-    protected $block;
+    protected Block $block;
     /**
      * @var Question
      */
-    protected $question;
+    protected \ilub\plugin\SelfEvaluation\Question\Question $question;
 
     protected function createTableGUI(): ilTable2GUI
     {
         return new QuestionTableGUI($this, $this->plugin, $this->tpl, 'showContent', $this->block, $this->hasSorting());
     }
 
-    public function initQuestionForm(string $mode = 'create')
+    public function initQuestionForm(string $mode = 'create'): void
     {
         parent::initQuestionForm($mode);
         $te = new ilTextAreaInputGUI($this->plugin->txt('question_body'), 'question_body');
@@ -45,7 +46,7 @@ class QuestionGUI extends BaseQuestionGUI
         $this->form->addItem($cb);
     }
 
-    public function setQuestionFormValues()
+    public function setQuestionFormValues(): void
     {
         $values['title'] = $this->question->getTitle();
         $values['question_body'] = $this->question->getQuestionBody();
@@ -53,7 +54,7 @@ class QuestionGUI extends BaseQuestionGUI
         $this->form->setValuesByArray($values);
     }
 
-    public function createQuestionSetFields()
+    public function createQuestionSetFields(): void
     {
         $this->question->setTitle($this->form->getInput('title'));
         $this->question->setQuestionBody($this->form->getInput('question_body'));

@@ -1,19 +1,16 @@
 <?php
 
 declare(strict_types=1);
-/**
- @ilCtrl_IsCalledBy ilSelfEvaluationConfigGUI: ilObjComponentSettingsGUI
- */
 
+/**
+ * @ilCtrl_IsCalledBy ilSelfEvaluationConfigGUI: ilObjComponentSettingsGUI
+ */
 class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
 {
     public const TYPE_TEXT = 'ilTextInputGUI';
     public const TYPE_RTE_TEXT_AREA = 'ilTextAreaInputGUI';
     public const TYPE_CHECKBOX = 'ilCheckboxInputGUI';
-    /**
-     * @var ilSelfEvaluationConfig
-     */
-    protected $object;
+    protected \ilSelfEvaluationConfig $object;
     /**
      * @var array
      */
@@ -38,17 +35,14 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
      * @var ilTabsGUI
      */
     protected $tabs;
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+    protected \ilSelfEvaluationPlugin $plugin;
 
     public function __construct()
     {
         global $DIC;
 
         $this->ctrl = $DIC->ctrl();
-        $this->tpl =  $DIC["tpl"];
+        $this->tpl = $DIC["tpl"];
         $this->tabs = $DIC->tabs();
 
         $this->plugin = new ilSelfEvaluationPlugin();
@@ -83,7 +77,7 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
     /**
      * @return ilSelfEvaluationConfig
      */
-    public function getObject()
+    public function getObject(): \ilSelfEvaluationConfig
     {
         return $this->object;
     }
@@ -102,20 +96,20 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this->initConfigurationForm();
         $this->getValues();
         $this->tpl->setContent($this->form->getHTML());
     }
 
-    public function getValues()
+    public function getValues(): void
     {
         $values = [];
         foreach ($this->getFields() as $key => $item) {
             $values[$key] = $this->object->getValue($key);
             if (is_array($item['subelements'])) {
-                foreach ($item['subelements'] as $subkey => $subitem) {
+                foreach (array_keys($item['subelements']) as $subkey) {
                     $values[$key . '_' . $subkey] = $this->object->getValue($key . '_' . $subkey);
                 }
             }
@@ -164,19 +158,21 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         return $this->form;
     }
 
-    public function save()
+    public function save(): void
     {
         $this->initConfigurationForm();
         if ($this->form->checkInput()) {
             foreach ($this->getFields() as $key => $item) {
                 $this->object->setValue($key, $this->form->getInput($key));
                 if (is_array($item['subelements'])) {
-                    foreach ($item['subelements'] as $subkey => $subitem) {
+                    foreach (array_keys($item['subelements']) as $subkey) {
                         $this->object->setValue($key . '_' . $subkey, $this->form->getInput($key . '_' . $subkey));
                     }
                 }
             }
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('conf_saved'));
+            $this->tpl->setOnScreenMessage(
+                IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('conf_saved')
+            );
             $this->ctrl->redirect($this, 'configure');
         } else {
             $this->form->setValuesByPost();

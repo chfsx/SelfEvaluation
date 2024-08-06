@@ -1,13 +1,14 @@
 <?php
 
 declare(strict_types=1);
+use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
 use ilub\plugin\SelfEvaluation\Block\BlockGUI;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 
 class QuestionBlockGUI extends BlockGUI
 {
     /**
-     * @var \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock|\ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock
+     * @var QuestionBlock|MetaBlock
      */
     protected $object;
 
@@ -29,7 +30,7 @@ class QuestionBlockGUI extends BlockGUI
         $this->object->setParentId($this->parent->getObjId());
     }
 
-    public function initForm(string $mode = 'create')
+    public function initForm(string $mode = 'create'): void
     {
         parent::initForm($mode);
 

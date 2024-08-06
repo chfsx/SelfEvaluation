@@ -24,7 +24,7 @@ class MetaTypeSelect extends MetaQuestionType
         return 'MetaTypeSelect';
     }
 
-    public function getValueDefinitionInputGUI(ilSelfEvaluationPlugin $plugin, MetaTypeOption $option)
+    public function getValueDefinitionInputGUI(ilSelfEvaluationPlugin $plugin, MetaTypeOption $option): MetaTypeOption
     {
         $ty_se_mu = new ilTextWizardInputGUI($plugin->txt('value'), 'value_' . $this->getId());
         $ty_se_mu->setRequired(true);
@@ -36,10 +36,10 @@ class MetaTypeSelect extends MetaQuestionType
         return $option;
     }
 
-    public function setValues(MetaTypeOption $item, array $values = [])
+    public function setValues(MetaTypeOption $item, array $values = []): void
     {
         foreach ($item->getSubItems() as $sub_item) {
-            if ($sub_item instanceof ilTextWizardInputGUI and $sub_item->getPostVar() == 'value_' . $this->getId()) {
+            if ($sub_item instanceof ilTextWizardInputGUI && $sub_item->getPostVar() === 'value_' . $this->getId()) {
                 $sub_item->setValue($values);
             }
         }
@@ -50,7 +50,7 @@ class MetaTypeSelect extends MetaQuestionType
         return $form->getInput('value_' . $this->getId());
     }
 
-    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values)
+    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values): \ilSelectInputGUI
     {
         $select = new ilSelectInputGUI($title, $postvar);
 

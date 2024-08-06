@@ -11,7 +11,7 @@ class ilSelfEvaluationExporter extends ilXmlExporter
 
     public function getXmlRepresentation(string $a_entity, string $a_schema_version, string $a_id): string
     {
-        if ($type = ilObject::_lookupType((int)$a_id) != "xsev") {
+        if ($type = ilObject::_lookupType((int)$a_id) !== "xsev") {
             throw new Exception("Wrong type " . $type . " for selfevaluation export.");
         }
 
@@ -20,8 +20,7 @@ class ilSelfEvaluationExporter extends ilXmlExporter
 
         $obj_self_eval = new ilObjSelfEvaluation($ref_id);
         $dom = dom_import_simplexml($obj_self_eval->toXML());
-        $xml_string = $dom->ownerDocument->saveXML($dom->ownerDocument->documentElement);
-        return $xml_string;
+        return $dom->ownerDocument->saveXML($dom->ownerDocument->documentElement);
     }
 
     public function getValidSchemaVersions(string $a_entity): array

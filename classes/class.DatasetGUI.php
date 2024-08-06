@@ -49,7 +49,7 @@ class DatasetGUI
         $this->dataset = new Dataset($this->db, $this->http->query()->has('dataset_id') ? $this->http->query()->retrieve('dataset_id', $this->refinery->kindlyTo()->int()) : 0);
     }
 
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $this->performCommand();
     }
@@ -59,24 +59,20 @@ class DatasetGUI
         return 'show';
     }
 
-    public function performCommand()
+    public function performCommand(): void
     {
-        $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
+        $cmd = $this->ctrl->getCmd() ?: $this->getStandardCommand();
 
-        switch ($cmd) {
-            default:
-                $this->$cmd();
-                break;
-        }
+        $this->$cmd();
     }
 
-    public function selectResult()
+    public function selectResult(): void
     {
         $this->ctrl->setParameter($this, 'dataset_id', $_POST['select_result']);
         $this->ctrl->redirect($this, 'listMyObjects');
     }
 
-    public function index()
+    public function index(): void
     {
         global $DIC;
 
@@ -101,7 +97,7 @@ class DatasetGUI
         $this->tpl->setContent($table->getHTML());
     }
 
-    public function show()
+    public function show(): void
     {
         $content = $this->plugin->getTemplate('default/Dataset/tpl.dataset_presentation.html');
         $content->setVariable('INTRO_HEADER', $this->parent->object->getOutroTitle());
@@ -117,12 +113,12 @@ class DatasetGUI
         $this->tpl->setContent($content->get() . $feedback);
     }
 
-    public function deleteDataset()
+    public function deleteDataset(): void
     {
         $this->confirmDelete([$this->dataset->getId()]);
     }
 
-    public function deleteDatasets()
+    public function deleteDatasets(): void
     {
         if(!$this->http->post()->has('id')) {
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('no_dataset_selected'));
@@ -135,7 +131,7 @@ class DatasetGUI
     /**
      * @param array $ids
      */
-    public function confirmDelete(array $ids = [])
+    public function confirmDelete(array $ids = []): void
     {
         $conf = new ilConfirmationGUI();
         $conf->setHeaderText($this->plugin->txt('qst_delete_dataset'));
@@ -154,7 +150,7 @@ class DatasetGUI
         $this->tpl->setContent($conf->getHTML());
     }
 
-    public function delete()
+    public function delete(): void
     {
         $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_dataset_deleted'), true);
         $post = $this->http->post()->retrieve('dataset_ids', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()));
@@ -166,7 +162,7 @@ class DatasetGUI
         $this->ctrl->redirect($this, 'index');
     }
 
-    public function confirmDeleteAll()
+    public function confirmDeleteAll(): void
     {
         $conf = new ilConfirmationGUI();
         $conf->setFormAction($this->ctrl->getFormAction($this));
@@ -177,14 +173,14 @@ class DatasetGUI
         $this->tpl->setContent($conf->getHTML());
     }
 
-    public function deleteAll()
+    public function deleteAll(): void
     {
         Dataset::_deleteAllInstancesByObjectId($this->db, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int())));
         $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('all_datasets_deleted'));
         $this->ctrl->redirect($this, 'index');
     }
 
-    public function exportCsv()
+    public function exportCsv(): void
     {
         $csvExport = new DatasetCsvExport($this->db, $this->plugin, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int())));
         $csvExport->getCsvExport();

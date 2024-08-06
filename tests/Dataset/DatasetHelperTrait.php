@@ -11,7 +11,7 @@ trait DatasetHelperTrait
     /**
      * @return QuestionBlock[]|Question[]|Data[]
      */
-    protected function getBasics()
+    protected function getBasics(): array
     {
         return [$this->getBasicBlock(), $this->getBasicQuestion(), $this->getBasicAnswerWithValue1()];
     }
@@ -54,7 +54,7 @@ trait DatasetHelperTrait
         return $block3;
     }
 
-    protected function setUpDatasetWithThreeBlocks(Dataset $dataset)
+    protected function setUpDatasetWithThreeBlocks(Dataset $dataset): Dataset
     {
         $dataset->setHighestScale($max = 5);
         $block1 = $this->getBlock1();
@@ -71,7 +71,7 @@ trait DatasetHelperTrait
         return $dataset;
     }
 
-    protected function getDataForBlock1WithThreeQuestionsAndAnswerValuesOneTwoFive()
+    protected function getDataForBlock1WithThreeQuestionsAndAnswerValuesOneTwoFive(): array
     {
 
         $question1 = $this->getBasicQuestion();
@@ -85,7 +85,7 @@ trait DatasetHelperTrait
         return [$question1->getId() => $answer_data_1, $question2->getId() => $answer_data_2, $question3->getId() => $answer_data_3];
     }
 
-    protected function getDataForBlock2WithOneQuestionAndAnswerValuesOne()
+    protected function getDataForBlock2WithOneQuestionAndAnswerValuesOne(): array
     {
 
         $question1 = $this->getBasicQuestion();
@@ -96,7 +96,7 @@ trait DatasetHelperTrait
         return [$question1->getId() => $answer_data_1];
     }
 
-    protected function getDataForBlock3WithThreeQuestionsAndAnswerValuesOneTwo()
+    protected function getDataForBlock3WithThreeQuestionsAndAnswerValuesOneTwo(): array
     {
 
         $question1 = $this->getBasicQuestion();
@@ -108,22 +108,22 @@ trait DatasetHelperTrait
         return [$question1->getId() => $answer_data_1, $question2->getId() => $answer_data_2];
     }
 
-    protected function getBlock1Percentage()
+    protected function getBlock1Percentage(): float
     {
         return (1 + 2 + 5) / (3 * 5) * 100;
     }
 
-    protected function getBlock2Percentage()
+    protected function getBlock2Percentage(): float
     {
         return 1 / 5 * 100;
     }
 
-    protected function getBlock3Percentage()
+    protected function getBlock3Percentage(): float
     {
         return (1 + 2) / (2 * 5) * 100;
     }
 
-    protected function getBlockThreeBlocksPercentages()
+    protected function getBlockThreeBlocksPercentages(): array
     {
         return [$this->getBlock1()->getId() => $this->getBlock1Percentage(),
                 $this->getBlock2()->getId() => $this->getBlock2Percentage(),
@@ -138,20 +138,20 @@ trait DatasetHelperTrait
     protected function getOverallPercentageVarianz()
     {
         $op = ($this->getBlock1Percentage() + $this->getBlock2Percentage() + $this->getBlock3Percentage()) / 3;
-        return pow($this->getBlock1Percentage() - $op, 2) / 3
-            + pow($this->getBlock2Percentage() - $op, 2) / 3
-            + pow($this->getBlock3Percentage() - $op, 2) / 3;
+        return ($this->getBlock1Percentage() - $op) ** 2 / 3
+            + ($this->getBlock2Percentage() - $op) ** 2 / 3
+            + ($this->getBlock3Percentage() - $op) ** 2 / 3;
     }
 
-    protected function getSdPerBlock()
+    protected function getSdPerBlock(): array
     {
         $perc1 = $this->getBlock1Percentage();
         $perc2 = $this->getBlock2Percentage();
         $perc3 = $this->getBlock3Percentage();
 
-        $varianz1 = pow((1 / 5 * 100 - $perc1), 2) / 3 +  pow((2 / 5 * 100 - $perc1), 2) / 3 +  pow((5 / 5 * 100 - $perc1), 2) / 3;
-        $varianz2 = pow((1 / 5 * 100 - $perc2), 2) / 1;
-        $varianz3 = pow((1 / 5 * 100 - $perc3), 2) / 2 +  pow((2 / 5 * 100 - $perc3), 2) / 2;
+        $varianz1 = (1 / 5 * 100 - $perc1) ** 2 / 3 +  (2 / 5 * 100 - $perc1) ** 2 / 3 +  (5 / 5 * 100 - $perc1) ** 2 / 3;
+        $varianz2 = (1 / 5 * 100 - $perc2) ** 2 / 1;
+        $varianz3 = (1 / 5 * 100 - $perc3) ** 2 / 2 +  (2 / 5 * 100 - $perc3) ** 2 / 2;
 
         return [$this->getBlock1()->getId() => sqrt($varianz1),$this->getBlock2()->getId() => sqrt($varianz2),$this->getBlock3()->getId() => sqrt($varianz3)];
     }

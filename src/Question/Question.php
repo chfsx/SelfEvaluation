@@ -21,15 +21,9 @@ abstract class Question implements hasDBFields
      */
     public const PRIMARY_KEY = 'id';
 
-    /**
-     * @var \ilDBInterface
-     */
-    protected $db;
+    protected \ilDBInterface $db;
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
     /**
      * @var int
@@ -61,14 +55,14 @@ abstract class Question implements hasDBFields
         SimpleXMLElement $xml
     ): SimpleXMLElement;
 
-    public function read()
+    public function read(): void
     {
         $set = $this->db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId());
 
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
-    final public function initDB()
+    final public function initDB(): void
     {
         if (!$this->db->tableExists(static::TABLE_NAME)) {
             $this->db->createTable(static::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -77,7 +71,7 @@ abstract class Question implements hasDBFields
         }
     }
 
-    final public function updateDB()
+    final public function updateDB(): void
     {
         if (!$this->db->tableExists(static::TABLE_NAME)) {
             $this->initDB();
@@ -90,7 +84,7 @@ abstract class Question implements hasDBFields
         }
     }
 
-    public function create()
+    public function create(): void
     {
         if ($this->getId() != 0) {
             $this->update();
@@ -107,7 +101,7 @@ abstract class Question implements hasDBFields
         return $this->db->manipulate('DELETE FROM ' . static::TABLE_NAME . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId());
     }
 
-    public function update()
+    public function update(): void
     {
         if ($this->getId() == 0) {
             $this->create();
@@ -116,7 +110,7 @@ abstract class Question implements hasDBFields
         $this->db->update(static::TABLE_NAME, $this->getArrayForDb(), $this->getIdForDb());
     }
 
-    public function setParentId(int $parent_id)
+    public function setParentId(int $parent_id): void
     {
         $this->parent_id = $parent_id;
     }
@@ -177,7 +171,7 @@ abstract class Question implements hasDBFields
         return false;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -194,7 +188,7 @@ abstract class Question implements hasDBFields
         return $this->position;
     }
 
-    public function setPosition(int $position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }

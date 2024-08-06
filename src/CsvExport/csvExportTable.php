@@ -11,7 +11,7 @@ class csvExportTable
     /**
      * @var csvExportRow[]
      */
-    protected $rows = null;
+    protected array $rows;
 
     /**
      * @var csvExportColumns
@@ -54,7 +54,7 @@ class csvExportTable
     /**
      * @param csvExportRow[] $rows
      */
-    public function setRows($rows)
+    public function setRows(array $rows): void
     {
         $this->rows = $rows;
         $this->columns = null;
@@ -65,7 +65,7 @@ class csvExportTable
     /**
      * @return csvExportRow[]|null
      */
-    public function getRows()
+    public function getRows(): array
     {
         return $this->rows;
     }
@@ -74,7 +74,7 @@ class csvExportTable
      * @param csvExportRow $row
      * @param bool         $containsNewColumns
      */
-    public function addRow(csvExportRow $row, $containsNewColumns = true)
+    public function addRow(csvExportRow $row, $containsNewColumns = true): void
     {
         $this->rows[] = $row;
         if ($containsNewColumns || ($this->getColumns()->isEmpty())) {
@@ -82,12 +82,12 @@ class csvExportTable
         }
     }
 
-    public function addDBTable(ilDBInterface $db, $table_name)
+    public function addDBTable(ilDBInterface $db, string $table_name): void
     {
         $this->addDBCustom($db, "SELECT * FROM " . $table_name);
     }
 
-    public function addDBCustom(ilDBInterface $db, $query)
+    public function addDBCustom(ilDBInterface $db, string $query): void
     {
         $set = $db->query($query);
 
@@ -113,17 +113,17 @@ class csvExportTable
         return $this->columns->getColumns();
     }
 
-    public function addColumn(csvExportColumn $column)
+    public function addColumn(csvExportColumn $column): void
     {
         $this->getColumns()->addColumn($column);
     }
 
-    public function addColumnsFromArray(array $columns)
+    public function addColumnsFromArray(array $columns): void
     {
         $this->getColumns()->addColumnsFromArray($columns);
     }
 
-    public function addValuesFromArray(array $rows_of_values = [])
+    public function addValuesFromArray(array $rows_of_values = []): void
     {
         $first = true;
         foreach ($rows_of_values as $row_of_values) {
@@ -134,7 +134,7 @@ class csvExportTable
         }
     }
 
-    public function addColumnsAndValuesFromArrays($columns, $rows_of_values)
+    public function addColumnsAndValuesFromArrays(array $columns, $rows_of_values): void
     {
         $first = true;
         foreach ($rows_of_values as $row_of_values) {
@@ -154,12 +154,12 @@ class csvExportTable
         return $values;
     }
 
-    public function setPositionOfColumn(string $id, int $posititon)
+    public function setPositionOfColumn(string $id, int $posititon): void
     {
         $this->getColumns()->getColumnById($id)->setPosition($posititon);
     }
 
-    public function getTableAsArray()
+    public function getTableAsArray(): array
     {
         $values = [];
         $this->getColumns()->sortColumns();
@@ -168,11 +168,7 @@ class csvExportTable
         foreach ($this->getRowsValuesAsArray() as $row_id => $row_array) {
             $values[1 + $row_id] = [];
             foreach ($this->getColumnsArray() as $column) {
-                if (array_key_exists($column->getColumnId(), $row_array)) {
-                    $values[1 + $row_id][] = $row_array[$column->getColumnId()];
-                } else {
-                    $values[1 + $row_id][] = "";
-                }
+                $values[1 + $row_id][] = array_key_exists($column->getColumnId(), $row_array) ? $row_array[$column->getColumnId()] : "";
 
             }
         }
@@ -182,16 +178,15 @@ class csvExportTable
     /**
      *
      */
-    public function sortRows()
+    public function sortRows(): void
     {
         if ($this->getSortColumn() && $this->getColumns()->columnExists($this->getSortColumn())) {
             $sort_column = $this->getSortColumn();
-            uasort($this->rows, function (csvExportRow $row_a, csvExportRow $row_b) use ($sort_column) {
+            uasort($this->rows, function (csvExportRow $row_a, csvExportRow $row_b) use ($sort_column): int {
                 if (is_string($row_a->getValue($sort_column))) {
                     return strcmp($row_a->getValue($sort_column)->getValue(), $row_b->getValue($sort_column)->getValue());
-                } else {
-                    return $row_a->getValue($sort_column)->getValue() > $row_b->getValue($sort_column)->getValue()? 1:-1;
                 }
+                return $row_a->getValue($sort_column)->getValue() > $row_b->getValue($sort_column)->getValue()? 1:-1;
             });
         }
     }
@@ -199,7 +194,7 @@ class csvExportTable
     /**
      * @param $sort_column
      */
-    public function setSortColumn($sort_column)
+    public function setSortColumn($sort_column): void
     {
         $this->sort_column = new csvExportColumn($sort_column);
     }
@@ -212,7 +207,7 @@ class csvExportTable
         return $this->sort_column;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->getRows());
     }

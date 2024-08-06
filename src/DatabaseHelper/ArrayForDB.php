@@ -61,11 +61,7 @@ trait ArrayForDB
         foreach ($array as $k => $v) {
 
             $serialized = unserialize($v);
-            if(is_array($serialized)) {
-                $this->{$k} = $serialized;
-            } else {
-                $this->{$k} = $v;
-            }
+            $this->{$k} = is_array($serialized) ? $serialized : $v;
         }
         return $this;
     }
@@ -78,7 +74,7 @@ trait ArrayForDB
     /**
      * @return array
      */
-    protected function getNonDbFields()
+    protected function getNonDbFields(): array
     {
         return ['db'];
     }
@@ -86,7 +82,7 @@ trait ArrayForDB
     protected function setObjectValuesFromRecord(hasDBFields $data, stdClass $rec)
     {
         //Problematisch
-        foreach ($data->getArrayForDb() as $k => $v) {
+        foreach (array_keys($data->getArrayForDb()) as $k) {
             try {
                 $serialized = unserialize((string) $rec->{$k});
             } catch(\ErrorException $e) {
@@ -97,7 +93,7 @@ trait ArrayForDB
             } else {
 
                 $type = getType($this->$k);
-                if($type == 'NULL'){
+                if($type === 'NULL'){
                     $type = getType($rec->{$k});
                 }
                 switch($type) {
@@ -135,7 +131,7 @@ trait ArrayForDB
         }
     }
 
-    public function serialize()
+    public function serialize(): string
     {
         return serialize($this->getArray());
     }
@@ -144,4 +140,15 @@ trait ArrayForDB
     {
         return $this->fromArray(unserialize($serialized));
     }
+
+    public function __serialize(): array
+    {
+        return ['data' => $this->serialize()];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data['data']);
+    }
+
 }

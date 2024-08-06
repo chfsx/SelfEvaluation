@@ -15,10 +15,7 @@ use ilSelfEvaluationPlugin;
 
 class QuestionBlockTableRow extends BlockTableRow
 {
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected \ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin, QuestionBlock $block)
     {

@@ -22,7 +22,7 @@ class MetaTypeSingleChoice extends MetaTypeSelect
         return 'MetaTypeSingleChoice';
     }
 
-    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values)
+    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values): \ilRadioGroupInputGUI
     {
         $select = new ilRadioGroupInputGUI($title, $postvar);
 

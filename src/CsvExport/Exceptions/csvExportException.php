@@ -56,7 +56,7 @@ class csvExportException extends Exception
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return implode('<br>', [get_class($this), $this->message]);
     }

@@ -46,15 +46,15 @@ class ListBlocksGUI
      * @throws ilObjectException
      * @throws ilCtrlException
      */
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $this->ctrl->saveParameter($this, 'block_id');
         $this->performCommand();
     }
 
-    public function performCommand()
+    public function performCommand(): void
     {
-        $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
+        $cmd = $this->ctrl->getCmd() ?: $this->getStandardCommand();
 
         switch ($cmd) {
             case 'showContent':
@@ -79,7 +79,7 @@ class ListBlocksGUI
         return 'showContent';
     }
 
-    public function showContent()
+    public function showContent(): void
     {
         $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
         $table = new BlockTableGUI($this->ctrl, $this->plugin, $this->parent, 'showContent');
@@ -119,14 +119,14 @@ class ListBlocksGUI
 
     }
 
-    public function saveSorting()
+    public function saveSorting(): void
     {
         $factory = new BlockFactory($this->db, $this->getSelfEvalId());
         $blocks = $factory->getAllBlocks();
         $positions = $this->http->post()->retrieve('position', $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()));
         foreach ($blocks as $block) {
             $position = (int) array_search($block->getPositionId(), $positions) + 1;
-            if ($position) {
+            if ($position !== 0) {
                 $block->setPosition($position);
                 $block->update();
             }
@@ -136,7 +136,7 @@ class ListBlocksGUI
         $this->ctrl->redirect($this, 'showContent');
     }
 
-    public function editOverall()
+    public function editOverall(): void
     {
         $this->tpl->setContent("hello World");
     }
@@ -146,7 +146,7 @@ class ListBlocksGUI
         return $this->parent->object->getId();
     }
 
-    protected function txt(string $lng_var)
+    protected function txt(string $lng_var): string
     {
         return $this->plugin->txt($lng_var);
     }
