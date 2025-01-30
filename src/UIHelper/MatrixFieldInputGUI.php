@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ilub\plugin\SelfEvaluation\UIHelper;
 
+use ILIAS\UI\Factory;
+use ILIAS\UI\Renderer;
 use ilSubEnabledFormPropertyGUI;
 use ilRepositoryObjectPlugin;
 use ilTemplate;
@@ -15,13 +17,18 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
     protected array $values;
     protected array $scale = [];
     protected ilRepositoryObjectPlugin $plugin;
+    private Factory $ui_factory;
+    private Renderer $ui_renderer;
 
     public function __construct(ilRepositoryObjectPlugin $plugin, string $a_title = '', string $a_postvar = '')
     {
+        global $DIC;
         parent::__construct($a_title, $a_postvar);
         $this->setType('matrix_field');
 
         $this->plugin = $plugin;
+        $this->ui_factory = $DIC->ui()->factory();
+        $this->ui_renderer = $DIC->ui()->renderer();
     }
 
     public function getHtml(): string
@@ -142,4 +149,24 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         }
         return true;
     }
+
+    public function getAlert(): string
+    {
+        $alert_text = parent::getAlert();
+
+        if ($alert_text !== '') {
+            // prepend alert icon
+            return $this->ui_renderer->render(
+                $this->ui_factory->symbol()->icon()->custom(
+                    \ilUtil::getImagePath("icon_alert.svg"),
+                    $this->lng->txt('alert'),
+                    'medium'
+                )
+            )
+                . $alert_text;
+        }
+
+        return $alert_text;
+    }
+
 }
