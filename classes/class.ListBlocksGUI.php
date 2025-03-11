@@ -132,7 +132,7 @@ class ListBlocksGUI
             }
         }
 
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->txt('sorting_saved'), true);
+        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->txt('sorting_saved'), true);
         $this->ctrl->redirect($this, 'showContent');
     }
 
@@ -146,7 +146,7 @@ class ListBlocksGUI
         return $this->parent->object->getId();
     }
 
-    protected function txt(string $lng_var)
+    protected function txt(string $lng_var): string
     {
         return $this->plugin->txt($lng_var);
     }

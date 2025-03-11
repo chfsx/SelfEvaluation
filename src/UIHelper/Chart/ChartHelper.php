@@ -8,8 +8,8 @@ use ilChartLegend;
 
 trait ChartHelper
 {
-    protected $canvas_width = "99%";
-    protected $canvas_height = "450px";
+    protected string $canvas_width = "99%";
+    protected string $canvas_height = "450px";
 
     protected function getLegend(): ilChartLegend
     {

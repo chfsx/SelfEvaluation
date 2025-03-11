@@ -11,24 +11,12 @@ use ILIAS\Refinery\ConstraintViolationException;
 
 class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
 {
-    /**
-     * @var string
-     */
-    protected $value = "";
-    /**
-     * @var array
-     */
-    protected $values;
-    /**
-     * @var array
-     */
-    protected $scale = [];
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
+    protected string $value = "";
+    protected array $values;
+    protected array $scale = [];
+    protected ilRepositoryObjectPlugin $plugin;
 
-    public function __construct(ilRepositoryObjectPlugin $plugin, $a_title = '', $a_postvar = '')
+    public function __construct(ilRepositoryObjectPlugin $plugin, string $a_title = '', string $a_postvar = '')
     {
         parent::__construct($a_title, $a_postvar);
         $this->setType('matrix_field');
@@ -69,20 +57,23 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $a_tpl->parseCurrentBlock();
     }
 
-    public function setValueByArray($values)
+    public function setValueByArray(array $values)
     {
-        if(array_key_exists($this->getPostVar(), $values)) {
+        $matrix_key = "";
+        $question_key = "";
+
+        if (array_key_exists($this->getPostVar(), $values)) {
             $this->setValue($values[$this->getPostVar()]);
             return;
         }
         try {
             list($matrix_key, $question_key) = explode("[", str_replace("]", "", $this->getPostVar()));
+        } catch (\Exception) {
         }
-        catch(\Exception $e){}
 
-        if(array_key_exists($matrix_key, $values)) {
+        if (array_key_exists($matrix_key, $values)) {
             $meta_question_values = $values[$matrix_key];
-            if(array_key_exists($question_key, $meta_question_values)) {
+            if (array_key_exists($question_key, $meta_question_values)) {
                 $this->setValue($meta_question_values[$question_key]);
             }
         }
@@ -131,7 +122,7 @@ class MatrixFieldInputGUI extends ilSubEnabledFormPropertyGUI
                         $post_var_parts[0],
                         $this->refinery->kindlyTo()->string()
                     );
-                } catch (ConstraintViolationException $e) {
+                } catch (ConstraintViolationException) {
                     $value = $this->http->wrapper()->post()->retrieve(
                         $post_var_parts[0],
                         $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string())

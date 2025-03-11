@@ -11,36 +11,13 @@ use ilUtil;
 
 class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
 {
-    /**
-     * @var array
-     */
-    protected $values;
-    /**
-     * @var string
-     */
-    protected $field_name;
-    /**
-     * @var string
-     */
-    protected $placeholder_value = "Value";
-    /**
-     * @var string
-     */
-    protected $placeholder_title = 'Title';
-    /**
-     * @var int
-     */
-    protected $default_value = 0;
-
-    /**
-     * @var string
-     */
-    protected $description = "";
-
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
+    protected array $values;
+    protected string $field_name;
+    protected string $placeholder_value = "Value";
+    protected string $placeholder_title = 'Title';
+    protected int $default_value = 0;
+    protected string $description = "";
+    protected ilRepositoryObjectPlugin $plugin;
 
     public function __construct(ilRepositoryObjectPlugin $plugin, string $title, string $post_var, string $field_name)
     {
@@ -100,7 +77,7 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
              */
             $item->setValueByArray($value);
         }
-        if(array_key_exists($this->getPostVar(), $value)) {
+        if (array_key_exists($this->getPostVar(), $value)) {
             $this->setValues(is_array($value[$this->getPostVar()]) ? $value[$this->getPostVar()] : []);
         }
     }
@@ -159,11 +136,6 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
     public function getPlaceholderValue(): string
     {
         return $this->placeholder_value;
-    }
-
-    public function setDefaultValue(string $default_value)
-    {
-        $this->default_value = $default_value;
     }
 
     public function getDefaultValue(): int

@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace ilub\plugin\SelfEvaluation\Player\Block;
 
+use ilub\plugin\SelfEvaluation\Block\Block;
 use ilub\plugin\SelfEvaluation\Player\Question\QuestionPlayerGUI;
 use ilub\plugin\SelfEvaluation\Player\PlayerFormContainer;
 use ilub\plugin\SelfEvaluation\UIHelper\Scale\Scale;
 use ilub\plugin\SelfEvaluation\UIHelper\MatrixHeaderGUI;
 use ilObjSelfEvaluation;
-use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 
 class QuestionBlockPlayerGUI extends BlockPlayerGUI
 {
-    /**
-     * @var QuestionBlock
-     */
-    protected $block;
+    protected Block $block;
 
     public function getBlockForm(PlayerFormContainer $parent_form): PlayerFormContainer
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ilub\plugin\SelfEvaluation\Player\Block;
 
-use ilPropertyFormGUI;
 use ilub\plugin\SelfEvaluation\Block\Block;
 use ilObjSelfEvaluationGUI;
 use ilub\plugin\SelfEvaluation\UIHelper\FormSectionHeaderGUIFixed;
@@ -15,25 +14,10 @@ use ilub\plugin\SelfEvaluation\Block\BlockType;
 
 abstract class BlockPlayerGUI
 {
-    /**
-     * @var Block
-     */
-    protected $block;
-
-    /**
-     * @var ilObjSelfEvaluationGUI
-     */
-    protected $parent;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
-
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+    protected Block $block;
+    protected ilObjSelfEvaluationGUI $parent;
+    protected ilDBInterface $db;
+    protected ilSelfEvaluationPlugin $plugin;
 
     public function __construct(ilDBInterface $db, ilSelfEvaluationPlugin $plugin, ilObjSelfEvaluationGUI $parent, BlockType $block)
     {
@@ -45,12 +29,6 @@ abstract class BlockPlayerGUI
 
     public function getBlockForm(PlayerFormContainer $parent_form): PlayerFormContainer
     {
-        if ($parent_form) {
-            $form = $parent_form;
-        } else {
-            $form = new ilPropertyFormGUI();
-        }
-
         $h = new FormSectionHeaderGUIFixed();
 
         if ($this->parent->object->isShowBlockTitlesDuringEvaluation()) {
@@ -61,8 +39,8 @@ abstract class BlockPlayerGUI
         if ($this->parent->object->isShowBlockDescriptionsDuringEvaluation()) {
             $h->setInfo($this->block->getDescription());
         }
-        $form->addItem($h);
+        $parent_form->addItem($h);
 
-        return $form;
+        return $parent_form;
     }
 }

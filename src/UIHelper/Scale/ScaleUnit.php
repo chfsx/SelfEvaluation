@@ -14,30 +14,12 @@ class ScaleUnit implements hasDBFields
     use ArrayForDB;
 
     public const TABLE_NAME = 'rep_robj_xsev_scale_u';
-    /**
-     * @var int
-     */
-    protected $id = 0;
-    /**
-     * @var string
-     */
-    protected $title = 'Standartitle';
-    /**
-     * @var int
-     */
-    protected $value = 10;
-    /**
-     * @var int
-     */
-    protected $parent_id = 0;
-    /**
-     * @var int
-     */
-    protected $position = 99;
-    /**
-     * @var \ilDBInterface
-     */
-    protected $db;
+    protected int $id = 0;
+    protected string $title = 'Standartitle';
+    protected int $value = 10;
+    protected int $parent_id = 0;
+    protected int $position = 99;
+    protected ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, $id = 0)
     {
@@ -76,7 +58,7 @@ class ScaleUnit implements hasDBFields
         $attributes = $xml->attributes();
         $unit = new self($db);
         $unit->setParentId($parent_id);
-        $unit->setTitle($attributes["title"]->__ToString());
+        $unit->setTitle($attributes["title"]->__toString());
         $unit->setValue((int)$attributes["value"]);
         $unit->setPosition((int)$attributes["position"]);
         $unit->create();
@@ -88,7 +70,7 @@ class ScaleUnit implements hasDBFields
         $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
             . $this->db->quote($this->getId(), 'integer'));
         $set = $this->db->fetchObject($set);
-        if(!is_null($set) ) {
+        if (!is_null($set)) {
             $this->setObjectValuesFromRecord($this, ($set));
         }
     }
@@ -123,14 +105,11 @@ class ScaleUnit implements hasDBFields
 
             return;
         }
-        $this->setId($this->db->nextID(self::TABLE_NAME));
+        $this->setId($this->db->nextId(self::TABLE_NAME));
         $this->db->insert(self::TABLE_NAME, $this->getArrayForDb());
     }
 
-    /**
-     * @return int
-     */
-    public function delete()
+    public function delete(): int
     {
         return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ' . $this->getId());
     }
@@ -188,7 +167,7 @@ class ScaleUnit implements hasDBFields
 
     public function getTitle(): string
     {
-        return (string) $this->title;
+        return $this->title;
     }
 
     public function setValue(int $value)

@@ -13,7 +13,7 @@ class MetaBlockPlayerGUI extends BlockPlayerGUI
     /**
      * @var MetaBlock
      */
-    protected $block;
+    protected \ilub\plugin\SelfEvaluation\Block\Block $block;
 
     public function getBlockForm(PlayerFormContainer $parent_form = null): PlayerFormContainer
     {

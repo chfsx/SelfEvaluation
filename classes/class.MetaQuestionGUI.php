@@ -2,35 +2,25 @@
 
 declare(strict_types=1);
 
-use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
 use ilub\plugin\SelfEvaluation\Question\Meta\Type\MetaTypeOption;
 use ilub\plugin\SelfEvaluation\Question\Meta\Type\MetaQuestionType;
 use ilub\plugin\SelfEvaluation\Question\Meta\Type\MetaTypeFactory;
 use ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestion;
 use ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestionTableGUI;
 use ilub\plugin\SelfEvaluation\Question\BaseQuestionGUI;
+use ilub\plugin\SelfEvaluation\Block\Block;
+use ilub\plugin\SelfEvaluation\Question\Question;
 
 class MetaQuestionGUI extends BaseQuestionGUI
 {
-    /**
-     * @var MetaBlock
-     */
-    protected $block;
+    protected Block $block;
 
     /**
      * @var MetaQuestionType[]
      */
     protected array $types;
-
-    /**
-     * @var MetaQuestion
-     */
-    protected $question;
-
-    /**
-     * @var bool
-     */
-    protected $enable_sorting = true;
+    protected Question $question;
+    protected bool $enable_sorting = true;
 
 
     protected function createTableGUI(): ilTable2GUI
@@ -38,7 +28,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
         return new MetaQuestionTableGUI($this, $this->plugin, $this->tpl, 'showContent', $this->getTypes(), $this->hasSorting(), $this->block);
     }
 
-    protected function initQuestionForm(string $mode = 'create')
+    public function initQuestionForm(string $mode = 'create')
     {
         parent::initQuestionForm($mode);
 
@@ -73,7 +63,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
         $this->form->addItem($re);
     }
 
-    protected function setQuestionFormValues()
+    public function setQuestionFormValues()
     {
         $item = $this->form->getItemByPostVar('question');
         /**
@@ -100,18 +90,16 @@ class MetaQuestionGUI extends BaseQuestionGUI
     protected function getValueDefinitionInputGuiByTypeId(ilRadioGroupInputGUI $group, int $type_id): ?MetaTypeOption
     {
         $options = $group->getOptions();
-        if (is_array($options)) {
-            /** @var MetaTypeOption[] $options */
-            foreach ($options as $option) {
-                if ($option->getValue() == $type_id) {
-                    return $option;
-                }
+        /** @var MetaTypeOption[] $options */
+        foreach ($options as $option) {
+            if ($option->getValue() == $type_id) {
+                return $option;
             }
         }
         return null;
     }
 
-    protected function createQuestionSetFields()
+    public function createQuestionSetFields()
     {
         $this->question->setName($this->form->getInput('question'));
         $this->question->setShortTitle($this->form->getInput('short_title'));
@@ -150,7 +138,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
     protected function saveRequired()
     {
         foreach (MetaQuestion::_getAllInstancesForParentId($this->db, $this->block->getId()) as $question) {
-            if($this->parent->http->post()->has('required')) {
+            if ($this->parent->http->post()->has('required')) {
                 $required_array = $this->parent->http->post()->retrieve(
                     'required',
                     $this->parent->refinery->kindlyTo()->dictOf($this->parent->refinery->kindlyTo()->int())

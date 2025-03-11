@@ -13,7 +13,7 @@ class MetaQuestion extends BaseQuestion
     public const TABLE_NAME = 'rep_robj_xsev_mqst';
     public const POSTVAR_PREFIX = 'mqst_';
     public const PRIMARY_KEY = 'id';
-    protected $parent_id;
+    protected int $parent_id;
     protected string $name = "";
     protected string $short_title = "";
     protected int $type_id = 0;
@@ -101,7 +101,7 @@ class MetaQuestion extends BaseQuestion
 
     public function getValues(): array
     {
-        return $this->values ? $this->values : [];
+        return $this->values ?: [];
     }
 
     public function setValues(array $values)

@@ -12,74 +12,24 @@ class KnobGUI
     public const CAP_BUTT = '\'butt\'';
     public const CAP_ROUND = '\'round\'';
     public const CAP_GAUGE = '\'gauge\'';
-    /**
-     * @var int
-     */
-    private static $num = 1;
-    /**
-     * @var string
-     */
-    protected $html = '';
-    /**
-     * @var int
-     */
-    protected $value = 0;
-    /**
-     * @var int
-     */
-    protected $min = 0;
-    /**
-     * @var int
-     */
-    protected $max = 100;
-    /**
-     * @var array
-     */
-    protected $fg_color = [208, 232, 255];
-    /**
-     * @var array
-     */
-    protected $input_color = [208, 232, 255];
-    /**
-     * @var array
-     */
-    protected $bg_color = [240, 240, 240];
-    /**
-     * @var bool
-     */
-    protected $read_only = true;
-    /**
-     * @var int
-     */
-    protected $angle_offset = 0;
-    /**
-     * @var int
-     */
-    protected $angle_arc = 360;
-    /**
-     * @var bool
-     */
-    protected $stopper = true;
-    /**
-     * @var int
-     */
-    protected $thickness = 0.3;
-    /**
-     * @var string
-     */
-    protected $line_cap = self::CAP_BUTT;
-    /**
-     * @var $height
-     */
-    protected $height = 50;
-    /**
-     * @var bool
-     */
-    protected $display_input = true;
-    /**
-     * @var bool
-     */
-    protected $display_previous = false;
+
+    private static int $num = 1;
+    protected string $html = '';
+    protected int $value = 0;
+    protected int $min = 0;
+    protected int $max = 100;
+    protected array $fg_color = [208, 232, 255];
+    protected array $input_color = [208, 232, 255];
+    protected array $bg_color = [240, 240, 240];
+    protected bool $read_only = true;
+    protected int $angle_offset = 0;
+    protected int $angle_arc = 360;
+    protected bool $stopper = true;
+    protected float $thickness = 0.3;
+    protected string $line_cap = self::CAP_BUTT;
+    protected int $height = 50;
+    protected bool $display_input = true;
+    protected bool $display_previous = false;
 
     public function render(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin)
     {
@@ -117,258 +67,162 @@ class KnobGUI
         return $this->html;
     }
 
-    /**
-     * @param int $max
-     */
-    public function setMax($max)
+    public function setMax(int $max)
     {
         $this->max = $max;
     }
 
-    /**
-     * @return int
-     */
-    public function getMax()
+    public function getMax(): int
     {
         return $this->max;
     }
 
-    /**
-     * @param int $min
-     */
-    public function setMin($min)
+    public function setMin(int $min)
     {
         $this->min = $min;
     }
 
-    /**
-     * @return int
-     */
-    public function getMin()
+    public function getMin(): int
     {
         return $this->min;
     }
 
-    /**
-     * @param int $num
-     */
-    public static function setNum($num)
+    public static function setNum(int $num)
     {
         self::$num = $num;
     }
 
-    /**
-     * @return int
-     */
-    public static function getNum()
+    public static function getNum(): int
     {
         return self::$num;
     }
 
-    /**
-     * @param int $value
-     */
-    public function setValue($value)
+    public function setValue(int $value)
     {
         $this->value = $value;
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }
 
-    /**
-     * @param array $fg_color
-     */
-    public function setFgColor($fg_color)
+    public function setFgColor(array $fg_color)
     {
         $this->fg_color = $fg_color;
     }
 
-    /**
-     * @return array
-     */
-    public function getFgColor()
+    public function getFgColor(): array
     {
         return $this->fg_color;
     }
 
-    /**
-     * @param array $in_color
-     */
-    public function setInputColor($in_color)
+    public function setInputColor(array $in_color)
     {
         $this->input_color = $in_color;
     }
 
-    /**
-     * @return array
-     */
-    public function getInputColor()
+    public function getInputColor(): array
     {
         return $this->input_color;
     }
 
-    /**
-     * @param boolean $read_only
-     */
-    public function setReadOnly($read_only)
+    public function setReadOnly(bool $read_only)
     {
         $this->read_only = $read_only;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getReadOnly()
+    public function getReadOnly(): bool
     {
         return $this->read_only;
     }
 
-    /**
-     * @param int $angle_arc
-     */
-    public function setAngleArc($angle_arc)
+    public function setAngleArc(int $angle_arc)
     {
         $this->angle_arc = $angle_arc;
     }
 
-    /**
-     * @return int
-     */
-    public function getAngleArc()
+    public function getAngleArc(): int
     {
         return $this->angle_arc;
     }
 
-    /**
-     * @param int $angle_offset
-     */
-    public function setAngleOffset($angle_offset)
+    public function setAngleOffset(int $angle_offset)
     {
         $this->angle_offset = $angle_offset;
     }
 
-    /**
-     * @return int
-     */
-    public function getAngleOffset()
+    public function getAngleOffset(): int
     {
         return $this->angle_offset;
     }
 
-    /**
-     * @param array $bg_color
-     */
-    public function setBgColor($bg_color)
+    public function setBgColor(array $bg_color)
     {
         $this->bg_color = $bg_color;
     }
 
-    /**
-     * @return array
-     */
-    public function getBgColor()
+    public function getBgColor(): array
     {
         return $this->bg_color;
     }
 
-    /**
-     * @param boolean $display_input
-     */
-    public function setDisplayInput($display_input)
+    public function setDisplayInput(bool $display_input)
     {
         $this->display_input = $display_input;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getDisplayInput()
+    public function getDisplayInput(): bool
     {
         return $this->display_input;
     }
 
-    /**
-     * @param boolean $display_previous
-     */
-    public function setDisplayPrevious($display_previous)
+    public function setDisplayPrevious(bool $display_previous)
     {
         $this->display_previous = $display_previous;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getDisplayPrevious()
+    public function getDisplayPrevious(): bool
     {
         return $this->display_previous;
     }
 
-    /**
-     * @param string $line_cap
-     */
-    public function setLineCap($line_cap)
+    public function setLineCap(string $line_cap)
     {
         $this->line_cap = $line_cap;
     }
 
-    /**
-     * @return string
-     */
-    public function getLineCap()
+    public function getLineCap(): string
     {
         return $this->line_cap;
     }
 
-    /**
-     * @param boolean $stopper
-     */
-    public function setStopper($stopper)
+    public function setStopper(bool $stopper)
     {
         $this->stopper = $stopper;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getStopper()
+    public function getStopper(): bool
     {
         return $this->stopper;
     }
 
-    /**
-     * @param int $thickness
-     */
-    public function setThickness($thickness)
+    public function setThickness(float $thickness)
     {
         $this->thickness = $thickness;
     }
 
-    /**
-     * @return int
-     */
-    public function getThickness()
+    public function getThickness(): float
     {
         return $this->thickness;
     }
 
-    /**
-     * @param int $height
-     */
-    public function setHeight($height)
+    public function setHeight(int $height)
     {
         $this->height = $height;
     }
 
-    /**
-     * @return int
-     */
-    public function getHeight()
+    public function getHeight(): int
     {
         return $this->height;
     }

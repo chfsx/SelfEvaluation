@@ -9,7 +9,6 @@ use ilGlobalTemplateInterface;
 use ilRepositoryObjectPlugin;
 use ilDBInterface;
 use ilFormSectionHeaderGUI;
-use ILIAS\HTTP\Wrapper\WrapperFactory;
 
 /**
  * @ilCtrl_Calls      ilSelfEvaluationScaleGUI: ilObjSelfEvaluationGUI
@@ -21,23 +20,10 @@ class ScaleFormGUI extends ilPropertyFormGUI
 
     protected Scale $scale;
     protected ilRepositoryObjectPlugin $plugin;
-
     protected ilGlobalTemplateInterface $tmpl;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
-
-    /**
-     * @var bool
-     */
-    protected $locked;
-
-    /**
-     * @var int
-     */
-    protected $parent_id;
+    protected ilDBInterface $db;
+    protected bool $locked;
+    protected int $parent_id;
 
     public function __construct(
         ilDBInterface $db,
@@ -78,7 +64,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
     /**
      * @return array
      */
-    public function fillForm()
+    public function fillForm(): array
     {
         $array = [];
         foreach ($this->scale->getUnits() as $unit) {
@@ -95,11 +81,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
         return $array;
     }
 
-    /**
-     * @param ilPropertyFormGUI $form_gui
-     * @return ilPropertyFormGUI
-     */
-    public function appendToForm(ilPropertyFormGUI $form_gui)
+    public function appendToForm(ilPropertyFormGUI $form_gui): ilPropertyFormGUI
     {
         foreach ($this->getItems() as $item) {
             $form_gui->addItem($item);
@@ -110,6 +92,8 @@ class ScaleFormGUI extends ilPropertyFormGUI
 
     public function updateObject()
     {
+        $positions = [];
+
         $this->scale->update();
         if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_new')) {
             if (!is_array($this->http->wrapper()->post()->retrieve(
@@ -119,7 +103,6 @@ class ScaleFormGUI extends ilPropertyFormGUI
                 return;
             }
         }
-        $units = [];
         if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_position')) {
             if (is_array($this->getArrayFromPost(self::FIELD_NAME . '_position'))) {
                 $positions = array_flip($this->getArrayFromPost(self::FIELD_NAME . '_position'));
@@ -127,7 +110,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
         }
 
         $new = $this->getArrayFromPostComplex(self::FIELD_NAME . '_new');
-        if (!is_null($new) &&is_array($new['value'])) {
+        if (!is_null($new) && is_array($new['value'])) {
             foreach ($new['value'] as $k => $v) {
                 if ($v !== false and $v !== null and $v !== '') {
                     $obj = new ScaleUnit($this->db);
@@ -135,7 +118,6 @@ class ScaleFormGUI extends ilPropertyFormGUI
                     $obj->setTitle($new['title'][$k]);
                     $obj->setValue((int) $v);
                     $obj->create();
-                    $units[] = $obj;
                 }
             }
         }
@@ -144,15 +126,13 @@ class ScaleFormGUI extends ilPropertyFormGUI
             $old = $this->getArrayFromPostComplex(self::FIELD_NAME . '_old');
             if (is_array($old['value'])) {
                 foreach ($old['value'] as $k => $v) {
+                    $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
                     if ($v !== false and $v !== null and $v !== '') {
-                        $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
                         $obj->setTitle($old['title'][$k]);
                         $obj->setValue((int) $v);
                         $obj->setPosition((int)$positions[str_replace('id_', '', (string)$k)]);
                         $obj->update();
-                        $units[] = $obj;
                     } else {
-                        $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
                         $obj->delete();
                     }
                 }
@@ -167,7 +147,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
                 $string,
                 $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string())
             );
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return null;
         }
 
@@ -180,7 +160,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
                 $string,
                 $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()))
             );
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return null;
         }
     }

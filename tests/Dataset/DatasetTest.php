@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 include_once "DatasetHelperTrait.php";
 
@@ -9,22 +10,19 @@ use ilub\plugin\SelfEvaluation\Dataset\Data;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
 
-class DatasetTest extends TestCase
+class DatasetsTest extends TestCase
 {
     use DatasetHelperTrait;
-    /**
-     * @var Dataset
-     */
-    protected $dataset;
 
-    /**
-     * @var  \Mockery\MockInterface|\ilDBInterface
-     */
-    protected $db;
+    protected Dataset $dataset;
+    protected \Mockery\MockInterface|ilDBInterface $db;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->db = \Mockery::mock("\ilDBInterface");
+        $this->db = Mockery::mock("\ilDBInterface");
+        $this->db->shouldReceive("query");
+        $this->db->shouldReceive("fetchObject");
+
         $this->dataset = new Dataset($this->db);
     }
 
@@ -48,7 +46,8 @@ class DatasetTest extends TestCase
     {
         self::assertEquals(['id' => ['integer', 0],
                             'identifier_id' => ['integer', 0],
-                            'creation_date' => ['integer', 0]
+                            'creation_date' => ['integer', 0],
+                            'complete' => ['integer', 0]
         ], $this->dataset->getArrayForDb());
     }
 
@@ -192,7 +191,7 @@ class DatasetTest extends TestCase
         $question1 = new Question($this->db);
         $question1->setId(1);
         $answer = new Data($this->db);
-        $answer->setValue(0);
+        $answer->setValue("0");
         $this->dataset->setQuestionsDataForBlocks([$block1->getId() => [$question1->getId() => $answer]]);
         self::assertEquals(
             [$question1->getId() => $answer],
@@ -215,8 +214,8 @@ class DatasetTest extends TestCase
         $this->dataset->setQuestionsDataForBlocks([$block1->getId() => []]);
         try {
             $this->dataset->getPercentageForBlock(1);
-            self::assertTrue(false);
-        } catch (Exception $e) {
+            self::fail();
+        } catch (Exception) {
             self::assertTrue(true);
         }
     }
@@ -225,7 +224,7 @@ class DatasetTest extends TestCase
     {
         $this->dataset->setHighestScale(5);
         [$block1, $question1, $answer1] = $this->getBasics();
-        $answer1->setValue(0);
+        $answer1->setValue("0");
         $this->dataset->setQuestionBlocks([$block1]);
         $this->dataset->setQuestionsDataForBlocks([$block1->getId() => [$question1->getId() => $answer1]]);
 
@@ -236,18 +235,18 @@ class DatasetTest extends TestCase
     {
         $this->dataset->setHighestScale(5);
         [$block1, $question1, $answer1] = $this->getBasics();
-        $answer1->setValue(5);
+        $answer1->setValue("5");
         $this->dataset->setQuestionBlocks([$block1]);
         $this->dataset->setQuestionsDataForBlocks([$block1->getId() => [$question1->getId() => $answer1]]);
 
-        self::assertEquals(5 / 5 * 100, $this->dataset->getPercentageForBlock(1));
+        self::assertEquals(100, $this->dataset->getPercentageForBlock(1));
     }
 
     public function testGetPercentageForBlockOnSingularSetMediumAnswer()
     {
         $this->dataset->setHighestScale(5);
         [$block1, $question1, $answer1] = $this->getBasics();
-        $answer1->setValue(2);
+        $answer1->setValue("2");
         $this->dataset->setQuestionBlocks([$block1]);
         $this->dataset->setQuestionsDataForBlocks([$block1->getId() => [$question1->getId() => $answer1]]);
 
@@ -259,7 +258,7 @@ class DatasetTest extends TestCase
         $this->dataset->setHighestScale(5);
         [$block1, $question1, $answer1] = $this->getBasics();
         $this->dataset->setQuestionBlocks([$block1]);
-        $answer1->setValue(2);
+        $answer1->setValue("2");
         $this->dataset->setQuestionsDataForBlocks([$block1->getId() => [$question1->getId() => $answer1]]);
 
         self::assertEquals(2 / 5 * 100, $this->dataset->getPercentageForBlock(1));

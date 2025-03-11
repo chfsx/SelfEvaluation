@@ -10,34 +10,16 @@ use ilub\plugin\SelfEvaluation\Block\BlockType;
 
 class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
 {
-    /**
-     * @var int
-     */
-    public $id = 0;
-    /**
-     * @var string
-     */
-    protected $title = '';
-    /**
-     * @var string
-     */
-    protected $description = '';
-    /**
-     * @var int
-     */
-    protected $position = 99;
-    /**
-     * @var int
-     */
-    protected $parent_id = 0;
-    /**
-     * @var string
-     */
-    protected $abbreviation = '';
+    public int $id = 0;
+    protected string $title = '';
+    protected string $description = '';
+    protected int $position = 99;
+    protected int $parent_id = 0;
+    protected string $abbreviation = '';
     /**
      * @var Question[]
      */
-    protected $questions = [];
+    protected array $questions = [];
 
     public function __construct(int $parent_id = 0)
     {
@@ -115,7 +97,7 @@ class VirtualQuestionBlock implements QuestionBlockInterface, BlockType
     /**
      * @return Question[]
      */
-    public function getQuestions()
+    public function getQuestions(): array
     {
         return $this->questions;
     }

@@ -24,7 +24,7 @@ class MetaBlockTableRow extends BlockTableRow
         $this->setQuestionsLink($question_action->getLink());
         $this->addAction($question_action);
 
-        $img_path = ilUtil::getImagePath('icon_ok.svg');
+        $img_path = ilUtil::getImagePath('standard/icon_ok.svg');
         $this->setStatusImg($img_path);
     }
 

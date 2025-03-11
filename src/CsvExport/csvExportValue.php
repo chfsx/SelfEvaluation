@@ -11,14 +11,8 @@ namespace ilub\plugin\SelfEvaluation\CsvExport;
  */
 class csvExportValue
 {
-    /**
-     * @var csvExportColumn
-     */
-    protected $column = null;
-    /**
-     * @var string
-     */
-    protected $value = "";
+    protected ?csvExportColumn $column = null;
+    protected string $value = "";
 
     public function __construct(string $column_name, string $value)
     {

@@ -36,6 +36,9 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
 
     public ?ilObject $object = null;
     protected ilPropertyFormGUI $form;
+    /**
+     * @var ilSelfEvaluationPlugin|null
+     */
     protected ?ilPlugin $plugin = null;
     protected ilDBInterface $db;
     public WrapperFactory $http;
@@ -89,12 +92,11 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
     {
         if (!$this->getCreationMode()) {
 
-            if ($this->access->checkAccess('read', '',  $this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int()))) {
+            if ($this->access->checkAccess('read', '', $this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int()))) {
                 $this->nav_history->addItem(
                     $this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int()),
                     $this->ctrl->getLinkTarget($this, $this->getStandardCmd()),
-                    $this->getType(),
-                    ''
+                    $this->getType()
                 );
             }
 
@@ -286,7 +288,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
 
 
         } else {
-             parent::executeCommand();
+            parent::executeCommand();
 
         }
 
@@ -299,7 +301,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
 
     public function performCommand(string $cmd): void
     {
-        if($cmd == '') {
+        if ($cmd == '') {
             $cmd = $this->ctrl->getCmd();
         }
         switch ($cmd) {
@@ -366,7 +368,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
     public function editProperties()
     {
         if ($this->object->hasDatasets()) {
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_INFO, $this->txt('scale_cannot_be_edited'));
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_INFO, $this->txt('scale_cannot_be_edited'));
         }
         $this->tabs->activateTab('properties');
         $this->initPropertiesForm();
@@ -710,12 +712,12 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
             $this->object->setShowFbsChartLeftRight((bool)$this->form->getInput('show_fbs_chart_left_right'));
 
             $this->object->update();
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->txt('msg_obj_modified'), true);
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->txt('msg_obj_modified'), true);
             $this->ctrl->redirect($this, 'editProperties');
         }
         $this->tabs->activateTab('properties');
         $this->form->setValuesByPost();
-        $this->tpl->setContent($this->form->getHtml());
+        $this->tpl->setContent($this->form->getHTML());
     }
 
     public function getObjId(): int
@@ -737,13 +739,6 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                 $this->object->getId(),
                 (string)$DIC->user()->getId()
             );
-            if (!$id) {
-                $id = Identity::_getNewInstanceForObjIdAndUserId(
-                    $this->db,
-                    $this->object->getId(),
-                    (string)$DIC->user()->getId()
-                );
-            }
             $this->ctrl->setParameterByClass('PlayerGUI', 'uid', $id->getId());
             $this->ctrl->redirectByClass('PlayerGUI', 'startScreen');
         }

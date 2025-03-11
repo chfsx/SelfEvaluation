@@ -1,16 +1,13 @@
 <?php
 
-
+declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use ilub\plugin\SelfEvaluation\Dataset\Statistics;
 
 class StatisticsTest extends TestCase
 {
-    /**
-     * @var Statistics
-     */
-    protected $statistics;
+    protected Statistics $statistics;
 
 
 
@@ -53,7 +50,7 @@ class StatisticsTest extends TestCase
     public function testFractionOfZero()
     {
         self::assertEquals(0, $this->statistics->fractionOf(0, 0));
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         self::assertNull($this->statistics->fractionOf(1, 0));
     }
     public function testFractionOf()
@@ -63,14 +60,14 @@ class StatisticsTest extends TestCase
     }
     public function testPercentageOf()
     {
-        self::assertEquals(1 * 100, $this->statistics->percentageOf(1, 1));
+        self::assertEquals(100, $this->statistics->percentageOf(1, 1));
         self::assertEquals(1 / 3 * 100, $this->statistics->percentageOf(1, 3));
     }
 
     public function testArraySumFractionOfMaxSumPossible()
     {
         self::assertEquals(0, $this->statistics->arraySumFractionOfMaxSumPossible([0], 1));
-        self::assertEquals(1 / (1 * 1), $this->statistics->arraySumFractionOfMaxSumPossible([1], 1));
+        self::assertEquals(1, $this->statistics->arraySumFractionOfMaxSumPossible([1], 1));
         self::assertEquals((1 + 2) / (2 * 2), $this->statistics->arraySumFractionOfMaxSumPossible([1,2], 2));
         self::assertEquals((1 + 2 + 30) / (3 * 100), $this->statistics->arraySumFractionOfMaxSumPossible([1,2,30], 100));
     }

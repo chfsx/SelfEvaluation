@@ -15,10 +15,7 @@ use ilub\plugin\SelfEvaluation\Block\BlockTableRow;
 
 class QuestionBlock extends Block implements QuestionBlockInterface
 {
-    /**
-     * @var string
-     */
-    protected $abbreviation = '';
+    protected string $abbreviation = '';
 
     public function cloneTo(int $parent_id): self
     {
@@ -59,7 +56,7 @@ class QuestionBlock extends Block implements QuestionBlockInterface
         }
 
         $feedbacks = Feedback::_getAllInstancesForParentId($this->db, $this->getId());
-        ;
+
         foreach ($feedbacks as $feedback) {
             $child_xml = $feedback->toXml($child_xml);
         }
@@ -79,11 +76,11 @@ class QuestionBlock extends Block implements QuestionBlockInterface
         $block->create();
 
         foreach ($xml->question as $question) {
-            Question::fromXML($db, $block->getId(), $question);
+            Question::fromXml($db, $block->getId(), $question);
         }
 
         foreach ($xml->feedback as $feedback) {
-            Feedback::fromXML($db, $block->getId(), $feedback);
+            Feedback::fromXml($db, $block->getId(), $feedback);
         }
 
         return $xml;
@@ -101,12 +98,12 @@ class QuestionBlock extends Block implements QuestionBlockInterface
 
     public function getAbbreviation(): string
     {
-        return (string) $this->abbreviation;
+        return $this->abbreviation;
     }
 
     public function getLabel(): string
     {
-        if($this->getAbbreviation() != '') {
+        if ($this->getAbbreviation() != '') {
             return $this->getAbbreviation();
         }
         return $this->getTitle();

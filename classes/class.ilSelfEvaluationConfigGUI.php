@@ -10,38 +10,15 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
     public const TYPE_TEXT = 'ilTextInputGUI';
     public const TYPE_RTE_TEXT_AREA = 'ilTextAreaInputGUI';
     public const TYPE_CHECKBOX = 'ilCheckboxInputGUI';
-    /**
-     * @var ilSelfEvaluationConfig
-     */
-    protected $object;
-    /**
-     * @var array
-     */
-    protected $fields = [];
-    /**
-     * @var string
-     */
-    protected $table_name = '';
-    /**
-     * @var ilPropertyFormGUI
-     */
-    protected $form;
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilTemplate
-     */
-    protected $tpl;
-    /**
-     * @var ilTabsGUI
-     */
-    protected $tabs;
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+
+    protected ilSelfEvaluationConfig $object;
+    protected array $fields = [];
+    protected string $table_name = '';
+    protected ilPropertyFormGUI $form;
+    protected ilCtrl|ilCtrlInterface $ctrl;
+    protected mixed $tpl;
+    protected ilTabsGUI $tabs;
+    protected ilSelfEvaluationPlugin $plugin;
 
     public function __construct()
     {
@@ -56,10 +33,7 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         $this->object = new ilSelfEvaluationConfig($this->plugin->getConfigTableName());
     }
 
-    /**
-     * @return array
-     */
-    public function getFields()
+    public function getFields(): array
     {
         $this->fields = [
             'identity_selection' => [
@@ -72,18 +46,12 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         return $this->fields;
     }
 
-    /**
-     * @return string
-     */
-    public function getTableName()
+    public function getTableName(): string
     {
         return $this->table_name;
     }
 
-    /**
-     * @return ilSelfEvaluationConfig
-     */
-    public function getObject()
+    public function getObject(): ilSelfEvaluationConfig
     {
         return $this->object;
     }
@@ -123,10 +91,7 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         $this->form->setValuesByArray($values);
     }
 
-    /**
-     * @return ilPropertyFormGUI
-     */
-    public function initConfigurationForm()
+    public function initConfigurationForm(): ilPropertyFormGUI
     {
         $this->form = new ilPropertyFormGUI();
         foreach ($this->getFields() as $key => $item) {
@@ -176,11 +141,11 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
                     }
                 }
             }
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('conf_saved'));
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('conf_saved'));
             $this->ctrl->redirect($this, 'configure');
         } else {
             $this->form->setValuesByPost();
-            $this->tpl->setContent($this->form->getHtml());
+            $this->tpl->setContent($this->form->getHTML());
         }
     }
 }

@@ -23,27 +23,11 @@ use ilub\plugin\SelfEvaluation\Dataset\Data;
 
 class FeedbackChartGUI
 {
-    /**
-     * @var ilGlobalPageTemplate
-     */
-    protected $tpl;
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
-    /**
-     * @var ilToolbarGUI
-     */
-    protected $toolbar;
-
-    /**
-     * @var ilObjSelfEvaluation
-     */
-    protected $evaluation;
+    protected ilGlobalPageTemplate $tpl;
+    protected ilRepositoryObjectPlugin $plugin;
+    protected ilDBInterface $db;
+    protected ilToolbarGUI $toolbar;
+    protected ilObjSelfEvaluation $evaluation;
 
     public function __construct(
         ilDBInterface $db,
@@ -59,7 +43,7 @@ class FeedbackChartGUI
         $this->evaluation = $evaluation;
     }
 
-    public function getPresentationOfFeedback(Dataset $dataset)
+    public function getPresentationOfFeedback(Dataset $dataset): string
     {
         $tpl = $this->initTemplate();
 
@@ -158,20 +142,20 @@ class FeedbackChartGUI
         return $tpl->get();
     }
 
-    protected function showAnyFeedbackCharts()
+    protected function showAnyFeedbackCharts(): bool
     {
         $any_active = $this->evaluation->isShowFbsChartBar() || $this->evaluation->isShowFbsChartSpider() || $this->evaluation->isShowFbsChartLeftRight();
         return $this->evaluation->isShowFeedbacksCharts() && $any_active;
     }
 
-    protected function showOverview()
+    protected function showOverview(): bool
     {
         $any_overview_active = $this->evaluation->isShowFbsOverviewBar() || $this->evaluation->isShowFbsOverviewSpider() ||
             $this->evaluation->isShowFbsOverviewLeftRight() || $this->evaluation->isShowFbsOverviewStatistics();
         return $this->evaluation->isShowFeedbacksOverview() || $any_overview_active;
     }
 
-    protected function showAnyFeedback()
+    protected function showAnyFeedback(): bool
     {
         return $this->showAnyFeedbackCharts() || $this->evaluation->isShowBlockTitlesDuringFeedback() ||
             $this->evaluation->isShowBlockDescriptionsDuringFeedback() || $this->evaluation->isShowFeedbacks();
@@ -192,7 +176,7 @@ class FeedbackChartGUI
         return $tpl;
     }
 
-    protected function getBlockLabel(QuestionBlock $block)
+    protected function getBlockLabel(QuestionBlock $block): string
     {
         return $this->plugin->txt('block') . ' ' . ($block->getPosition() + 1);
     }
@@ -206,7 +190,7 @@ class FeedbackChartGUI
         if ($this->showAnyFeedback()) {
             $percentage = $dataset->getPercentageForBlock($block->getId());
             $feedback = Feedback::_getFeedbackForPercentage($this->db, $block->getId(), $percentage);
-            if(!$feedback) {
+            if (!$feedback) {
                 return;
             }
             $tpl->setCurrentBlock('feedback');
@@ -274,7 +258,7 @@ class FeedbackChartGUI
             $value = Data::_getInstanceForQuestionId($this->db, $dataset->getId(), $qst->getId())->getValue();
             $data = $chart->getDataInstance();
             $data->addPoint($x, (float)$value);
-            $ticks[$x] = $qst->getTitle() ? $qst->getTitle() : $this->plugin->txt('question') . ' ' . $x;
+            $ticks[$x] = $qst->getTitle() ?: $this->plugin->txt('question') . ' ' . $x;
             $x++;
             $chart->addData($data);
 
@@ -298,7 +282,7 @@ class FeedbackChartGUI
         foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
             $value = Data::_getInstanceForQuestionId($this->db, $dataset->getId(), $qst->getId())->getValue();
             $data->addPoint((float)$value, $x);
-            $ticks[$x] = $qst->getTitle() ? $qst->getTitle() : $this->plugin->txt('question') . ' ' . $x;
+            $ticks[$x] = $qst->getTitle() ?: $this->plugin->txt('question') . ' ' . $x;
             $x++;
 
         }
@@ -322,7 +306,7 @@ class FeedbackChartGUI
         foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
             $value = Data::_getInstanceForQuestionId($this->db, $dataset->getId(), $qst->getId())->getValue();
             $data->addPoint($cnt, (float)$value);
-            $leg_labels[] = $qst->getTitle() ? $qst->getTitle() : $this->plugin->txt('question') . ' ' . ($cnt + 1);
+            $leg_labels[] = $qst->getTitle() ?: $this->plugin->txt('question') . ' ' . ($cnt + 1);
             $cnt++;
         }
         $chart->setLegLabels($leg_labels); // This might be the questions

@@ -24,7 +24,7 @@ class LeftRightChart extends ilChartGrid
         $this->setYAxisToInteger(true);
     }
 
-    public function getDataInstance($type = null): \ilChartData
+    public function getDataInstance($a_type = null): \ilChartData
     {
         return new ilChartDataLines();
     }
@@ -33,11 +33,8 @@ class LeftRightChart extends ilChartGrid
     {
         parent::parseGlobalOptions($a_options);
         $x_tick_key = array_keys($this->getTicks()["x"]);
-        $y_tick_key = array_keys($this->getTicks()["y"]);
 
         $a_options->{"yaxis"}->labelWidth = 0;
-
-        $a_options->{"yaxis"}->min = empty($y_tick_key) ? 0 : min($y_tick_key);
 
         $a_options->{"xaxis"}->min = min($x_tick_key);
         $a_options->{"xaxis"}->max = max($x_tick_key);

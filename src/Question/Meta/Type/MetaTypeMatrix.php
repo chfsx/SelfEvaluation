@@ -110,7 +110,7 @@ class MetaTypeMatrix extends MetaQuestionType
         return array_merge($scale, $questions);
     }
 
-    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values)
+    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values): array
     {
         $scale_values = self::getScaleFromArray($values);
         $question_values = self::getQuestionsFromArray($values);
@@ -125,7 +125,7 @@ class MetaTypeMatrix extends MetaQuestionType
             $input_item = new MatrixFieldInputGUI(
                 $plugin,
                 $question_value,
-                "" . $postvar . "[" . $key . "]"
+                $postvar . "[" . $key . "]"
             );
             $input_item->setScale($scale_values);
             $matrix_items[] = $input_item;

@@ -4,19 +4,10 @@ declare(strict_types=1);
 
 class ilSelfEvaluationConfig
 {
-    /**
-     * @var string
-     */
-    protected $table_name = '';
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected string $table_name = '';
+    protected ilDBInterface $db;
 
-    /**
-     * @param $table_name
-     */
-    public function __construct($table_name)
+    public function __construct(string $table_name)
     {
         global $DIC;
 
@@ -24,28 +15,17 @@ class ilSelfEvaluationConfig
         $this->table_name = $table_name;
     }
 
-    /**
-     * @param string $table_name
-     */
-    public function setTableName($table_name)
+    public function setTableName(string $table_name)
     {
         $this->table_name = $table_name;
     }
 
-    /**
-     * @return string
-     */
-    public function getTableName()
+    public function getTableName(): string
     {
         return $this->table_name;
     }
 
-    /**
-     * @param $method
-     * @param $params
-     * @return bool|null
-     */
-    public function __call($method, $params)
+    public function __call(string $method, array $params): string|bool|null
     {
         if (substr($method, 0, 3) == 'get') {
             return $this->getValue(self::_fromCamelCase(substr($method, 3)));
@@ -60,11 +40,7 @@ class ilSelfEvaluationConfig
         }
     }
 
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function setValue($key, $value)
+    public function setValue(string $key, string $value)
     {
         if (!is_string($this->getValue($key))) {
             $this->db->insert($this->getTableName(), [
@@ -96,11 +72,7 @@ class ilSelfEvaluationConfig
         }
     }
 
-    /**
-     * @param $key
-     * @return bool|string
-     */
-    public function getValue($key): string
+    public function getValue(string $key): string
     {
         $result = $this->db->query("SELECT config_value FROM " . $this->getTableName() . " WHERE config_key = "
             . $this->db->quote($key, "text"));
@@ -112,10 +84,7 @@ class ilSelfEvaluationConfig
         return (string) $record['config_value'];
     }
 
-    /**
-     * @return int
-     */
-    public function getContainer()
+    public function getContainer(): bool|int|string
     {
         $key = $this->getValue('container');
         if ($key == '' or $key == 0) {
@@ -125,10 +94,7 @@ class ilSelfEvaluationConfig
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function initDB()
+    public function initDB(): bool
     {
         if (!$this->db->tableExists($this->getTableName())) {
             $fields = [
@@ -149,15 +115,7 @@ class ilSelfEvaluationConfig
         return true;
     }
 
-
-    //
-    // Helper
-    //
-    /**
-     * @param string $str
-     * @return string
-     */
-    public static function _fromCamelCase($str)
+    public static function _fromCamelCase(string $str): string
     {
         $str[0] = strtolower($str[0]);
 
@@ -170,12 +128,7 @@ class ilSelfEvaluationConfig
         );
     }
 
-    /**
-     * @param string $str
-     * @param bool   $capitalise_first_char
-     * @return string
-     */
-    public static function _toCamelCase($str, $capitalise_first_char = false)
+    public static function _toCamelCase(string $str, bool $capitalise_first_char = false): string
     {
         if ($capitalise_first_char) {
             $str[0] = strtoupper($str[0]);

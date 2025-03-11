@@ -6,15 +6,9 @@ namespace ilub\plugin\SelfEvaluation\CsvExport;
 
 class csvExport
 {
-    /**
-     * @var csvExportTable
-     */
-    protected $table;
+    protected csvExportTable $table;
 
-    /**
-     * @param csvExportTable $table
-     */
-    public function __construct($table = null)
+    public function __construct(csvExportTable $table = null)
     {
         if ($table) {
             $this->table = $table;
@@ -35,29 +29,25 @@ class csvExport
 
         foreach ($this->getTable()->getTableAsArray() as $row) {
 
+            /**
             $utf8_row = [];
             foreach ($row as $entry) {
                 $utf8_row[] = $this->convertExcelUtf8($entry);
             }
-
+            **/
             fputcsv($output, $row, $delimiter, $enclosure);
         }
 
     }
 
-    /**
-     * @param $string
-     * @return mixed
-     */
-    protected function convertExcelUtf8(string $string)
+    protected function convertExcelUtf8(string $string): array|string
     {
         $string = str_replace("Ä", mb_convert_encoding("Ä", 'UTF-16LE', 'UTF-8'), $string);
         $string = str_replace("Ü", mb_convert_encoding("Ü", 'UTF-16LE', 'UTF-8'), $string);
         $string = str_replace("Ö", mb_convert_encoding("Ö", 'UTF-16LE', 'UTF-8'), $string);
         $string = str_replace("ä", mb_convert_encoding("ä", 'UTF-16LE', 'UTF-8'), $string);
         $string = str_replace("ü", mb_convert_encoding("ü", 'UTF-16LE', 'UTF-8'), $string);
-        $string = str_replace("ö", mb_convert_encoding("ö", 'UTF-16LE', 'UTF-8'), $string);
-        return $string;
+        return str_replace("ö", mb_convert_encoding("ö", 'UTF-16LE', 'UTF-8'), $string);
     }
 
     public function setTable(csvExportTable $table)

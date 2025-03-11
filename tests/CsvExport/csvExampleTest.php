@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 use ilub\plugin\SelfEvaluation\CsvExport\csvExport;
 use ilub\plugin\SelfEvaluation\CsvExport\csvExportRow;
@@ -12,40 +13,28 @@ use PHPUnit\Framework\TestCase;
 
 class csvExampleTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    protected $columns = ["column1", "column2", "column3"];
-    /**
-     * @var array
-     */
-    protected $rows_values = [["ce1r1c1", "e1r1c2", "e1r1c3"],
-                              ["ae1r2c1", "e1r2c2", "e1r2c3"],
-                              ["be1r3c1", "e1r3c2", "e1r3c3"]
+    protected array $columns = ["column1", "column2", "column3"];
+    protected array $rows_values = [["ce1r1c1", "e1r1c2", "e1r1c3"],
+                                    ["ae1r2c1", "e1r2c2", "e1r2c3"],
+                                    ["be1r3c1", "e1r3c2", "e1r3c3"]
     ];
-    /**
-     * @var array
-     */
-    protected $rows_paired = [["column1" => "e2r1c1", "column2" => "e2r1c2", "column3" => "e2r1c3"],
-                              ["column1" => "e2r2c1", "column3" => "e2r2c3"],
-                              ["column3" => "e2r3c3"],
-                              ["columnX" => "e2r4cX", "column1" => "e2r4c1"]
+    protected array $rows_paired = [["column1" => "e2r1c1", "column2" => "e2r1c2", "column3" => "e2r1c3"],
+                                    ["column1" => "e2r2c1", "column3" => "e2r2c3"],
+                                    ["column3" => "e2r3c3"],
+                                    ["columnX" => "e2r4cX", "column1" => "e2r4c1"]
     ];
 
-    /**
-     * @var csvExport;
-     */
-    protected $csvExport;
+    protected csvExport $csvExport;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->csvExport = new csvExport();
     }
 
     public function testInitTable()
     {
-        self::assertEquals($this->csvExport->getTable()->getColumns()->count(), 0);
-        self::assertEquals($this->csvExport->getTable()->getColumns()->count(), 0);
+        self::assertEquals(0, $this->csvExport->getTable()->getColumns()->count());
+        self::assertEquals(0, $this->csvExport->getTable()->getColumns()->count());
     }
 
     /**
@@ -54,11 +43,11 @@ class csvExampleTest extends TestCase
     public function testAddFromArray()
     {
         $this->csvExport->getTable()->addColumnsAndValuesFromArrays($this->columns, $this->rows_values);
-        self::assertEquals($this->csvExport->getTable()->getColumns()->count(), 3);
-        self::assertEquals($this->csvExport->getTable()->getColumns()->count(), 3);
+        self::assertEquals(3, $this->csvExport->getTable()->getColumns()->count());
+        self::assertEquals(3, $this->csvExport->getTable()->getColumns()->count());
         self::assertEquals(
-            $this->csvExport->getTable()->getColumns()->getColumnNamesAsArray(),
-            ['column1' => 'column1', 'column2' => 'column2', 'column3' => 'column3']
+            ['column1' => 'column1', 'column2' => 'column2', 'column3' => 'column3'],
+            $this->csvExport->getTable()->getColumns()->getColumnNamesAsArray()
         );
         $expected_table = [
             0 => ["column1" => "column1", "column2" => "column2", "column3" => "column3"],
@@ -73,7 +62,7 @@ class csvExampleTest extends TestCase
     /**
      * @depends testInitTable
      */
-    public function testPositioningOfColumns()
+    public function testPositioningOfColumns(): \ilub\plugin\SelfEvaluation\CsvExport\csvExportTable
     {
         $this->csvExport->getTable()->addColumnsAndValuesFromArrays($this->columns, $this->rows_values);
         $this->csvExport->getTable()->setPositionOfColumn('column1', 3);

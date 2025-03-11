@@ -104,7 +104,7 @@ class IdentityGUI
                 $this->ctrl->setParameterByClass('PlayerGUI', 'uid', $id->getId());
                 $this->ctrl->redirectByClass('PlayerGUI', 'startScreen');
             } else {
-                $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('uid_not_exists'), true);
+                $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('uid_not_exists'), true);
                 $this->ctrl->redirect($this, 'show');
             }
         }

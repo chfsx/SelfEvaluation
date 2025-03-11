@@ -12,36 +12,14 @@ use ilTemplate;
 class SliderInputGUI extends ilSubEnabledFormPropertyGUI
 {
     public const PREFIX = 'slider_';
-    /**
-     * @var array
-     */
-    protected $values = [0, 1];
-    /**
-     * @var int
-     */
-    protected $min = 0;
-    /**
-     * @var int
-     */
-    protected $max = 0;
-    /**
-     * @var string
-     */
-    protected $unit = '%';
-    /**
-     * @var string
-     */
-    protected $ajax = '';
-    /**
-     * @var ilGlobalTemplateInterface
-     */
-    protected $tpl;
-    protected $check = [];
-
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
+    protected array $values = [0, 1];
+    protected int $min = 0;
+    protected int $max = 0;
+    protected string $unit = '%';
+    protected string $ajax = '';
+    protected ilGlobalTemplateInterface $tpl;
+    protected array $check = [];
+    protected ilRepositoryObjectPlugin $plugin;
 
     public function __construct(
         ilGlobalTemplateInterface $tpl,
@@ -77,7 +55,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         $tpl->setVariable('VAL_TO', $values[1]);
         $tpl->setVariable('MIN', $this->getMin());
         $tpl->setVariable('MAX', $this->getMax());
-        $tpl->setVariable('POSTVAR', self::PREFIX . $this->getPostVar() . '');
+        $tpl->setVariable('POSTVAR', self::PREFIX . $this->getPostVar());
         $tpl->setVariable('UNIT', $this->getUnit());
         if ($this->getAjax()) {
             $tpl->setVariable('AJAX', $this->getAjax());
@@ -128,7 +106,7 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
             $item->setValueByArray($array);
         }
 
-        if(array_key_exists($this->getPostVar(), $array)) {
+        if (array_key_exists($this->getPostVar(), $array)) {
             $this->setValues((array) $array[$this->getPostVar()]);
         }
     }

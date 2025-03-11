@@ -13,31 +13,11 @@ class BarChart extends ilChartGrid
     use ChartHelper;
 
     public const BAR_WIDTH = 0.5;
-
-    /**
-     * @var bool
-     */
-    protected $show_average_line = false;
-
-    /**
-     * @var array
-     */
-    protected $standardabweichung_data = [];
-
-    /**
-     * @var array
-     */
-    protected $values_for_standardabweichung = [];
-
-    /**
-     * @var bool
-     */
-    protected $show_varianz = false;
-
-    /**
-     * @var int
-     */
-    protected $average = 0;
+    protected bool $show_average_line = false;
+    protected array $standardabweichung_data = [];
+    protected array $values_for_standardabweichung = [];
+    protected bool $show_varianz = false;
+    protected float $average = 0;
 
     public function __construct(string $a_id)
     {
@@ -51,10 +31,10 @@ class BarChart extends ilChartGrid
 
     }
 
-    public function getDataInstance($type = null): ilChartDataBars
+    public function getDataInstance($a_type = null): ilChartDataBars
     {
         $data = new ilChartDataBars();
-        $data->setBarOptions(self::BAR_WIDTH, 'center');
+        $data->setBarOptions(self::BAR_WIDTH);
         return $data;
     }
 

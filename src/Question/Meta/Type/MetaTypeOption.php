@@ -13,21 +13,16 @@ class MetaTypeOption extends ilRadioOption
         parent::__construct('', '', $info);
     }
 
-    public function setDisabled(bool $disabled): void
+    public function setDisabled(bool $a_disabled): void
     {
-        $this->disabled = $disabled;
+        $this->disabled = $a_disabled;
 
         foreach ($this->getSubItems() as $sub_item) {
-            $this->disable($sub_item, $disabled);
+            $this->disable($sub_item, $a_disabled);
         }
     }
 
-    /**
-     * Disable items recursively
-     * @param  $item
-     * @param bool   $disabled
-     */
-    protected function disable($item, $disabled)
+    protected function disable($item, bool $disabled)
     {
         if (method_exists($item, 'getSubItems')) {
             foreach ($item->getSubItems() as $sub_item) {

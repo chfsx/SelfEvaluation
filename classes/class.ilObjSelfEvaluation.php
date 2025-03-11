@@ -14,7 +14,6 @@ use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
 use ilub\plugin\SelfEvaluation\Dataset\Data;
 use ilub\plugin\SelfEvaluation\Dataset\Dataset;
 use ilub\plugin\SelfEvaluation\Block\BlockFactory;
-use JetBrains\PhpStorm\Pure;
 
 class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 {
@@ -50,7 +49,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
     protected bool $show_block_descriptions_during_feedback = true;
     protected bool $show_fbs_overview_bar = true;
     protected bool $show_fbs_overview_text = true;
-    protected $show_fbs_overview_statistics = true;
+    protected bool $show_fbs_overview_statistics = true;
     protected bool $show_fbs_overview_spider = true;
     protected bool $show_fbs_overview_left_right = true;
     protected bool $show_fbs_chart_bar = true;
@@ -119,12 +118,12 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
     }
 
-    final public function initType(): void
+    protected function initType(): void
     {
         $this->setType('xsev');
     }
 
-    public function doCreate(bool $clone_mode = false): void
+    protected function doCreate(bool $clone_mode = false): void
     {
         /** @var ilSelfEvaluationPlugin $plugin */
         $plugin = $this->plugin;
@@ -524,7 +523,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
 
 
-    public function doRead(): void
+    protected function doRead(): void
     {
         $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
             . $this->db->quote($this->getId(), 'integer'));
@@ -560,13 +559,13 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         }
     }
 
-    public function doUpdate(): void
+    protected function doUpdate(): void
     {
 
         $this->db->update(self::TABLE_NAME, $this->getArrayForDb(), $this->getIdForDb());
     }
 
-    public function doDelete(): void
+    protected function doDelete(): void
     {
         $scale = Scale::_getInstanceByObjId($this->db, $this->getId());
         foreach (ScaleUnit::_getAllInstancesByParentId($this->db, $scale->getId()) as $u) {
@@ -599,7 +598,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
     }
 
-    public function toXML()
+    public function toXML(): SimpleXMLElement
     {
         $xml = new SimpleXMLElement('<SelfEvaluation/>');
         $xml->addAttribute("xmlns", "http://www.w3.org");
@@ -635,24 +634,24 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
         //Export Scale
         $scale = Scale::_getInstanceByObjId($this->db, $this->getId());
-        $xml = $scale->toXML($xml);
+        $xml = $scale->toXml($xml);
 
         //Export Blocks
         $block_factory = new BlockFactory($this->db, $this->getId());
         foreach ($block_factory->getAllBlocks() as $block) {
-            $xml = $block->toXML($xml);
+            $xml = $block->toXml($xml);
         }
 
         //Export Overall Feedback
         $feedbacks = Feedback::_getAllInstancesForParentId($this->db, $this->getId(), false, true);
         foreach ($feedbacks as $feedback) {
-            $xml = $feedback->toXML($xml);
+            $xml = $feedback->toXml($xml);
         }
         return $xml;
 
     }
 
-    public function fromXML(string $xml)
+    public function fromXML(string $xml): static
     {
 
         if (!$this->getId()) {
@@ -717,7 +716,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
     public function isActive(): bool
     {
-        return ($this->isOnline() and $this->hasBlocks() and $this->areFeedbacksComplete() and $this->hasScale()) ? true : false;
+        return $this->isOnline() && $this->hasBLocks() && $this->areFeedbacksComplete() && $this->hasScale();
     }
 
     public function hasBLocks(): bool
@@ -766,8 +765,6 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         switch ($this->getSortType()) {
             case self::SHUFFLE_OFF:
                 return true;
-            case self::SHUFFLE_IN_BLOCKS:
-                return false;
             default:
                 return false;
         }

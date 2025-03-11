@@ -10,10 +10,8 @@ use ilCtrl;
 use ilSelfEvaluationPlugin;
 use ilPropertyFormGUI;
 use ilObjSelfEvaluationGUI;
-use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilTextInputGUI;
 use ilTextAreaInputGUI;
-use ilUtil;
 use ilConfirmationGUI;
 use ilAccessHandler;
 use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
@@ -21,23 +19,13 @@ use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
 abstract class BlockGUI
 {
     protected ilPropertyFormGUI $form;
-
     protected ilDBInterface $db;
-
     protected ilGlobalTemplateInterface $tpl;
-
     protected ilCtrl $ctrl;
-
     protected ilObjSelfEvaluationGUI $parent;
-
     protected ilAccessHandler $access;
-
     protected ilSelfEvaluationPlugin $plugin;
-
-    /**
-     * @var \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock|Metablock
-     */
-    protected $object;
+    protected \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock|MetaBlock $object;
 
     public function __construct(
         ilDBInterface $db,
@@ -92,7 +80,7 @@ abstract class BlockGUI
         }
     }
 
-    protected function checkAccess($permission, $cmd)
+    protected function checkAccess($permission, $cmd): bool
     {
         return $this->access->checkAccess($permission, $cmd, $this->parent->getRefId(), $this->plugin->getId());
     }
@@ -108,9 +96,9 @@ abstract class BlockGUI
         $this->ctrl->redirectByClass('ListBlocksGUI', 'showContent');
     }
 
-    protected function initForm(string $mode = 'create')
+    public function initForm(string $mode = 'create')
     {
-        $this->form = new  ilPropertyFormGUI();
+        $this->form = new ilPropertyFormGUI();
         $this->form->setTitle($this->plugin->txt($mode . '_block'));
         $this->form->setFormAction($this->ctrl->getFormAction($this));
         $this->form->addCommandButton($mode . 'Object', $this->plugin->txt($mode . '_block_button'));
@@ -132,7 +120,7 @@ abstract class BlockGUI
         if ($this->form->checkInput()) {
             $this->setObjectValuesByPost();
             $this->object->create();
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_created'), true);
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_created'), true);
             $this->cancel();
         }
         $this->tpl->setContent($this->form->getHTML());
@@ -144,7 +132,7 @@ abstract class BlockGUI
     protected function duplicateBlock()
     {
         $this->object->cloneTo($this->object->getParentId());
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_duplicated'), true);
+        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_duplicated'), true);
         $this->cancel();
     }
 
@@ -159,7 +147,7 @@ abstract class BlockGUI
         $this->tpl->setContent($this->form->getHTML());
     }
 
-    protected function getObjectValuesAsArray()
+    protected function getObjectValuesAsArray(): array
     {
         $values['title'] = $this->object->getTitle();
         $values['description'] = $this->object->getDescription();
@@ -177,7 +165,7 @@ abstract class BlockGUI
         if ($this->form->checkInput()) {
             $this->setObjectValuesByPost();
             $this->object->update();
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_updated'), true);
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_updated'), true);
             $this->cancel();
         }
         $this->tpl->setContent($this->form->getHTML());
@@ -196,7 +184,7 @@ abstract class BlockGUI
 
     protected function deleteObject()
     {
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_deleted'), true);
+        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_deleted'), true);
         $this->object->delete();
         $this->cancel();
     }

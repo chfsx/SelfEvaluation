@@ -18,7 +18,7 @@ abstract class MetaQuestionType
      * @param MetaTypeOption         $option
      * @return self
      */
-    abstract public function getValueDefinitionInputGUI(ilSelfEvaluationPlugin $plugin, MetaTypeOption $option);
+    abstract public function getValueDefinitionInputGUI(ilSelfEvaluationPlugin $plugin, MetaTypeOption $option): mixed;
 
     abstract public function setValues(MetaTypeOption $item, array $values = []);
 

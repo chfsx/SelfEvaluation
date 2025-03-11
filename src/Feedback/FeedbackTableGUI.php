@@ -13,15 +13,8 @@ use FeedbackGUI;
 
 class FeedbackTableGUI extends ilTable2GUI
 {
-    /**
-     * @var ilRepositoryObjectPlugin;
-     */
-    protected $plugin;
-
-    /**
-     * @var
-     */
-    protected $db;
+    protected ilRepositoryObjectPlugin $plugin;
+    protected ilDBInterface $db;
 
     public function __construct(
         ilDBInterface $db,
@@ -59,16 +52,15 @@ class FeedbackTableGUI extends ilTable2GUI
         ));
     }
 
-    public function fillRow($a_set): void
+    protected function fillRow($a_set): void
     {
         $obj = new Feedback($this->db, $a_set['id']);
         $this->tpl->setVariable("ID", $obj->getId());
         $this->tpl->setVariable('TITLE', $obj->getTitle());
         $this->tpl->setVariable('BODY', strip_tags($obj->getFeedbackText()));
         $start_sign = "> ";
-        if($obj->getStartValue() == "0") {
-            $start_sign = "> ";
-        } elseif($obj->getStartValue() == "100") {
+        if ($obj->getStartValue() == "0") {
+        } elseif ($obj->getStartValue() == "100") {
             $start_sign = "= ";
         }
         $this->tpl->setVariable('START', $start_sign . $obj->getStartValue() . '%');

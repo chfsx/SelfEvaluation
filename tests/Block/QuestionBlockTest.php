@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use ilub\plugin\SelfEvaluation\Block\Block;
@@ -7,19 +7,12 @@ use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 
 class QuestionBlockTest extends TestCase
 {
-    /**
-     * @var QuestionBlock
-     */
-    protected $block;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected QuestionBlock $block;
+    protected ilDBInterface $db;
 
     public function setUp(): void
     {
-        $this->db = \Mockery::mock("\ilDBInterface");
+        $this->db = Mockery::mock("\ilDBInterface");
         $this->block = new QuestionBlock($this->db);
     }
 

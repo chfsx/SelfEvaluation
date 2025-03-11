@@ -10,9 +10,12 @@ use ilub\plugin\SelfEvaluation\UIHelper\TinyMceTextAreaInputGUI;
 use ilub\plugin\SelfEvaluation\UIHelper\SliderInputGUI;
 use ilub\plugin\SelfEvaluation\Feedback\Feedback;
 use ilub\plugin\SelfEvaluation\Feedback\FeedbackTableGUI;
+use JetBrains\PhpStorm\NoReturn;
 
 class FeedbackGUI
 {
+    private \ILIAS\HTTP\Wrapper\WrapperFactory $http;
+    private \ILIAS\Refinery\Factory $refinery;
     protected ilPropertyFormGUI $form;
     protected ilTemplate $overview;
     protected int $total = 0;
@@ -69,10 +72,7 @@ class FeedbackGUI
         $this->performCommand();
     }
 
-    /**
-     * @return string
-     */
-    public function getStandardCommand()
+    public function getStandardCommand(): string
     {
         return 'listObjects';
     }
@@ -104,7 +104,7 @@ class FeedbackGUI
                     $this->plugin->getId(),
                     $this->parent->object->getId()
                 )) {
-                    throw new \ilObjectException($this->plugin->txt("permission_denied"));
+                    throw new ilObjectException($this->plugin->txt("permission_denied"));
                 }
                 $this->$cmd();
                 break;
@@ -151,7 +151,7 @@ class FeedbackGUI
         $this->tpl->setContent($this->form->getHTML());
     }
 
-    protected function checkNextValue()
+    #[NoReturn] protected function checkNextValue()
     {
         header('Cache-Control: no-cache, must-revalidate');
         header('Content-type: application/json');
@@ -174,7 +174,7 @@ class FeedbackGUI
         );
         $from = $this->http->query()->has('from') ? $this->http->query()->retrieve('from', $this->refinery->kindlyTo()->int()) : 0;
         $to = $this->http->query()->has('to') ? $this->http->query()->retrieve('to', $this->refinery->kindlyTo()->int()) : 0;
-        $state = (($from < $start) or ($to > $end)) ? false : true;
+        $state = !((($from < $start) or ($to > $end)));
         echo json_encode([
             'check' => $state,
             'start_value' => $start_value,
@@ -187,7 +187,7 @@ class FeedbackGUI
 
     protected function initForm($mode = 'create')
     {
-        $this->form = new  ilPropertyFormGUI();
+        $this->form = new ilPropertyFormGUI();
         $this->form->setTitle($this->plugin->txt($mode . '_feedback_form'));
         $this->form->setFormAction($this->ctrl->getFormAction($this));
         $this->form->addCommandButton($mode . 'Object', $this->plugin->txt($mode . '_feedback_button'));
@@ -275,12 +275,12 @@ class FeedbackGUI
 
             $obj->setFeedbackText($this->form->getInput('feedback_text'));
             $obj->create();
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_created'));
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_created'));
             $this->cancel();
         } else {
-            $this->form->getItemByPostVar('slider')->setValues(array($this->form->getInput("slider_slider_from"),
-                                                                     $this->form->getInput("slider_slider_to")
-            ));
+            $this->form->getItemByPostVar('slider')->setValues([$this->form->getInput("slider_slider_from"),
+                                                                $this->form->getInput("slider_slider_to")
+            ]);
         }
         $this->form->setValuesByPost();
         $this->tpl->setContent($this->form->getHTML());
@@ -319,7 +319,7 @@ class FeedbackGUI
             $this->feedback->setEndValue((int)$this->form->getInput('slider_slider_to'));
             $this->feedback->setFeedbackText($this->form->getInput('feedback_text'));
             $this->feedback->update();
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_created'));
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_created'));
             $this->cancel();
         }
         $this->form->setValuesByPost();
@@ -333,13 +333,13 @@ class FeedbackGUI
 
     protected function deleteFeedbacks()
     {
-        if($this->http->post()->has('id')) {
+        if ($this->http->post()->has('id')) {
             $ids = $this->http->post()->retrieve(
                 'id',
                 $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int())
             );
         } else {
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('msg_no_feedback_selected'));
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('msg_no_feedback_selected'));
             $this->listObjects();
             return;
         }
@@ -348,12 +348,12 @@ class FeedbackGUI
 
     protected function deleteFeedbacksConfirmation(array $ids = [])
     {
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_QUESTION, $this->plugin->txt('qst_delete_feedback'));
+        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_QUESTION, $this->plugin->txt('qst_delete_feedback'));
         $conf = new ilConfirmationGUI();
         $conf->setFormAction($this->ctrl->getFormAction($this));
         $conf->setCancel($this->plugin->txt('cancel'), 'cancel');
         $conf->setConfirm($this->plugin->txt('delete_feedback'), 'deleteObject');
-        $conf->setHeaderText($this->plugin->txt('qst_delete_feedback'), 'deleteObject');
+        $conf->setHeaderText($this->plugin->txt('qst_delete_feedback'));
         foreach ($ids as $id) {
             $obj = new Feedback($this->db, (int)$id);
             $conf->addItem('id[]', (string) $obj->getId(), $obj->getTitle());
@@ -365,7 +365,7 @@ class FeedbackGUI
 
     protected function deleteObject()
     {
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_deleted'), true);
+        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_feedback_deleted'), true);
 
         $ids =  $this->http->post()->retrieve('id', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()));
         foreach ($ids as $id) {
@@ -398,9 +398,9 @@ class FeedbackGUI
             $this->parseOverviewBlock('blank', 100, 0);
             return $this->overview;
         }
-
+        $fb = null;
         foreach ($feedbacks as $fb) {
-            if ($min !== false and $min <= $fb->getStartValue() &&  !($min == 100) && ($fb->getStartValue() - $min != 0)) {
+            if ($min != false and $min <= $fb->getStartValue() &&  !($min == 100) && ($fb->getStartValue() - $min != 0)) {
                 $this->parseOverviewBlock('blank', $fb->getStartValue() - $min, $min);
             }
             $this->parseOverviewBlock('fb', $fb->getEndValue() - $fb->getStartValue(), $fb->getId(), $fb->getTitle());
@@ -427,7 +427,7 @@ class FeedbackGUI
                 $this->overview->setVariable('INT', $x . '&nbsp;');
                 $this->overview->setVariable('LINE_CSS', '_double');
             } else {
-                $this->overview->setVariable('INT', '');
+                $this->overview->setVariable('INT');
             }
             $this->overview->setVariable('WIDTH', 10);
             $this->overview->parseCurrentBlock();

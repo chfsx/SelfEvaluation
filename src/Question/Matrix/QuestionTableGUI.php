@@ -10,6 +10,7 @@ use ilSelfEvaluationPlugin;
 use ilAdvancedSelectionListGUI;
 use QuestionGUI;
 use ilGlobalTemplateInterface;
+use ilUtil;
 
 class QuestionTableGUI extends ilTable2GUI
 {
@@ -50,10 +51,7 @@ class QuestionTableGUI extends ilTable2GUI
         $this->addColumn($this->plugin->txt('actions'), '', 'auto');
     }
 
-    /**
-     * @param array $a_set
-     */
-    public function fillRow($a_set): void
+    public function fillRow(array $a_set): void
     {
         $this->ctrl->setParameterByClass('QuestionGUI', 'question_id', $a_set['id']);
 
@@ -72,7 +70,7 @@ class QuestionTableGUI extends ilTable2GUI
             $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $a_set['position']);
         $this->tpl->setVariable(
             'IS_INVERTED',
-            $a_set['is_inverse'] ? $this->plugin->getDirectory().'/templates/images/icon_ok.svg' : $this->plugin->getDirectory().'/templates/images/empty.png'
+            $a_set['is_inverse'] ? ilUtil::getImagePath('standard/icon_not_ok.svg') : $this->plugin->getDirectory().'/templates/images/empty.png'
         );
         // Actions
         $ac = new ilAdvancedSelectionListGUI();

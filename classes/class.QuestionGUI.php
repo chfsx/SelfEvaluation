@@ -2,26 +2,16 @@
 
 declare(strict_types=1);
 
-use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
-use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
+use ilub\plugin\SelfEvaluation\Block\Block;
+use ilub\plugin\SelfEvaluation\Question\Question;
 use ilub\plugin\SelfEvaluation\Question\Matrix\QuestionTableGUI;
 use ilub\plugin\SelfEvaluation\Question\BaseQuestionGUI;
 
 class QuestionGUI extends BaseQuestionGUI
 {
-    /**
-     * @var ilPropertyFormGUI
-     */
-    protected $form;
-
-    /**
-     * @var QuestionBlock
-     */
-    protected $block;
-    /**
-     * @var Question
-     */
-    protected $question;
+    protected ilPropertyFormGUI $form;
+    protected Block $block;
+    protected Question $question;
 
     protected function createTableGUI(): ilTable2GUI
     {

@@ -15,10 +15,7 @@ use ilSelfEvaluationPlugin;
 
 class QuestionBlockTableRow extends BlockTableRow
 {
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin, QuestionBlock $block)
     {
@@ -39,9 +36,9 @@ class QuestionBlockTableRow extends BlockTableRow
         $this->addAction($feedback_action);
 
         if (Feedback::_isComplete($this->db, $block->getId())) {
-            $img_path = ilUtil::getImagePath('icon_ok.svg');
+            $img_path = ilUtil::getImagePath('standard/icon_ok.svg');
         } else {
-            $img_path = ilUtil::getImagePath('icon_not_ok.svg');
+            $img_path = ilUtil::getImagePath('standard/icon_not_ok.svg');
         }
         $this->setStatusImg($img_path);
 

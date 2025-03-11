@@ -14,24 +14,15 @@ class Scale implements hasDBFields
     use ArrayForDB;
 
     public const TABLE_NAME = 'rep_robj_xsev_scale';
-    /**
-     * @var int
-     */
-    protected $id = 0;
-    /**
-     * @var int
-     */
-    protected $parent_id = 0;
+
+    protected int $id = 0;
+    protected int $parent_id = 0;
 
     /**
      * @var ScaleUnit[]
      */
-    protected $units;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected array $units;
+    protected ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, int $id = 0)
     {
@@ -44,7 +35,7 @@ class Scale implements hasDBFields
         $this->units = ScaleUnit::_getAllInstancesByParentId($this->db, $this->getId());
     }
 
-    public function cloneTo($parent_obj_id)
+    public function cloneTo($parent_obj_id): Scale
     {
         $clone = new self($this->db);
         $clone->setParentId($parent_obj_id);
@@ -79,7 +70,7 @@ class Scale implements hasDBFields
         $scale->create();
 
         foreach ($xml->scaleUnit as $unit) {
-            ScaleUnit::fromXML($db, $scale->getId(), $unit);
+            ScaleUnit::fromXml($db, $scale->getId(), $unit);
         }
 
         return $xml;
@@ -89,7 +80,7 @@ class Scale implements hasDBFields
      * @param bool $flipped
      * @return array (unit value => unit title)
      */
-    public function getUnitsAsArray($flipped = false)
+    public function getUnitsAsArray(bool $flipped = false): array
     {
         $return = [];
         foreach ($this->units as $k => $u) {
@@ -103,22 +94,19 @@ class Scale implements hasDBFields
         return $return;
     }
 
-    public function hasUnits()
+    public function hasUnits(): bool
     {
         return count($this->units) > 0;
     }
 
-    /**
-     * @return array
-     */
-    public function getUnitsAsRelativeArray()
+    public function getUnitsAsRelativeArray(): array
     {
         $return = [];
         $min_max = $this->getMinMaxValue();
         $max = $min_max['max'];
 
-        foreach ($this->units as $k => $u) {
-            $return[$u->getValue() * 100 / $max] = $u->getTitle() . " (" . $u->getValue() . ")";
+        foreach ($this->units as $u) {
+            $return[(int)($u->getValue() * 100 / $max)] = $u->getTitle() . " (" . $u->getValue() . ")";
         }
 
         return $return;
@@ -132,14 +120,11 @@ class Scale implements hasDBFields
         return $this->units;
     }
 
-    /**
-     * @return array
-     */
-    public function getMinMaxValue()
+    public function getMinMaxValue(): array
     {
         $min = 999999;
         $max = 0;
-        foreach ($this->units as $k => $u) {
+        foreach ($this->units as $u) {
             if ($u->getValue() > $max) {
                 $max = $u->getValue();
             }
@@ -157,10 +142,7 @@ class Scale implements hasDBFields
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
-    /**
-     * @return array
-     */
-    protected function getNonDbFields()
+    protected function getNonDbFields(): array
     {
         return ['db','units'];
     }
@@ -181,7 +163,7 @@ class Scale implements hasDBFields
 
             return;
         }
-        $this->setId($this->db->nextID(self::TABLE_NAME));
+        $this->setId($this->db->nextId(self::TABLE_NAME));
         $this->db->insert(self::TABLE_NAME, $this->getArrayForDb());
     }
 

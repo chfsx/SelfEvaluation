@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ilub\plugin\SelfEvaluation\Dataset;
@@ -20,35 +21,17 @@ class Data implements hasDBFields
     public const TABLE_NAME = 'rep_robj_xsev_d';
     public const QUESTION_TYPE = 'qst';
     public const META_QUESTION_TYPE = 'mqst';
+
+    protected int $id = 0;
+    protected int $dataset_id = 0;
+    protected int $question_id = 0;
+    protected string $question_type = '';
+    protected int $creation_date = 0;
     /**
-     * @var int
-     */
-    protected $id = 0;
-    /**
-     * @var int
-     */
-    protected $dataset_id = 0;
-    /**
-     * @var int
-     */
-    protected $question_id = 0;
-    /**
-     * @var string
-     */
-    protected $question_type = '';
-    /**
-     * @var int
-     */
-    protected $creation_date = 0;
-    /**
-     * @var string
+     * @var string|array
      */
     protected $value = '';
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected ilDBInterface $db;
 
 
     public function __construct(ilDBInterface $db, int $id = 0)
@@ -85,7 +68,7 @@ class Data implements hasDBFields
 
             return;
         }
-        $this->setId($this->db->nextID(self::TABLE_NAME));
+        $this->setId($this->db->nextId(self::TABLE_NAME));
 
         $this->db->insert(self::TABLE_NAME, $this->getArrayForDb());
     }
@@ -109,11 +92,9 @@ class Data implements hasDBFields
 
 
     /**
-     * @param ilDBInterface $db
-     * @param int           $dataset_id
      * @return Data[]
      */
-    public static function _getAllInstancesByDatasetId(ilDBInterface $db, int $dataset_id)
+    public static function _getAllInstancesByDatasetId(ilDBInterface $db, int $dataset_id): array
     {
         $return = [];
         $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE dataset_id = ' .$dataset_id);
@@ -126,12 +107,7 @@ class Data implements hasDBFields
         return $return;
     }
 
-    /**
-     * @param ilDBInterface $db
-     * @param $dataset_id
-     * @return Data|null
-     */
-    public static function _getLatestInstanceByDatasetId(ilDBInterface $db, int $dataset_id)
+    public static function _getLatestInstanceByDatasetId(ilDBInterface $db, int $dataset_id): ?Data
     {
         $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE dataset_id = '.$dataset_id. ' ORDER BY creation_date DESC LIMIT 1');
         while ($rec = $db->fetchObject($set)) {
@@ -207,22 +183,20 @@ class Data implements hasDBFields
         return $this->question_type;
     }
 
-    public function setValue($value)
+    public function setValue(string $value)
     {
         $this->value = $value;
     }
 
     public function getValue()
     {
-        if(is_string($this->value)) {
-            try{
-            $unserialized = unserialize($this->value);}
-            catch(\ErrorException $e){
-                $unserialized = false;
-            }
-            if ($unserialized !== false) {
-                return $unserialized;
-            }
+        try {
+            $unserialized = @unserialize($this->value);
+        } catch (\Error) {
+            $unserialized = false;
+        }
+        if ($unserialized !== false) {
+            return $unserialized;
         }
 
         return $this->value;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
@@ -11,7 +12,7 @@ trait DatasetHelperTrait
     /**
      * @return QuestionBlock[]|Question[]|Data[]
      */
-    protected function getBasics()
+    protected function getBasics(): array
     {
         return [$this->getBasicBlock(), $this->getBasicQuestion(), $this->getBasicAnswerWithValue1()];
     }
@@ -33,30 +34,30 @@ trait DatasetHelperTrait
     protected function getBasicAnswerWithValue1(): Data
     {
         $answer = new Data($this->db);
-        $answer->setValue(1);
+        $answer->setValue("1");
         return $answer;
     }
 
-    protected function getBlock1()
+    protected function getBlock1(): QuestionBlock
     {
         return $this->getBasicBlock();
     }
 
-    protected function getBlock2()
+    protected function getBlock2(): QuestionBlock
     {
         ($block2 = $this->getBasicBlock())->setId(3);
         return $block2;
     }
 
-    protected function getBlock3()
+    protected function getBlock3(): QuestionBlock
     {
         ($block3 = $this->getBasicBlock())->setId(4);
         return $block3;
     }
 
-    protected function setUpDatasetWithThreeBlocks(Dataset $dataset)
+    protected function setUpDatasetWithThreeBlocks(Dataset $dataset): Dataset
     {
-        $dataset->setHighestScale($max = 5);
+        $dataset->setHighestScale(5);
         $block1 = $this->getBlock1();
         $block2 = $this->getBlock2();
         $block3 = $this->getBlock3();
@@ -71,7 +72,7 @@ trait DatasetHelperTrait
         return $dataset;
     }
 
-    protected function getDataForBlock1WithThreeQuestionsAndAnswerValuesOneTwoFive()
+    protected function getDataForBlock1WithThreeQuestionsAndAnswerValuesOneTwoFive(): array
     {
 
         $question1 = $this->getBasicQuestion();
@@ -79,13 +80,13 @@ trait DatasetHelperTrait
         ($question3 = $this->getBasicQuestion())->setId(3);
 
         $answer_data_1 = $this->getBasicAnswerWithValue1();
-        ($answer_data_2 = $this->getBasicAnswerWithValue1())->setValue(2);
-        ($answer_data_3 = $this->getBasicAnswerWithValue1())->setValue(5);
+        ($answer_data_2 = $this->getBasicAnswerWithValue1())->setValue("2");
+        ($answer_data_3 = $this->getBasicAnswerWithValue1())->setValue("5");
 
         return [$question1->getId() => $answer_data_1, $question2->getId() => $answer_data_2, $question3->getId() => $answer_data_3];
     }
 
-    protected function getDataForBlock2WithOneQuestionAndAnswerValuesOne()
+    protected function getDataForBlock2WithOneQuestionAndAnswerValuesOne(): array
     {
 
         $question1 = $this->getBasicQuestion();
@@ -96,46 +97,46 @@ trait DatasetHelperTrait
         return [$question1->getId() => $answer_data_1];
     }
 
-    protected function getDataForBlock3WithThreeQuestionsAndAnswerValuesOneTwo()
+    protected function getDataForBlock3WithThreeQuestionsAndAnswerValuesOneTwo(): array
     {
 
         $question1 = $this->getBasicQuestion();
         ($question2 = $this->getBasicQuestion())->setId(2);
 
         $answer_data_1 = $this->getBasicAnswerWithValue1();
-        ($answer_data_2 = $this->getBasicAnswerWithValue1())->setValue(2);
+        ($answer_data_2 = $this->getBasicAnswerWithValue1())->setValue("2");
 
         return [$question1->getId() => $answer_data_1, $question2->getId() => $answer_data_2];
     }
 
-    protected function getBlock1Percentage()
+    protected function getBlock1Percentage(): float|int
     {
         return (1 + 2 + 5) / (3 * 5) * 100;
     }
 
-    protected function getBlock2Percentage()
+    protected function getBlock2Percentage(): float|int
     {
         return 1 / 5 * 100;
     }
 
-    protected function getBlock3Percentage()
+    protected function getBlock3Percentage(): float|int
     {
         return (1 + 2) / (2 * 5) * 100;
     }
 
-    protected function getBlockThreeBlocksPercentages()
+    protected function getBlockThreeBlocksPercentages(): array
     {
         return [$this->getBlock1()->getId() => $this->getBlock1Percentage(),
                 $this->getBlock2()->getId() => $this->getBlock2Percentage(),
                 $this->getBlock3()->getId() => $this->getBlock3Percentage()];
     }
 
-    protected function getOverallPercentage()
+    protected function getOverallPercentage(): float|int
     {
         return ($this->getBlock1Percentage() + $this->getBlock2Percentage() + $this->getBlock3Percentage()) / 3;
     }
 
-    protected function getOverallPercentageVarianz()
+    protected function getOverallPercentageVarianz(): float|int
     {
         $op = ($this->getBlock1Percentage() + $this->getBlock2Percentage() + $this->getBlock3Percentage()) / 3;
         return pow($this->getBlock1Percentage() - $op, 2) / 3
@@ -143,13 +144,13 @@ trait DatasetHelperTrait
             + pow($this->getBlock3Percentage() - $op, 2) / 3;
     }
 
-    protected function getSdPerBlock()
+    protected function getSdPerBlock(): array
     {
         $perc1 = $this->getBlock1Percentage();
         $perc2 = $this->getBlock2Percentage();
         $perc3 = $this->getBlock3Percentage();
 
-        $varianz1 = pow((1 / 5 * 100 - $perc1), 2) / 3 +  pow((2 / 5 * 100 - $perc1), 2) / 3 +  pow((5 / 5 * 100 - $perc1), 2) / 3;
+        $varianz1 = pow((1 / 5 * 100 - $perc1), 2) / 3 +  pow((2 / 5 * 100 - $perc1), 2) / 3 +  pow((100 - $perc1), 2) / 3;
         $varianz2 = pow((1 / 5 * 100 - $perc2), 2) / 1;
         $varianz3 = pow((1 / 5 * 100 - $perc3), 2) / 2 +  pow((2 / 5 * 100 - $perc3), 2) / 2;
 

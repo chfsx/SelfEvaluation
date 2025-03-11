@@ -12,35 +12,17 @@ class csvExportException extends Exception
     public const COLUMN_DOES_NOT_EXIST = 1001;
     public const COLUMN_DOES_ALREADY_EXISTS_IN_ROW = 1002;
     public const INVALID_ARRAY = 2001;
-    /**
-     * @var array
-     */
-    protected static $message_strings = [
+
+    protected static array $message_strings = [
         self::UNKNONWN_EXCEPTION => 'Unknown Exception',
         self::COLUMN_DOES_NOT_EXIST => 'Column does not exist:',
         self::COLUMN_DOES_ALREADY_EXISTS_IN_ROW => 'Column does already exist in row:',
         self::INVALID_ARRAY => 'Invalid array: '
     ];
 
-    /**
-     * @var string
-     */
-    protected $message = '';
-    /**
-     * @var int
-     */
-    protected $code = self::UNKNONWN_EXCEPTION;
+    protected string $additional_info = '';
 
-    /**
-     * @var string
-     */
-    protected $additional_info = '';
-
-    /**
-     * @param int    $exception_code
-     * @param string $additional_info
-     */
-    public function __construct($exception_code = self::UNKNONWN_EXCEPTION, $additional_info = '')
+    public function __construct(int $exception_code = self::UNKNONWN_EXCEPTION, string $additional_info = '')
     {
         $this->code = $exception_code;
         $this->additional_info = $additional_info;
@@ -53,10 +35,7 @@ class csvExportException extends Exception
         $this->message = 'ActiveRecord Exeption: ' . self::$message_strings[$this->code] . $this->additional_info;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return implode('<br>', [get_class($this), $this->message]);
     }

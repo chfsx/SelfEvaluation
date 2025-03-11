@@ -6,7 +6,6 @@ namespace ilub\plugin\SelfEvaluation\Block;
 
 use ilCtrl;
 use ilSelfEvaluationPlugin;
-use iLub\Plugins\Mods\ModHelper\Translation\uiHookGuiModTranslatedString;
 
 class BlockTableRow
 {
@@ -14,7 +13,7 @@ class BlockTableRow
     protected ilSelfEvaluationPlugin $plugin;
     protected int $block_id;
     protected string $title;
-    protected string $abbreviation ='';
+    protected string $abbreviation = '';
     protected string $description;
     protected int $question_count;
     protected int $feedback_count = 0;
@@ -190,7 +189,7 @@ class BlockTableRow
     /**
      * @param BlockTableAction[] $actions
      */
-    public function setActions($actions)
+    public function setActions(array $actions)
     {
         $this->actions = $actions;
     }
@@ -198,7 +197,7 @@ class BlockTableRow
     /**
      * @return BlockTableAction[]
      */
-    public function getActions()
+    public function getActions(): array
     {
         return $this->actions;
     }
@@ -219,7 +218,7 @@ class BlockTableRow
         $link = $this->ctrl->getLinkTargetByClass($this->block_gui_class, 'editBlock');
         $cmd = 'edit_block';
         $position = 3;
-        return new  BlockTableAction($title, $cmd, $link, $position);
+        return new BlockTableAction($title, $cmd, $link, $position);
     }
 
     protected function getDeleteAction(): BlockTableAction

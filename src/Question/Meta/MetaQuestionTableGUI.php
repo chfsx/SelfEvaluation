@@ -6,7 +6,6 @@ namespace ilub\plugin\SelfEvaluation\Question\Meta;
 
 use ilTable2GUI;
 use ilSelfEvaluationPlugin;
-use ilub\plugin\SelfEvaluation\Question\Meta\Type\MetaQuestionType;
 use ilub\plugin\SelfEvaluation\Question\Meta\Type\MetaTypeFactory;
 use ilAdvancedSelectionListGUI;
 use MetaQuestionGUI;
@@ -19,15 +18,6 @@ class MetaQuestionTableGUI extends ilTable2GUI
     protected ilSelfEvaluationPlugin $plugin;
     protected bool $sortable;
 
-    /**
-     * MetaQuestionTableGUI constructor.
-     * @param MetaQuestionGUI           $a_parent_obj
-     * @param ilSelfEvaluationPlugin    $plugin
-     * @param ilGlobalTemplateInterface $global_template
-     * @param string                    $a_parent_cmd
-     * @param array                     $types
-     * @param bool                      $sortable
-     */
     public function __construct(MetaQuestionGUI $a_parent_obj, ilSelfEvaluationPlugin $plugin, ilGlobalTemplateInterface $global_template, string $a_parent_cmd, array $types, bool $sortable, Block $block)
     {
         $this->types = $types;
@@ -45,9 +35,8 @@ class MetaQuestionTableGUI extends ilTable2GUI
 
         $this->addCommandButton('saveRequired', $this->lng->txt('save'));
 
-        $this->enable('sort');
-        $this->enable('header');
-        $this->enable('numinfo');
+        $this->setEnableHeader(true);
+        $this->setEnableNumInfo(true);
 
         $this->setRowTemplate($this->plugin->getDirectory().'/templates/default/Question/tpl.template_meta_question_row.html');
 
@@ -72,35 +61,31 @@ class MetaQuestionTableGUI extends ilTable2GUI
         $this->addColumn($this->plugin->txt('actions'));
     }
 
-    /**
-     * Fill row
-     * @param array $row
-     */
-    public function fillRow(array $row): void
+    protected function fillRow(array $a_set): void
     {
-        $this->ctrl->setParameter($this->getParentObject(), 'question_id', $row['id']);
+        $this->ctrl->setParameter($this->getParentObject(), 'question_id', $a_set['id']);
 
         if ($this->sortable) {
             $this->tpl->setCurrentBlock('sortable');
             $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getDirectory()."/templates/images/move.png");
-            $this->tpl->setVariable('ID', $row['id']);
+            $this->tpl->setVariable('ID', $a_set['id']);
             $this->tpl->parseCurrentBlock();
         }
-        $this->tpl->setVariable('VAL_ID', $row['id']);
+        $this->tpl->setVariable('VAL_ID', $a_set['id']);
         $this->tpl->setVariable(
             'EDIT_LINK',
             $this->ctrl->getLinkTarget($this->getParentObject(), 'editQuestion')
         );
-        $this->tpl->setVariable('VAL_NAME', $row['name']);
-        $this->tpl->setVariable('VAL_SHORT_TITLE', $row['short_title']);
+        $this->tpl->setVariable('VAL_NAME', $a_set['name']);
+        $this->tpl->setVariable('VAL_SHORT_TITLE', $a_set['short_title']);
         $type_factory = new MetaTypeFactory();
-        $this->tpl->setVariable('VAL_TYPE', $this->plugin->txt($type_factory->getTypeByTypeId($row['type_id'])->getTypeName()));
+        $this->tpl->setVariable('VAL_TYPE', $this->plugin->txt($type_factory->getTypeByTypeId($a_set['type_id'])->getTypeName()));
 
-        $this->tpl->setVariable('REQUIRED_CHECKED', $row['required'] ? 'checked="checked"' : '');
+        $this->tpl->setVariable('REQUIRED_CHECKED', $a_set['required'] ? 'checked="checked"' : '');
 
         // actions
         $ac = new ilAdvancedSelectionListGUI();
-        $ac->setId((string)$row['id']);
+        $ac->setId((string)$a_set['id']);
         $ac->setListTitle($this->lng->txt('actions'));
 
         $edit_link = $this->ctrl->getLinkTarget($this->getParentObject(), 'editQuestion');

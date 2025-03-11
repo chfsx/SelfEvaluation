@@ -65,7 +65,7 @@ class MetaBlock extends Block
         $block->create();
 
         foreach ($xml->metaQuestion as $question) {
-            MetaQuestion::fromXML($db, $block->getId(), $question);
+            MetaQuestion::fromXml($db, $block->getId(), $question);
         }
 
         return $xml;
@@ -76,7 +76,7 @@ class MetaBlock extends Block
         return 'rep_robj_xsev_mblock';
     }
 
-    public function delete()
+    public function delete(): int
     {
         $questions = MetaQuestion::_getAllInstancesForParentId($this->db, $this->getId());
 

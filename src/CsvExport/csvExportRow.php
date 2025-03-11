@@ -11,12 +11,8 @@ class csvExportRow
     /**
      * @var csvExportValue[]
      */
-    protected $values = [];
-
-    /**
-     * @var csvExportColumns
-     */
-    protected $columns = null;
+    protected array $values = [];
+    protected ?csvExportColumns $columns = null;
 
     public function __construct(array $values = [])
     {
@@ -39,16 +35,12 @@ class csvExportRow
     /**
      * @return csvExportValue[]|null
      */
-    public function getValues()
+    public function getValues(): ?array
     {
         return $this->values;
     }
 
-    /**
-     * @param csvExportColumn $column
-     * @return csvExportValue
-     */
-    public function getValue(csvExportColumn $column)
+    public function getValue(csvExportColumn $column): ?csvExportValue
     {
         if (array_key_exists($column->getColumnId(), $this->values)) {
             return $this->values[$column->getColumnId()];
@@ -66,7 +58,7 @@ class csvExportRow
         $this->values[$value->getColumn()->getColumnId()] = $value;
     }
 
-    public function getColumns()
+    public function getColumns(): ?csvExportColumns
     {
         return $this->columns;
     }
@@ -86,7 +78,7 @@ class csvExportRow
         }
     }
 
-    public function getValuesAsArray()
+    public function getValuesAsArray(): array
     {
         $values = [];
         foreach ($this->getValues() as $value) {

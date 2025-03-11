@@ -5,7 +5,7 @@ declare(strict_types=1);
 class ilObjSelfEvaluationListGUI extends ilObjectPluginListGUI
 {
     /**
-     * @var ilSelfEvaluationPlugin
+     * @var ?ilSelfEvaluationPlugin
      */
     protected ?ilRepositoryObjectPlugin $plugin = null;
 

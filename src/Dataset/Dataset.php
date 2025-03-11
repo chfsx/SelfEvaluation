@@ -13,7 +13,6 @@ use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilDBInterface;
 use Exception;
 use ilub\plugin\SelfEvaluation\UIHelper\Scale\Scale;
-use ilub\plugin\SelfEvaluation\Block\Block;
 
 /**
  * Class Dataset
@@ -126,7 +125,7 @@ class Dataset implements hasDBFields
 
         foreach ($array as $item) {
             $da = Data::_getInstanceForQuestionId($this->db, $this->getId(), $item['qid'], $item['type']);
-            if(is_array($item['value'])) {
+            if (is_array($item['value'])) {
                 $item['value'] = serialize($item['value']);
             }
 
@@ -145,7 +144,7 @@ class Dataset implements hasDBFields
             if ($type !== "") {
                 $qid = $this->getQuestionId($type, $k);
 
-                    $data[] = ['qid' => $qid, 'value' => $v, 'type' => $type];
+                $data[] = ['qid' => $qid, 'value' => $v, 'type' => $type];
 
             }
 
@@ -184,7 +183,7 @@ class Dataset implements hasDBFields
             $highest = $this->getHighestValueFromScale();
             foreach ($this->getQuestionBlocks() as $block) {
                 $values = [];
-                foreach($this->getQuestionsDataPerBlock($block->getId()) as $data) {
+                foreach ($this->getQuestionsDataPerBlock($block->getId()) as $data) {
                     $values[] = (int)$data->getValue();
                 }
                 $fraction =  $this->statistics->arraySumFractionOfMaxSumPossible($values, $highest);
@@ -198,7 +197,11 @@ class Dataset implements hasDBFields
 
     public function getPercentageForBlock(int $block_id): ?float
     {
-        return $this->getPercentagePerBlock()[$block_id];
+        $percentage_per_block = $this->getPercentagePerBlock();
+        if (!array_key_exists(1, $percentage_per_block)) {
+            return null;
+        }
+        return $percentage_per_block[$block_id];
     }
 
     public function getMinPercentageBlockAndMin(): array
@@ -309,7 +312,7 @@ class Dataset implements hasDBFields
     public function getQuestionBlocks(): array
     {
 
-        if (count($this->question_blocks)== 0) {
+        if (count($this->question_blocks) == 0) {
 
             foreach (QuestionBlock::_getAllInstancesByIdentifierId($this->db, (string) $this->getIdentifierId()) as $block) {
                 $this->question_blocks[$block->getId()] = $block;
@@ -331,7 +334,7 @@ class Dataset implements hasDBFields
     public function getQuestionsDataPerBlock(int $block_id): array
     {
 
-        if(!array_key_exists($block_id,$this->questions_data_for_blocks) || !is_array($this->questions_data_for_blocks[$block_id])) {
+        if (!array_key_exists($block_id, $this->questions_data_for_blocks) || !is_array($this->questions_data_for_blocks[$block_id])) {
             foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
                 $data = Data::_getInstanceForQuestionId($this->db, $this->getId(), $qst->getId());
                 $this->questions_data_for_blocks[$block_id][$qst->getId()] = $data;
@@ -351,7 +354,7 @@ class Dataset implements hasDBFields
         $this->highest_scale = $highest_scale;
     }
 
-    public function getHighestValueFromScale()
+    public function getHighestValueFromScale(): int
     {
         if (!$this->highest_scale) {
             $obj_id = Identity::_getObjIdForIdentityId($this->db, (string) $this->getIdentifierId());
@@ -381,11 +384,9 @@ class Dataset implements hasDBFields
     }
 
     /**
-     * @param ilDBInterface $db
-     * @param int           $identifier_id
      * @return Dataset[]
      */
-    public static function _getAllInstancesByIdentifierId(ilDBInterface $db, int $identifier_id)
+    public static function _getAllInstancesByIdentifierId(ilDBInterface $db, int $identifier_id): array
     {
         $return = [];
         $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
@@ -400,10 +401,6 @@ class Dataset implements hasDBFields
     }
 
     /**
-     * @param ilDBInterface $db
-     * @param int           $obj_id
-     * @param bool          $as_array
-     * @param string        $identifier
      * @return Dataset[]
      */
     public static function _getAllInstancesByObjectId(
@@ -411,7 +408,7 @@ class Dataset implements hasDBFields
         int $obj_id,
         bool $as_array = false,
         string $identifier = ""
-    ) {
+    ): array {
         $return = [];
         if ($identifier == "") {
             $identities = Identity::_getAllInstancesByObjId($db, $obj_id);
@@ -446,12 +443,7 @@ class Dataset implements hasDBFields
         return true;
     }
 
-    /**
-     * @param ilDBInterface $db
-     * @param int           $identifier_id
-     * @return bool|Dataset
-     */
-    public static function _getInstanceByIdentifierId(ilDBInterface $db, int $identifier_id)
+    public static function _getInstanceByIdentifierId(ilDBInterface $db, int $identifier_id): Dataset|bool
     {
         $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
             . $db->quote($identifier_id, 'integer'). " ORDER BY id DESC");
@@ -464,12 +456,7 @@ class Dataset implements hasDBFields
         return false;
     }
 
-    /**
-     * @param ilDBInterface $db
-     * @param               $identifier_id
-     * @return Dataset
-     */
-    public static function _getNewInstanceForIdentifierId(ilDBInterface $db, int $identifier_id)
+    public static function _getNewInstanceForIdentifierId(ilDBInterface $db, int $identifier_id): Dataset
     {
         $obj = new self($db);
         $obj->setIdentifierId($identifier_id);
@@ -481,7 +468,7 @@ class Dataset implements hasDBFields
     {
         $set = $db->query('SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
             . $db->quote($identifier_id, 'integer'));
-        while ($rec = $db->fetchObject($set)) {
+        while ($db->fetchObject($set)) {
             return true;
         }
 

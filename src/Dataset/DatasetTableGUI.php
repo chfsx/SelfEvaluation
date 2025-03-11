@@ -12,6 +12,7 @@ use ilub\plugin\SelfEvaluation\Identity\Identity;
 use ilObjUser;
 use ilAdvancedSelectionListGUI;
 use DatasetGUI;
+use ilUtil;
 
 class DatasetTableGUI extends ilTable2GUI
 {
@@ -65,7 +66,7 @@ class DatasetTableGUI extends ilTable2GUI
         $this->tpl->setVariable("ID", $obj->getId());
         $this->tpl->setVariable(
             'COMPLETE',
-            $obj->isComplete() ? $this->plugin->getDirectory().'/templates/images/icon_ok.svg' : $this->plugin->getDirectory().'/templates/images/empty.png'
+            $obj->isComplete() ? ilUtil::getImagePath('standard/icon_not_ok.svg') : $this->plugin->getDirectory().'/templates/images/empty.png'
         );
         $this->tpl->setVariable('DATE', date('d.m.Y - H:i:s', $obj->getCreationDate()));
         $this->tpl->setVariable('EDIT_LINK', $this->ctrl->getLinkTargetByClass('DatasetGUI', 'show'));

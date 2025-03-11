@@ -11,26 +11,10 @@ use ilRepositoryObjectPlugin;
 
 class PlayerFormContainer extends ilPropertyFormGUI
 {
-    /**
-     * @var array
-     */
-    protected $copy_of_buttons = [];
-
-    /**
-     * @var KnobGUI
-     */
-    protected $knob = null;
-
-    /**
-     * @var int
-     */
-    protected $question_field_size = 6;
-    
-
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
+    protected array $copy_of_buttons = [];
+    protected ?KnobGUI $knob = null;
+    protected int $question_field_size = 6;
+    protected ilRepositoryObjectPlugin $plugin;
 
     public function __construct(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin)
     {
@@ -78,9 +62,9 @@ class PlayerFormContainer extends ilPropertyFormGUI
         $this->global_tpl->addCss($this->plugin->getStyleSheetLocation("css/player.css"));
         $this->global_tpl->addJavaScript("./Services/JavaScript/js/Basic.js");
         $this->global_tpl->addJavaScript("Services/Form/js/Form.js");
-        $this->global_tpl->addJavascript("./Services/UIComponent/Tooltip/js/ilTooltip.js");
-        $this->global_tpl->addJavascript($this->plugin->getDirectory()."/templates/js/scale_units.js");
-        $this->global_tpl->addJavascript($this->plugin->getDirectory()."/templates/js/jquery.knob.js");
+        $this->global_tpl->addJavaScript("./Services/UIComponent/Tooltip/js/ilTooltip.js");
+        $this->global_tpl->addJavaScript($this->plugin->getDirectory()."/templates/js/scale_units.js");
+        $this->global_tpl->addJavaScript($this->plugin->getDirectory()."/templates/js/jquery.knob.js");
         $this->global_tpl->addOnLoadCode('il.Tooltip.init();', 3);
 
         $required_text = false;
@@ -141,18 +125,12 @@ class PlayerFormContainer extends ilPropertyFormGUI
         return $this->tpl->get();
     }
 
-    /**
-     * @param int $question_field_size
-     */
-    public function setQuestionFieldSize($question_field_size)
+    public function setQuestionFieldSize(int $question_field_size)
     {
         $this->question_field_size = $question_field_size;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuestionFieldSize()
+    public function getQuestionFieldSize(): int
     {
         return $this->question_field_size;
     }

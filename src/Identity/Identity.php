@@ -25,10 +25,8 @@ class Identity implements hasDBFields
 
     public function __construct(ilDBInterface $db, int $id = 0)
     {
-        global $DIC;
-
         $this->id = $id;
-        $this->db = $DIC->database();
+        $this->db = $db;
         if ($id != 0) {
             $this->read();
         }
@@ -74,14 +72,11 @@ class Identity implements hasDBFields
 
             return;
         }
-        $this->setId($this->db->nextID(self::TABLE_NAME));
+        $this->setId($this->db->nextId(self::TABLE_NAME));
         $this->db->insert(self::TABLE_NAME, $this->getArrayForDb());
     }
 
-    /**
-     * @return int
-     */
-    public function delete()
+    public function delete(): int
     {
         return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = '.$this->getId());
     }
@@ -149,7 +144,7 @@ class Identity implements hasDBFields
 
         $obj = new self($db);
         $obj->setObjId($obj_id);
-        $obj->setIdentifier((string) $identifier);
+        $obj->setIdentifier($identifier);
         $obj->setType(self::TYPE_EXTERNAL);
         $obj->create();
 
@@ -178,7 +173,7 @@ class Identity implements hasDBFields
     {
         $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
             . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text'));
-        while ($rec = $db->fetchObject($set)) {
+        while ($db->fetchObject($set)) {
             return true;
         }
 
@@ -195,34 +190,22 @@ class Identity implements hasDBFields
         return 0;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id)
     {
         $this->id = $id;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $obj_id
-     */
-    public function setObjId($obj_id)
+    public function setObjId(int $obj_id)
     {
         $this->obj_id = $obj_id;
     }
 
-    /**
-     * @return int
-     */
-    public function getObjId()
+    public function getObjId(): int
     {
         return $this->obj_id;
     }
@@ -237,18 +220,12 @@ class Identity implements hasDBFields
         return $this->identifier;
     }
 
-    /**
-     * @param int $type
-     */
-    public function setType($type)
+    public function setType(int $type)
     {
         $this->type = $type;
     }
 
-    /**
-     * @return int
-     */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }

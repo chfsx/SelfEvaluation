@@ -12,10 +12,7 @@ use ilAdvancedSelectionListGUI;
 
 class BlockTableGUI extends ilTable2GUI
 {
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $plugin;
+    protected ilSelfEvaluationPlugin $plugin;
 
     public function __construct(
         ilCtrl $ilCtrl,
@@ -44,7 +41,7 @@ class BlockTableGUI extends ilTable2GUI
         $this->setRowTemplate($this->plugin->getDirectory() . '/templates/default/Block/tpl.template_block_row.html');
     }
 
-    public function fillRow(array $a_set): void
+    protected function fillRow(array $a_set): void
     {
         // Row
         $this->tpl->setVariable('ID', $a_set['position_id']);
@@ -54,21 +51,18 @@ class BlockTableGUI extends ilTable2GUI
         $this->tpl->setVariable('DESCRIPTION', $a_set['description']);
         if ($a_set['questions_link'] == '') {
             $this->tpl->setCurrentBlock('question_count');
-            $this->tpl->setVariable('COUNT_QUESTIONS', $a_set['question_count']);
-            $this->tpl->parseCurrentBlock();
         } else {
             $this->tpl->setCurrentBlock('question_count_with_link');
             $this->tpl->setVariable('QUESTIONS_LINK', $a_set['questions_link']);
-            $this->tpl->setVariable('COUNT_QUESTIONS', $a_set['question_count']);
-            $this->tpl->parseCurrentBlock();
         }
+        $this->tpl->setVariable('COUNT_QUESTIONS', $a_set['question_count']);
+        $this->tpl->parseCurrentBlock();
         if ($a_set['feedback_link'] == '') {
             $this->tpl->setCurrentBlock('feedback_count');
             $this->tpl->setVariable('COUNT_FEEDBACKS', $a_set['feedback_count']);
             $this->tpl->parseCurrentBlock();
             $this->tpl->setCurrentBlock('status_img');
             $this->tpl->setVariable('FEEDBACK_STATUS', $a_set['status_img']);
-            $this->tpl->parseCurrentBlock();
         } else {
             $this->tpl->setCurrentBlock('feedback_count_with_link');
             $this->tpl->setVariable('COUNT_FEEDBACKS', $a_set['feedback_count']);
@@ -77,8 +71,8 @@ class BlockTableGUI extends ilTable2GUI
             $this->tpl->setCurrentBlock('status_img_with_link');
             $this->tpl->setVariable('FEEDBACK_STATUS', $a_set['status_img']);
             $this->tpl->setVariable('FEEDBACK_LINK', $a_set['feedback_link']);
-            $this->tpl->parseCurrentBlock();
         }
+        $this->tpl->parseCurrentBlock();
 
         $ac = new ilAdvancedSelectionListGUI();
         $ac->setId($a_set['position_id']);
@@ -89,10 +83,12 @@ class BlockTableGUI extends ilTable2GUI
         $actions = unserialize($a_set['actions']);
 
         usort($actions, function (BlockTableAction $action_a, BlockTableAction $action_b) {
-               $value =  $action_a->getPosition() > $action_b->getPosition();
-               if($value) {
-                   return 1 ;
-               } else {return -1;}
+            $value =  $action_a->getPosition() > $action_b->getPosition();
+            if ($value) {
+                return 1 ;
+            } else {
+                return -1;
+            }
         });
         foreach ($actions as $action) {
             $ac->addItem($action->getTitle(), $action->getCmd(), $action->getLink());

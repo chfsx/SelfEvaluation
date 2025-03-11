@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 class ilObjSelfEvaluationAccess extends ilObjectPluginAccess
 {
-    public function _checkAccess(string $a_cmd, string $a_permission, int $a_ref_id, int $a_obj_id, ?int $a_user_id = null): bool
+    public function _checkAccess(string $cmd, string $permission, int $ref_id, int $obj_id, ?int $user_id = null): bool
     {
-        if ($a_user_id == '') {
-            $a_user_id = $this->user->getId();
+        if ($user_id == '') {
+            $user_id = $this->user->getId();
         }
 
-        switch ($a_permission) {
+        switch ($permission) {
             case 'read':
             case 'visible':
-                $object = new ilObjSelfEvaluation($a_ref_id);
+                $object = new ilObjSelfEvaluation($ref_id);
                 if (!$object->isOnline()
-                    and !$this->access->checkAccessOfUser($a_user_id, 'write', '', $a_ref_id)
+                    and !$this->access->checkAccessOfUser($user_id, 'write', '', $ref_id)
                 ) {
                     return false;
                 }

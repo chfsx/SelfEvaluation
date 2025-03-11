@@ -9,7 +9,7 @@ class Statistics
     public function getMeanFromData(array $data): ?float
     {
         $count = count($data);
-        if($count) {
+        if ($count) {
             return array_sum($data) / $count;
         }
         return null;
@@ -22,10 +22,10 @@ class Statistics
 
     public function fractionOf(float $value, float $max): float
     {
-        if($value == 0) {
+        if ($value == 0) {
             return 0;
         }
-        if($max == 0) {
+        if ($max == 0) {
             throw new \Exception("Fractions of zero for values greater than 0 do not exist");
         }
         return $value / $max;

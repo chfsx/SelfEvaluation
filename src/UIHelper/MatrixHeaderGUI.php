@@ -7,26 +7,13 @@ namespace ilub\plugin\SelfEvaluation\UIHelper;
 use ilSubEnabledFormPropertyGUI;
 use ilRepositoryObjectPlugin;
 use ilTemplate;
-use ilUtil;
 
 class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
 {
-    /**
-     * @var string
-     */
-    protected $html = '';
-    /**
-     * @var array
-     */
-    protected $scale = [];
-    /**
-     * @var string
-     */
-    protected $block_info = '';
-    /**
-     * @var ilRepositoryObjectPlugin
-     */
-    protected $plugin;
+    protected string $html = '';
+    protected array $scale = [];
+    protected string $block_info = '';
+    protected ilRepositoryObjectPlugin $plugin;
 
     public function __construct(ilRepositoryObjectPlugin $plugin, string $a_title = '', string $a_postvar = '')
     {
@@ -84,9 +71,9 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
     /**
      * @param mixed $parentform
      */
-    public function setParentform($parentform): void
+    public function setParentform($a_parentform): void
     {
-        $this->parentform = $parentform;
+        $this->parentform = $a_parentform;
     }
 
     public function getParentform(): ?\ilPropertyFormGUI
@@ -94,19 +81,9 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         return $this->parentform;
     }
 
-    public function setParentgui($parentgui)
+    public function setPostvar(string $a_postvar): void
     {
-        $this->parentgui = $parentgui;
-    }
-
-    public function getParentgui()
-    {
-        return $this->parentgui;
-    }
-
-    public function setPostvar($postvar): void
-    {
-        $this->postvar = $postvar;
+        $this->postvar = $a_postvar;
     }
 
     public function getPostvar(): string

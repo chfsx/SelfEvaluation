@@ -3,13 +3,11 @@
 declare(strict_types=1);
 use ilub\plugin\SelfEvaluation\Block\BlockGUI;
 use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
+use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 
 class MetaBlockGUI extends BlockGUI
 {
-    /**
-     * @var MetaBlock
-     */
-    protected $object;
+    protected QuestionBlock|MetaBlock $object;
 
     public function __construct(
         ilDBInterface $db,
@@ -21,10 +19,11 @@ class MetaBlockGUI extends BlockGUI
     ) {
         parent::__construct($db, $tpl, $ilCtrl, $access, $plugin, $parent);
         if ($parent->http->query()->has('block_id')) {
-            $this->object = new MetaBlock($this->db,
-                $parent->http->query()->retrieve('block_id', $parent->refinery->kindlyTo()->int()));
-        }
-        else {
+            $this->object = new MetaBlock(
+                $this->db,
+                $parent->http->query()->retrieve('block_id', $parent->refinery->kindlyTo()->int())
+            );
+        } else {
             $this->object = new MetaBlock($this->db);
         }
         $this->object->setParentId($this->parent->getObjId());

@@ -15,42 +15,15 @@ class Feedback implements hasDBFields
     use ArrayForDB;
 
     public const TABLE_NAME = 'rep_robj_xsev_fb';
-    /**
-     * @var int
-     */
-    public $id = 0;
-    /**
-     * @var int
-     */
-    protected $parent_id = 0;
-    /**
-     * @var string
-     */
-    protected $title = '';
-    /**
-     * @var string
-     */
-    protected $description = '';
-    /**
-     * @var int
-     */
-    protected $start_value = 0;
-    /**
-     * @var int
-     */
-    protected $end_value = 100;
-    /**
-     * @var string
-     */
-    protected $feedback_text = '';
-    /**
-     * @var bool
-     */
-    protected $parent_type_overall = false;
-    /**
-     * @var \ilDBInterface
-     */
-    protected $db;
+    public int $id = 0;
+    protected int $parent_id = 0;
+    protected string $title = '';
+    protected string $description = '';
+    protected int $start_value = 0;
+    protected int $end_value = 100;
+    protected string $feedback_text = '';
+    protected bool $parent_type_overall = false;
+    protected ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, int $id = 0)
     {
@@ -61,7 +34,7 @@ class Feedback implements hasDBFields
         }
     }
 
-    public function cloneTo(int $parent_id)
+    public function cloneTo(int $parent_id): Feedback
     {
         $clone = new self($this->db);
         $clone->setParentId($parent_id);
@@ -141,14 +114,11 @@ class Feedback implements hasDBFields
 
             return;
         }
-        $this->setId($this->db->nextID(self::TABLE_NAME));
+        $this->setId($this->db->nextId(self::TABLE_NAME));
         $this->db->insert(self::TABLE_NAME, $this->getArrayForDb());
     }
 
-    /**
-     * @return int
-     */
-    public function delete()
+    public function delete(): int
     {
         return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ' . $this->getId());
     }
@@ -175,7 +145,7 @@ class Feedback implements hasDBFields
         int $parent_id,
         bool $as_array = false,
         bool $is_overall = false
-    ) {
+    ): array {
         $return = [];
         $q = 'SELECT * FROM ' . self::TABLE_NAME . ' ' .
             ' WHERE parent_id = ' . $db->quote($parent_id, 'integer');
@@ -206,7 +176,7 @@ class Feedback implements hasDBFields
      * @param bool          $is_overall
      * @return self[]
      */
-    public static function _getAllInstances(ilDBInterface $db, bool $is_overall = false)
+    public static function _getAllInstances(ilDBInterface $db, bool $is_overall = false): array
     {
         $return = [];
         $q = 'SELECT * FROM ' . self::TABLE_NAME . ' ';
@@ -241,8 +211,7 @@ class Feedback implements hasDBFields
         $set = $db->query($q);
 
         while ($rec = $db->fetchObject($set)) {
-            $feedback = new self($db, (int) $rec->id);
-            return $feedback;
+            return new self($db, (int) $rec->id);
         }
         return null;
     }
@@ -254,7 +223,6 @@ class Feedback implements hasDBFields
         int $ignore = 0,
         bool $is_overall = false
     ): int {
-        $res = null;
         for ($return = $value; $return < 100; $return++) {
 
             $q =
@@ -311,7 +279,7 @@ class Feedback implements hasDBFields
         $min = self::_getNextMinValueForParentId($db, $parent_id, 0, 0, $is_overall);
         $max = self::_getNextMaxValueForParentId($db, $parent_id, $min, 0, $is_overall);
 
-        return ($min == 100 and $max == 100) ? true : false;
+        return $min == 100 and $max == 100;
     }
 
     public static function _getNewInstanceByParentId(ilDBInterface $db, int $parent_id, bool $is_overall = false): self
@@ -328,7 +296,7 @@ class Feedback implements hasDBFields
         $obj = new self($db);
         $obj->setParentId($parent_id);
 
-        $feedbacks = self::_getAllInstancesForParentId($db, $parent_id, $as_array = false, $is_overall);
+        $feedbacks = self::_getAllInstancesForParentId($db, $parent_id, false, $is_overall);
         $nr_feedbacks = count($feedbacks) + 1;
         $range_per_feedback = (int) floor(100 / $nr_feedbacks);
         $remainder = 100 - $range_per_feedback * $nr_feedbacks;

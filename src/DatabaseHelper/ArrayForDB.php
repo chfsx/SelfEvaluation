@@ -35,7 +35,7 @@ trait ArrayForDB
         $array = [];
         foreach (get_object_vars($this) as $property => $value) {
             if (!in_array($property, $this->getNonDbFields())) {
-                if(is_array($value)) {
+                if (is_array($value)) {
                     $value = serialize($value);
                 }
                 $array[$property] = [$this->getDBFieldType($value), $value];
@@ -61,7 +61,7 @@ trait ArrayForDB
         foreach ($array as $k => $v) {
 
             $serialized = unserialize($v);
-            if(is_array($serialized)) {
+            if (is_array($serialized)) {
                 $this->{$k} = $serialized;
             } else {
                 $this->{$k} = $v;
@@ -75,37 +75,28 @@ trait ArrayForDB
         return ['id' => ['integer', $this->getId()]];
     }
 
-    /**
-     * @return array
-     */
-    protected function getNonDbFields()
+    protected function getNonDbFields(): array
     {
         return ['db'];
     }
 
-    protected function setObjectValuesFromRecord(hasDBFields $data, stdClass $rec)
+    protected function setObjectValuesFromRecord(hasDBFields $data, stdClass $rec): static
     {
         //Problematisch
         foreach ($data->getArrayForDb() as $k => $v) {
             try {
                 $serialized = unserialize((string) $rec->{$k});
-            } catch(\ErrorException $e) {
+            } catch (\ErrorException) {
                 $serialized = "false";
             }
-            if(is_array($serialized)) {
+            if (is_array($serialized)) {
                 $this->{$k} = $serialized;
             } else {
 
-                $type = getType($this->$k);
-                if($type == 'NULL'){
-                    $type = getType($rec->{$k});
-                }
-                switch($type) {
+                $type = gettype($this->{$k});
+                switch ($type) {
                     case 'string':
                         $this->{$k} = (string) $rec->{$k};
-                        break;
-                    case 'bool':
-                        $this->{$k} = (bool) $rec->{$k};
                         break;
                     case 'boolean':
                         $this->{$k} = (bool) $rec->{$k};
@@ -135,12 +126,12 @@ trait ArrayForDB
         }
     }
 
-    public function serialize()
+    public function serialize(): string
     {
         return serialize($this->getArray());
     }
 
-    public function unserialize($serialized)
+    public function unserialize($serialized): self
     {
         return $this->fromArray(unserialize($serialized));
     }

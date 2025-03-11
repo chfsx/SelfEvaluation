@@ -8,7 +8,6 @@ use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilub\plugin\SelfEvaluation\CsvExport\csvExport;
 use ilub\plugin\SelfEvaluation\CsvExport\csvExportRow;
 use ilub\plugin\SelfEvaluation\CsvExport\csvExportValue;
-
 use ilSelfEvaluationPlugin;
 use ilub\plugin\SelfEvaluation\Question\Meta\MetaQuestion;
 use ilub\plugin\SelfEvaluation\Question\Matrix\Question;
@@ -25,38 +24,23 @@ use ilObjUser;
 
 class DatasetCsvExport extends csvExport
 {
-    /**
-     * @var int
-     */
-    protected $object_id = 0;
+    protected int $object_id = 0;
 
     /**
      * @var MetaQuestion[]
      */
-    protected $meta_questions = [];
+    protected array $meta_questions = [];
     /**
      * @var Question[]
      */
-    protected $questions = [];
+    protected array $questions = [];
     /**
      * @var Dataset[]
      */
-    protected $datasets = [];
-
-    /**
-     * @var string
-     */
-    protected $date_format = "Y-m-d H:i:s";
-
-    /**
-     * @var ilSelfEvaluationPlugin
-     */
-    protected $pl;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected array $datasets = [];
+    protected string $date_format = "Y-m-d H:i:s";
+    protected ilSelfEvaluationPlugin $pl;
+    protected ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, ilSelfEvaluationPlugin $pl, $object_id = 0)
     {
@@ -216,7 +200,7 @@ class DatasetCsvExport extends csvExport
                     foreach ($values as $value) {
                         $row->addValue($value);
                     }
-                } elseif($this->getQuestion($entry->getQuestionId())) {
+                } elseif ($this->getQuestion($entry->getQuestionId())) {
                     $row->addValue($this->getQuestionValues($row, $entry));
                 }
             }
@@ -265,7 +249,7 @@ class DatasetCsvExport extends csvExport
             } else {
                 $meta_csv_values[] = new csvExportValue("duration", (string) $dataset->getDuration());
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $meta_csv_values[] = new csvExportValue("Error", "Invalid Date");
         }
         return $meta_csv_values;
@@ -299,7 +283,7 @@ class DatasetCsvExport extends csvExport
     }
 
 
-    protected function getQuestionValues($row, Data $entry)
+    protected function getQuestionValues($row, Data $entry): csvExportValue
     {
 
         $column_name = $this->getTitleForQuestion($this->getQuestion($entry->getQuestionId()));
@@ -363,7 +347,7 @@ class DatasetCsvExport extends csvExport
             if ($meta_question->getTypeId() == MetaTypeSelect::TYPE_ID ||
                 $meta_question->getTypeId() == MetaTypeSingleChoice::TYPE_ID) {
                 $question_values = $meta_question->getValues();
-                if (is_array($question_values) && array_key_exists($key, $question_values)) {
+                if (array_key_exists($key, $question_values)) {
                     $meta_csv_values[] = new csvExportValue($column_name . " ID", $key);
                     $entry_value = $question_values[$key];
                     $meta_csv_values[] = new csvExportValue($column_name, $entry_value);
@@ -390,8 +374,7 @@ class DatasetCsvExport extends csvExport
     protected function getTitleForQuestion(Question $question): string
     {
         $block = new QuestionBlock($this->db, $question->getParentId());
-        $title = $question->getTitle() ? $question->getTitle() : $this->pl->txt('question') . ' ' . $block->getPosition() . '.' . $question->getPosition();
-        return $title;
+        return $question->getTitle() ?: $this->pl->txt('question') . ' ' . $block->getPosition() . '.' . $question->getPosition();
     }
 
     public function setObjectId(int $object_id)
@@ -407,7 +390,7 @@ class DatasetCsvExport extends csvExport
     /**
      * @param Dataset[] $datasets
      */
-    public function setDatasets($datasets)
+    public function setDatasets(array $datasets)
     {
         $this->datasets = $datasets;
     }
@@ -415,7 +398,7 @@ class DatasetCsvExport extends csvExport
     /**
      * @return Dataset[]
      */
-    public function getDatasets()
+    public function getDatasets(): array
     {
         return $this->datasets;
     }
@@ -423,7 +406,7 @@ class DatasetCsvExport extends csvExport
     /**
      * @param MetaQuestion[] $meta_questions
      */
-    public function setMetaQuestions($meta_questions)
+    public function setMetaQuestions(array $meta_questions)
     {
         $this->meta_questions = $meta_questions;
     }
@@ -439,7 +422,7 @@ class DatasetCsvExport extends csvExport
     /**
      * @return MetaQuestion[]
      */
-    public function getMetaQuestions()
+    public function getMetaQuestions(): array
     {
         return $this->meta_questions;
     }
@@ -449,15 +432,14 @@ class DatasetCsvExport extends csvExport
     {
         if (array_key_exists($id, $this->meta_questions)) {
             return $this->meta_questions[$id];
-        }
-        else{
+        } else {
             return null;
         }
     }
     /**
      * @param Question[] $questions
      */
-    public function setQuestions($questions)
+    public function setQuestions(array $questions)
     {
         $this->questions = $questions;
     }
@@ -465,7 +447,7 @@ class DatasetCsvExport extends csvExport
     /**
      * @param Question[] $questions
      */
-    public function addQuestions($questions)
+    public function addQuestions(array $questions)
     {
         $this->questions = $this->questions + $questions;
     }
@@ -473,7 +455,7 @@ class DatasetCsvExport extends csvExport
     /**
      * @return Question[]
      */
-    public function getQuestions()
+    public function getQuestions(): array
     {
         return $this->questions;
     }
@@ -487,20 +469,13 @@ class DatasetCsvExport extends csvExport
         }
     }
 
-    /**
-     * @param string $date_format
-     */
     public function setDateFormat(string $date_format)
     {
         $this->date_format = $date_format;
     }
 
-    /**
-     * @return string
-     */
     public function getDateFormat(): string
     {
         return $this->date_format;
     }
-
 }

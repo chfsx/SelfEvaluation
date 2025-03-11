@@ -14,38 +14,13 @@ class Question extends BaseQuestion
     public const TABLE_NAME = 'rep_robj_xsev_qst';
 
     public const POSTVAR_PREFIX = 'qst_';
-
-    /**
-     * @var string
-     */
     protected string $title = '';
-    /**
-     * @var string
-     */
     protected string $question_body = '';
-    /**
-     * @var bool
-     */
     protected bool $is_inverse = false;
-    /**
-     * @var int
-     */
-    protected $parent_id = 0;
-
-    /**
-     * @var array
-     */
+    protected int $parent_id = 0;
     protected static array $instances_for_parent_id_array = [];
-
-    /**
-     * @var array
-     */
     protected static array $instances_for_parent_id = [];
-
-    /**
-     * @var int
-     */
-    protected $position;
+    protected int $position;
 
     public function cloneTo(int $parent_id): BaseQuestion
     {
@@ -98,7 +73,7 @@ class Question extends BaseQuestion
             while ($rec = $db->fetchObject($stmt)) {
                 $question = new self($db);
                 $question->setId((int) $rec->id);
-                $question->setParentId((int) $parent_id);
+                $question->setParentId($parent_id);
                 $question->setTitle((string) $rec->title);
                 $question->setQuestionBody((string) $rec->question_body);
                 $question->setIsInverse((bool) $rec->is_inverse);

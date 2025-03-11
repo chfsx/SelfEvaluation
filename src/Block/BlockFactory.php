@@ -10,15 +10,8 @@ use ilDBInterface;
 
 class BlockFactory
 {
-    /**
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    protected int $id;
+    protected ilDBInterface $db;
 
     public function __construct(ilDBInterface $db, $self_eval_id)
     {
@@ -29,7 +22,7 @@ class BlockFactory
     /**
      * @return Block[]
      */
-    public function getAllBlocks()
+    public function getAllBlocks(): array
     {
         $blocks = QuestionBlock::_getAllInstancesByParentId($this->db, $this->id);
 
@@ -45,9 +38,7 @@ class BlockFactory
         $block = new QuestionBlock($db);
         $pos = $block->getNextPosition($self_eval_id);
         $block = new MetaBlock($db);
-        $pos = max($block->getNextPosition($self_eval_id), $pos);
-
-        return $pos;
+        return max($block->getNextPosition($self_eval_id), $pos);
     }
 
     protected function positionSort(Block $a, Block $b): int
@@ -69,10 +60,9 @@ class BlockFactory
 
     /**
      * @param Block[] $blocks
-     * @return bool
      */
-    public function sortByPosition(&$blocks): bool
+    public function sortByPosition(array &$blocks): bool
     {
-        return usort($blocks, [get_class(), "positionSort"]);
+        return usort($blocks, [self::class, "positionSort"]);
     }
 }

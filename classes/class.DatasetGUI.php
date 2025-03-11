@@ -10,6 +10,7 @@ use ilub\plugin\SelfEvaluation\Dataset\DatasetTableGUI;
 use ilub\plugin\SelfEvaluation\Dataset\DatasetCsvExport;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Refinery\Factory;
+use JetBrains\PhpStorm\NoReturn;
 
 class DatasetGUI
 {
@@ -63,11 +64,7 @@ class DatasetGUI
     {
         $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
 
-        switch ($cmd) {
-            default:
-                $this->$cmd();
-                break;
-        }
+        $this->$cmd();
     }
 
     public function selectResult()
@@ -92,10 +89,7 @@ class DatasetGUI
             $table = new DatasetTableGUI($this->db, $this->ctrl, $this, 'index', $this->plugin, $this->parent->object->getId());
         } else {
             $id = Identity::_getInstanceForObjIdAndIdentifier($this->db, (int)$this->plugin->getId(), (string)$DIC->user()->getId());
-            if (!$id) {
-                $id = Identity::_getNewInstanceForObjIdAndUserId($this->db, (int)$this->plugin->getId(), (string)$DIC->user()->getId());
-            }
-            $table = new DatasetTableGUI($this->db, $this->ctrl, $this, 'index', $this->plugin, $this->parent->object->getId(), (string) $id->getIdentifier());
+            $table = new DatasetTableGUI($this->db, $this->ctrl, $this, 'index', $this->plugin, $this->parent->object->getId(), $id->getIdentifier());
         }
 
         $this->tpl->setContent($table->getHTML());
@@ -124,8 +118,8 @@ class DatasetGUI
 
     public function deleteDatasets()
     {
-        if(!$this->http->post()->has('id')) {
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('no_dataset_selected'));
+        if (!$this->http->post()->has('id')) {
+            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('no_dataset_selected'));
             $this->index();
             return;
         }
@@ -156,7 +150,7 @@ class DatasetGUI
 
     public function delete()
     {
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_dataset_deleted'), true);
+        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_dataset_deleted'), true);
         $post = $this->http->post()->retrieve('dataset_ids', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()));
         foreach ($post as $id) {
             $dataset = new Dataset($this->db, $id);
@@ -180,11 +174,11 @@ class DatasetGUI
     public function deleteAll()
     {
         Dataset::_deleteAllInstancesByObjectId($this->db, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int())));
-        $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('all_datasets_deleted'));
+        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('all_datasets_deleted'));
         $this->ctrl->redirect($this, 'index');
     }
 
-    public function exportCsv()
+    #[NoReturn] public function exportCsv()
     {
         $csvExport = new DatasetCsvExport($this->db, $this->plugin, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int())));
         $csvExport->getCsvExport();

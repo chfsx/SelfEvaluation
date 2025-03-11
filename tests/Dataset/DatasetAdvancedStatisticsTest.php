@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 include_once "DatasetHelperTrait.php";
 
@@ -10,19 +10,12 @@ class DatasetAdvancedStatisticsTest extends TestCase
 {
     use DatasetHelperTrait;
 
-    /**
-     * @var Dataset
-     */
-    protected $dataset;
+    protected Dataset $dataset;
+    protected ilDBInterface $db;
 
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
-
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->db = \Mockery::mock("\ilDBInterface");
+        $this->db = Mockery::mock("\ilDBInterface");
         $this->dataset = new Dataset($this->db);
         $this->dataset = $this->setUpDatasetWithThreeBlocks($this->dataset);
     }

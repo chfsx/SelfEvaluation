@@ -79,7 +79,7 @@ abstract class Block implements hasDBFields, BlockType
 
     public function create()
     {
-        $this->setId($this->db->nextID(static::_getTableName()));
+        $this->setId($this->db->nextId(static::_getTableName()));
         $this->setPosition(BlockFactory::_getNextPositionAcrossBlocks($this->db, $this->getParentId()));
         $this->db->insert(static::_getTableName(), $this->getArrayForDb());
     }
@@ -87,7 +87,7 @@ abstract class Block implements hasDBFields, BlockType
     /**
      * @return int
      */
-    public function delete()
+    public function delete(): int
     {
 
         return $this->db->manipulate('DELETE FROM ' . static::_getTableName() . ' WHERE id = '
@@ -107,9 +107,9 @@ abstract class Block implements hasDBFields, BlockType
     /**
      * @param ilDBInterface $db
      * @param int           $parent_id
-     * @return static[]
+     * @return Block[]
      */
-    public static function _getAllInstancesByParentId(ilDBInterface $db, int $parent_id)
+    public static function _getAllInstancesByParentId(ilDBInterface $db, int $parent_id): array
     {
         $return = [];
         $set = $db->query('SELECT * FROM ' . static::_getTableName() . ' ' . ' WHERE parent_id = '.$parent_id. ' ORDER BY position ASC');
@@ -127,12 +127,12 @@ abstract class Block implements hasDBFields, BlockType
      * @param int $identity_id
      * @return static[]
      */
-    public static function _getAllInstancesByIdentifierId(ilDBInterface $db, string $identity_id)
+    public static function _getAllInstancesByIdentifierId(ilDBInterface $db, string $identity_id): array
     {
         return self::_getAllInstancesByParentId($db, Identity::_getObjIdForIdentityId($db, $identity_id));
     }
 
-    public function getNextPosition(int $parent_id)
+    public function getNextPosition(int $parent_id): int
     {
         $set = $this->db->query('SELECT MAX(position) next_pos FROM ' . static::_getTableName() . ' ' . ' WHERE parent_id = '
             . $this->db->quote($parent_id, 'integer'));
@@ -160,7 +160,7 @@ abstract class Block implements hasDBFields, BlockType
 
     public function getDescription(): string
     {
-        return (string)$this->description;
+        return $this->description;
     }
 
     public function setParentId(int $parent_id)
@@ -190,7 +190,7 @@ abstract class Block implements hasDBFields, BlockType
 
     public function getTitle(): string
     {
-        return (string) $this->title;
+        return $this->title;
     }
 
     public function getPositionId(): string
@@ -200,7 +200,7 @@ abstract class Block implements hasDBFields, BlockType
 
     abstract public function getBlockTableRow(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin): BlockTableRow;
 
-    public function unserialize($serialized)
+    public function unserialize($serialized): Block
     {
         global $DIC;
 
