@@ -45,8 +45,8 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
 
     private function buildHTML(): string
     {
-        $this->tpl->addCss("./libs/bower/bower_components/jquery-ui/themes/base/jquery-ui.css");
-        $this->tpl->addJavaScript("./libs/bower/bower_components/jquery-ui/jquery-ui.min.js");
+        $this->tpl->addCss('./node_modules/jquery-ui-dist/jquery-ui.css');
+        $this->tpl->addJavaScript('./node_modules/jquery-ui-dist/jquery-ui.min.js');
 
         $tpl = $this->plugin->getTemplate('default/Feedback/tpl.slider_input.html');
 
