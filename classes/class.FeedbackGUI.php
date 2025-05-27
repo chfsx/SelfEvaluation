@@ -12,6 +12,7 @@ use ilub\plugin\SelfEvaluation\UIHelper\SliderInputGUI;
 use ilub\plugin\SelfEvaluation\Feedback\Feedback;
 use ilub\plugin\SelfEvaluation\Feedback\FeedbackTableGUI;
 use JetBrains\PhpStorm\NoReturn;
+use ILIAS\DI\UIServices;
 
 class FeedbackGUI
 {
@@ -30,7 +31,8 @@ class FeedbackGUI
         protected ilAccessHandler $access,
         private WrapperFactory $http,
         private Factory $refinery,
-        protected ilSelfEvaluationPlugin $plugin
+        protected ilSelfEvaluationPlugin $plugin,
+        protected UIServices $ui
     ) {
     }
 
@@ -118,7 +120,7 @@ class FeedbackGUI
         $this->toolbar->addButton($this->plugin->txt('add_new_feedback'), $this->ctrl->getLinkTarget($this, 'addNew'));
 
         $ov = $this->getOverview();
-        $table = new FeedbackTableGUI($this->db, $this, $this->plugin, 'listObjects', $this->block);
+        $table = new FeedbackTableGUI($this->db, $this->ui, $this, $this->plugin, 'listObjects', $this->block);
         $this->tpl->setContent($ov->get() . '<br><br>' . $table->getHTML());
     }
 

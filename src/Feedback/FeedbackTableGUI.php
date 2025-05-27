@@ -7,14 +7,15 @@ namespace ilub\plugin\SelfEvaluation\Feedback;
 use ilTable2GUI;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlockInterface;
 use ilRepositoryObjectPlugin;
-use ilAdvancedSelectionListGUI;
 use ilDBInterface;
 use FeedbackGUI;
+use ILIAS\DI\UIServices;
 
 class FeedbackTableGUI extends ilTable2GUI
 {
     public function __construct(
         protected ilDBInterface $db,
+        protected UIServices $ui,
         FeedbackGUI $a_parent_obj,
         protected ilRepositoryObjectPlugin $plugin,
         string $a_parent_cmd,
@@ -65,21 +66,17 @@ class FeedbackTableGUI extends ilTable2GUI
         $this->tpl->setVariable('START', $start_sign . $obj->getStartValue() . '%');
         $this->tpl->setVariable('END', '<= ' . $obj->getEndValue() . '%');
         // Actions
-        $ac = new ilAdvancedSelectionListGUI();
-        $this->ctrl->setParameter($this->parent_obj, 'feedback_id', $obj->getId());
-        $ac->setId('fb_' . $obj->getId());
-        $ac->addItem(
-            $this->plugin->txt('edit_feedback'),
-            'edit_feedback',
-            $this->ctrl->getLinkTarget($this->parent_obj, 'editFeedback')
-        );
-        $ac->addItem(
-            $this->plugin->txt('delete_feedback'),
-            'delete_feedback',
-            $this->ctrl->getLinkTarget($this->parent_obj, 'deleteFeedback')
-        );
-        $ac->setListTitle($this->plugin->txt('actions'));
-        //
-        $this->tpl->setVariable('ACTIONS', $ac->getHTML());
+        $dropdown = $this->ui->factory()->dropdown()->standard([
+            $this->ui->factory()->link()->standard(
+                $this->plugin->txt('edit_feedback'),
+                $this->ctrl->getLinkTarget($this->parent_obj, 'editFeedback')
+            ),
+            $this->ui->factory()->link()->standard(
+                $this->plugin->txt('delete_feedback'),
+                $this->ctrl->getLinkTarget($this->parent_obj, 'deleteFeedback')
+            )
+        ]);
+
+        $this->tpl->setVariable('ACTIONS', $this->ui->renderer()->render($dropdown));
     }
 }

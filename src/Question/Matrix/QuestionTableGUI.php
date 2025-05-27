@@ -7,15 +7,16 @@ namespace ilub\plugin\SelfEvaluation\Question\Matrix;
 use ilTable2GUI;
 use ilub\plugin\SelfEvaluation\Block\Block;
 use ilSelfEvaluationPlugin;
-use ilAdvancedSelectionListGUI;
 use QuestionGUI;
 use ilGlobalTemplateInterface;
 use ilUtil;
+use ILIAS\DI\UIServices;
 
 class QuestionTableGUI extends ilTable2GUI
 {
     public function __construct(
         QuestionGUI $a_parent_obj,
+        protected UIServices $ui,
         protected ilSelfEvaluationPlugin $plugin,
         ilGlobalTemplateInterface $global_template,
         string $a_parent_cmd,
@@ -76,19 +77,17 @@ class QuestionTableGUI extends ilTable2GUI
             ) . '/templates/images/empty.png'
         );
         // Actions
-        $ac = new ilAdvancedSelectionListGUI();
-        $ac->setId('question_' . $a_set['id']);
-        $ac->addItem(
-            $this->plugin->txt('edit_question'),
-            'edit_question',
-            $this->ctrl->getLinkTargetByClass('QuestionGUI', 'editQuestion')
-        );
-        $ac->addItem(
-            $this->plugin->txt('delete_question'),
-            'delete_question',
-            $this->ctrl->getLinkTargetByClass('QuestionGUI', 'confirmDeleteQuestion')
-        );
-        $ac->setListTitle($this->plugin->txt('actions'));
-        $this->tpl->setVariable('ACTIONS', $ac->getHTML());
+        $dropdown = $this->ui->factory()->dropdown()->standard([
+            $this->ui->factory()->link()->standard(
+                $this->plugin->txt('edit_question'),
+                $this->ctrl->getLinkTargetByClass('QuestionGUI', 'editQuestion')
+            ),
+            $this->ui->factory()->link()->standard(
+                $this->plugin->txt('delete_question'),
+                $this->ctrl->getLinkTargetByClass('QuestionGUI', 'confirmDeleteQuestion')
+            )
+        ]);
+
+        $this->tpl->setVariable('ACTIONS', $this->ui->renderer()->render($dropdown));
     }
 }

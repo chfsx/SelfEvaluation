@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use ILIAS\DI\UIServices;
 use ILIAS\Refinery\Factory;
 use ilub\plugin\SelfEvaluation\Identity\Identity;
 use ilub\plugin\SelfEvaluation\UIHelper\Scale\ScaleFormGUI;
@@ -34,6 +35,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
     public const FIELD_ORDER_FULLY_RANDOM = 'block_option_random';
     public const FIELD_ORDER_BLOCK = 'block_option_block';
     public const FIELD_ORDER_BLOCK_RANDOM = 'shuffle_in_blocks';
+    private UIServices $ui;
 
     public ?ilObject $object = null;
     protected ilPropertyFormGUI $form;
@@ -54,6 +56,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         $this->db = $DIC->database();
         $this->refinery = $DIC->refinery();
         $this->http = $DIC->http()->wrapper();
+        $this->ui = $DIC->ui();
         parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
     }
 
@@ -156,7 +159,8 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $this->access,
                         $this->plugin,
                         $this->http,
-                        $this->refinery
+                        $this->refinery,
+                        $this->ui
                     );
                     $this->tabs->activateTab('administration');
                     $this->ctrl->forwardCommand($gui);
@@ -202,6 +206,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $this->ctrl,
                         $this->toolbar,
                         $this->access,
+                        $this->ui,
                         $this->plugin,
                         $block,
                         $question
@@ -222,6 +227,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $this->ctrl,
                         $this->toolbar,
                         $this->access,
+                        $this->ui,
                         $this->plugin,
                         $block,
                         $question
@@ -240,7 +246,8 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $this->access,
                         $this->http,
                         $this->refinery,
-                        $this->plugin
+                        $this->plugin,
+                        $this->ui
                     );
                     $this->tabs->activateTab('administration');
                     $this->ctrl->forwardCommand($gui);
@@ -281,7 +288,8 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                         $this->access,
                         $this->plugin,
                         $this->http,
-                        $this->refinery
+                        $this->refinery,
+                        $this->ui
                     );
                     $this->ctrl->forwardCommand($gui);
                     $this->tpl->printToStdout();

@@ -8,12 +8,14 @@ use ilObjSelfEvaluationGUI;
 use ilCtrl;
 use ilSelfEvaluationPlugin;
 use ilTable2GUI;
-use ilAdvancedSelectionListGUI;
+use ILIAS\DI\UIServices;
+use ILIAS\UI\Component\Link\Link;
 
 class BlockTableGUI extends ilTable2GUI
 {
     public function __construct(
         ilCtrl $ilCtrl,
+        protected UIServices $ui,
         protected ilSelfEvaluationPlugin $plugin,
         ilObjSelfEvaluationGUI $parent,
         string $a_parent_cmd
@@ -70,24 +72,19 @@ class BlockTableGUI extends ilTable2GUI
         }
         $this->tpl->parseCurrentBlock();
 
-        $ac = new ilAdvancedSelectionListGUI();
-        $ac->setId($a_set['position_id']);
-        $ac->setListTitle($this->plugin->txt('actions'));
-        /**
-         * @var BlockTableAction[] $actions
-         */
-        $actions = unserialize($a_set['actions']);
+        $actions = unserialize($a_set['actions'], ['allowed_classes' => [BlockTableAction::class]]);
 
-        usort($actions, function (BlockTableAction $action_a, BlockTableAction $action_b): int {
-            $value = $action_a->getPosition() > $action_b->getPosition();
-            if ($value) {
-                return 1;
-            }
-            return -1;
-        });
-        foreach ($actions as $action) {
-            $ac->addItem($action->getTitle(), $action->getCmd(), $action->getLink());
-        }
-        $this->tpl->setVariable('ACTIONS', $ac->getHTML());
+        usort($actions, static fn(BlockTableAction $action_a, BlockTableAction $action_b): int => $action_a->getPosition() - $action_b->getPosition());
+
+        $dropdown = $this->ui->factory()->dropdown()->standard(array_map(
+            fn(BlockTableAction $action): Link => $this->ui->factory()->link()->standard(
+                $action->getTitle(),
+                $action->getLink()
+            ),
+            $actions
+        ));
+
+
+        $this->tpl->setVariable('ACTIONS', $this->ui->renderer()->render($dropdown));
     }
 }

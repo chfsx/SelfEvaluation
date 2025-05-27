@@ -15,7 +15,15 @@ class QuestionGUI extends BaseQuestionGUI
 
     protected function createTableGUI(): ilTable2GUI
     {
-        return new QuestionTableGUI($this, $this->plugin, $this->tpl, 'showContent', $this->block, $this->hasSorting());
+        return new QuestionTableGUI(
+            $this,
+            $this->ui,
+            $this->plugin,
+            $this->tpl,
+            'showContent',
+            $this->block,
+            $this->hasSorting()
+        );
     }
 
     public function initQuestionForm(string $mode = 'create'): void

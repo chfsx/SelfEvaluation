@@ -10,15 +10,16 @@ use ilDBInterface;
 use ilCtrl;
 use ilub\plugin\SelfEvaluation\Identity\Identity;
 use ilObjUser;
-use ilAdvancedSelectionListGUI;
 use DatasetGUI;
 use ilUtil;
+use ILIAS\DI\UIServices;
 
 class DatasetTableGUI extends ilTable2GUI
 {
     public function __construct(
         protected ilDBInterface $db,
         protected ilCtrl $ctrl,
+        protected UIServices $ui,
         DatasetGUI $a_parent_obj,
         string $a_parent_cmd,
         protected ilSelfEvaluationPlugin $plugin,
@@ -56,7 +57,7 @@ class DatasetTableGUI extends ilTable2GUI
     {
         $obj = new Dataset($this->db, (int) $a_set['id']);
         $identifier = new Identity($this->db, $obj->getIdentifierId());
-        $this->ctrl->setParameterByClass('DatasetGUI', 'dataset_id', $obj->getId());
+        $this->ctrl->setParameterByClass(DatasetGUI::class, 'dataset_id', $obj->getId());
         // Row
         $this->tpl->setVariable("ID", $obj->getId());
         $this->tpl->setVariable(
@@ -65,7 +66,7 @@ class DatasetTableGUI extends ilTable2GUI
             ) . '/templates/images/empty.png'
         );
         $this->tpl->setVariable('DATE', date('d.m.Y - H:i:s', $obj->getCreationDate()));
-        $this->tpl->setVariable('EDIT_LINK', $this->ctrl->getLinkTargetByClass('DatasetGUI', 'show'));
+        $this->tpl->setVariable('EDIT_LINK', $this->ctrl->getLinkTargetByClass(DatasetGUI::class, 'show'));
         switch ($identifier->getType()) {
             case Identity::TYPE_EXTERNAL:
                 $this->tpl->setVariable(
@@ -89,24 +90,19 @@ class DatasetTableGUI extends ilTable2GUI
                 $this->tpl->setVariable('IDENTITY', $username['login']);
                 break;
         }
-        //$this->tpl->setVariable('PERCENTAGE', $obj->getOverallPercentage());
         $this->tpl->setVariable('ID', $obj->getId());
         // Actions
-        $ac = new ilAdvancedSelectionListGUI();
-        $ac->setId('dataset_' . $obj->getId());
-        $ac->addItem(
-            $this->plugin->txt('show_feedback'),
-            'show_dataset',
-            $this->ctrl->getLinkTargetByClass('DatasetGUI', 'show')
-        );
-        $ac->addItem(
-            $this->plugin->txt('delete_dataset'),
-            'delete_dataset',
-            $this->ctrl->getLinkTargetByClass('DatasetGUI', 'deleteDataset')
-        );
-        $ac->setListTitle($this->plugin->txt('actions'));
-        //
-        $this->ctrl->setParameterByClass('DatasetGUI', 'dataset_id', 0);
-        $this->tpl->setVariable('ACTIONS', $ac->getHTML());
+        $dropdown = $this->ui->factory()->dropdown()->standard([
+            $this->ui->factory()->link()->standard(
+                $this->plugin->txt('show_feedback'),
+                $this->ctrl->getLinkTargetByClass(DatasetGUI::class, 'show')
+            ),
+            $this->ui->factory()->link()->standard(
+                $this->plugin->txt('delete_dataset'),
+                $this->ctrl->getLinkTargetByClass(DatasetGUI::class, 'deleteDataset')
+            )
+        ]);
+        $this->ctrl->setParameterByClass(DatasetGUI::class, 'dataset_id', 0);
+        $this->tpl->setVariable('ACTIONS', $this->ui->renderer()->render($dropdown));
     }
 }

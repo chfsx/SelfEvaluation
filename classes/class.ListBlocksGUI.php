@@ -6,6 +6,7 @@ use ilub\plugin\SelfEvaluation\Block\BlockTableGUI;
 use ilub\plugin\SelfEvaluation\Block\BlockFactory;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Refinery\Factory;
+use ILIAS\DI\UIServices;
 
 class ListBlocksGUI
 {
@@ -18,7 +19,8 @@ class ListBlocksGUI
         protected ilAccessHandler $access,
         protected ilSelfEvaluationPlugin $plugin,
         protected WrapperFactory $http,
-        protected Factory $refinery
+        protected Factory $refinery,
+        protected UIServices $ui
     ) {
     }
 
@@ -62,7 +64,13 @@ class ListBlocksGUI
     public function showContent(): void
     {
         $this->tpl->addJavaScript($this->plugin->getRelativeDirectory() . '/templates/js/sortable.js');
-        $table = new BlockTableGUI($this->ctrl, $this->plugin, $this->parent, 'showContent');
+        $table = new BlockTableGUI(
+            $this->ctrl,
+            $this->ui,
+            $this->plugin,
+            $this->parent,
+            'showContent'
+        );
 
         $this->ctrl->setParameterByClass(QuestionBlockGUI::class, 'block_id', null);
         $this->toolbar->addButton(

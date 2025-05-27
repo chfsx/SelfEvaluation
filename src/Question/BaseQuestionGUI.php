@@ -15,6 +15,7 @@ use ilAccessHandler;
 use ilDBInterface;
 use ilTable2GUI;
 use ilConfirmationGUI;
+use ILIAS\DI\UIServices;
 
 abstract class BaseQuestionGUI
 {
@@ -30,6 +31,7 @@ abstract class BaseQuestionGUI
         protected ilCtrl $ctrl,
         protected ilToolbarGUI $toolbar,
         protected ilAccessHandler $access,
+        protected UIServices $ui,
         protected ilSelfEvaluationPlugin $plugin,
         protected Block $block,
         protected Question $question

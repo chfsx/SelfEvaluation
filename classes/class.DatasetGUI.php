@@ -10,6 +10,7 @@ use ilub\plugin\SelfEvaluation\Dataset\DatasetCsvExport;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
 use ILIAS\Refinery\Factory;
 use JetBrains\PhpStorm\NoReturn;
+use ILIAS\DI\UIServices;
 
 class DatasetGUI
 {
@@ -24,7 +25,8 @@ class DatasetGUI
         protected ilAccessHandler $access,
         protected ilSelfEvaluationPlugin $plugin,
         protected WrapperFactory $http,
-        protected Factory $refinery
+        protected Factory $refinery,
+        protected UIServices $ui
     ) {
         $this->dataset = new Dataset(
             $this->db,
@@ -74,6 +76,7 @@ class DatasetGUI
             $table = new DatasetTableGUI(
                 $this->db,
                 $this->ctrl,
+                $this->ui,
                 $this,
                 'index',
                 $this->plugin,
@@ -88,6 +91,7 @@ class DatasetGUI
             $table = new DatasetTableGUI(
                 $this->db,
                 $this->ctrl,
+                $this->ui,
                 $this,
                 'index',
                 $this->plugin,
