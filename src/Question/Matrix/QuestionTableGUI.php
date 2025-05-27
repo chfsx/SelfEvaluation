@@ -30,7 +30,8 @@ class QuestionTableGUI extends ilTable2GUI
         $this->ctrl->setParameterByClass('QuestionGUI', 'question_id', null);
         $this->ctrl->setParameterByClass('QuestionGUI', 'block_id', $this->block->getId());
         $this->setRowTemplate(
-            $this->plugin->getDirectory() . '/templates/default/Question/tpl.template_question_row.html'
+            'Question/tpl.template_question_row.html',
+            $this->plugin->getDirectory()
         );
         $this->initColumns($global_template);
     }
@@ -38,7 +39,7 @@ class QuestionTableGUI extends ilTable2GUI
     protected function initColumns(ilGlobalTemplateInterface $global_template)
     {
         if ($this->sortable) {
-            $global_template->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
+            $global_template->addJavaScript($this->plugin->getRelativeDirectory() . '/templates/js/sortable.js');
             $this->addColumn('', 'position', '20px');
             $this->addMultiCommand('saveSorting', $this->plugin->txt('save_sorting'));
         }
@@ -55,7 +56,7 @@ class QuestionTableGUI extends ilTable2GUI
 
         if ($this->sortable) {
             $this->tpl->setCurrentBlock("sortable");
-            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getDirectory() . "/templates/images/move.png");
+            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getRelativeDirectory() . "/templates/images/move.png");
             $this->tpl->setVariable('ID', $a_set['id']);
             $this->tpl->parseCurrentBlock();
         }
@@ -71,7 +72,7 @@ class QuestionTableGUI extends ilTable2GUI
         );
         $this->tpl->setVariable(
             'IS_INVERTED',
-            $a_set['is_inverse'] ? ilUtil::getImagePath('standard/icon_not_ok.svg') : $this->plugin->getDirectory(
+            $a_set['is_inverse'] ? ilUtil::getImagePath('standard/icon_not_ok.svg') : $this->plugin->getRelativeDirectory(
             ) . '/templates/images/empty.png'
         );
         // Actions

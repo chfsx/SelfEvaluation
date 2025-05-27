@@ -61,7 +61,7 @@ class ListBlocksGUI
 
     public function showContent(): void
     {
-        $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
+        $this->tpl->addJavaScript($this->plugin->getRelativeDirectory() . '/templates/js/sortable.js');
         $table = new BlockTableGUI($this->ctrl, $this->plugin, $this->parent, 'showContent');
 
         $this->ctrl->setParameterByClass(QuestionBlockGUI::class, 'block_id', null);

@@ -34,7 +34,7 @@ class KnobGUI
     public function render(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin): void
     {
         self::$num++;
-        $tpl->addJavaScript($plugin->getDirectory() . '/templates/js/jquery.knob.js');
+        $tpl->addJavaScript($plugin->getRelativeDirectory() . '/templates/js/jquery.knob.js');
         $knob = $plugin->getTemplate('default/Form/tpl.knob.html', false, false);
         $knob->setVariable('ID', 'knob_' . self::getNum());
         $knob->setVariable('VALUE', $this->getValue());

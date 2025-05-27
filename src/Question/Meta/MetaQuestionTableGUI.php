@@ -35,7 +35,8 @@ class MetaQuestionTableGUI extends ilTable2GUI
         $this->setEnableNumInfo(true);
 
         $this->setRowTemplate(
-            $this->plugin->getDirectory() . '/templates/default/Question/tpl.template_meta_question_row.html'
+            'Question/tpl.template_meta_question_row.html',
+            $this->plugin->getDirectory()
         );
 
         $this->initColumns($global_template);
@@ -44,7 +45,7 @@ class MetaQuestionTableGUI extends ilTable2GUI
     protected function initColumns(ilGlobalTemplateInterface $global_template)
     {
         if ($this->sortable) {
-            $global_template->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
+            $global_template->addJavaScript($this->plugin->getRelativeDirectory() . '/templates/js/sortable.js');
             $this->addColumn('', 'position', '20px');
             $this->addMultiCommand('saveSorting', $this->plugin->txt('save_sorting'));
         } else {
@@ -65,7 +66,7 @@ class MetaQuestionTableGUI extends ilTable2GUI
 
         if ($this->sortable) {
             $this->tpl->setCurrentBlock('sortable');
-            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getDirectory() . "/templates/images/move.png");
+            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getRelativeDirectory() . "/templates/images/move.png");
             $this->tpl->setVariable('ID', $a_set['id']);
             $this->tpl->parseCurrentBlock();
         }

@@ -86,7 +86,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         } else {
             $this->setLocator();
         }
-        $this->tpl->addJavaScript($this->getPlugin()->getDirectory() . '/templates/js/scripts.js');
+        $this->tpl->addJavaScript($this->getPlugin()->getRelativeDirectory() . '/templates/js/scripts.js');
         $this->setTabs();
     }
 

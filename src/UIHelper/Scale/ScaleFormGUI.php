@@ -31,7 +31,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
 
         $this->scale = Scale::_getInstanceByObjId($this->db, $this->parent_id);
         $this->initForm();
-        $this->tmpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
+        $this->tmpl->addJavaScript($this->plugin->getRelativeDirectory() . '/templates/js/sortable.js');
     }
 
     protected function initForm()

@@ -179,9 +179,9 @@ class FeedbackChartGUI
         $this->toolbar->addButtonInstance($btn);
 
         $tpl = $this->plugin->getTemplate('default/Feedback/tpl.feedback.html');
-        $this->tpl->addCss($this->plugin->getDirectory() . "/templates/css/feedback.css");
-        $this->tpl->addJavaScript($this->plugin->getDirectory() . "/templates/js/bar_spider_chart_toggle.js");
-        $this->tpl->addJavaScript($this->plugin->getDirectory() . "/templates/js/print.js");
+        $this->tpl->addCss($this->plugin->getRelativeDirectory() . "/templates/css/feedback.css");
+        $this->tpl->addJavaScript($this->plugin->getRelativeDirectory() . "/templates/js/bar_spider_chart_toggle.js");
+        $this->tpl->addJavaScript($this->plugin->getRelativeDirectory() . "/templates/js/print.js");
         return $tpl;
     }
 
