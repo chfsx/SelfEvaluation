@@ -59,7 +59,6 @@ trait ArrayForDB
     public function fromArray(array $array): self
     {
         foreach ($array as $k => $v) {
-
             $serialized = unserialize($v);
             if (is_array($serialized)) {
                 $this->{$k} = $serialized;
@@ -92,7 +91,6 @@ trait ArrayForDB
             if (is_array($serialized)) {
                 $this->{$k} = $serialized;
             } else {
-
                 $type = gettype($this->{$k});
                 switch ($type) {
                     case 'string':
@@ -106,7 +104,6 @@ trait ArrayForDB
                         break;
                 }
             }
-
         }
         return $this;
     }

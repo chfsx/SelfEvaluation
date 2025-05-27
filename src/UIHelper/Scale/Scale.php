@@ -106,7 +106,7 @@ class Scale implements hasDBFields
         $max = $min_max['max'];
 
         foreach ($this->units as $u) {
-            $return[(int)($u->getValue() * 100 / $max)] = $u->getTitle() . " (" . $u->getValue() . ")";
+            $return[(int) ($u->getValue() * 100 / $max)] = $u->getTitle() . " (" . $u->getValue() . ")";
         }
 
         return $return;
@@ -138,13 +138,13 @@ class Scale implements hasDBFields
 
     public function read()
     {
-        $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '.$this->getId());
+        $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = ' . $this->getId());
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
     protected function getNonDbFields(): array
     {
-        return ['db','units'];
+        return ['db', 'units'];
     }
 
     final public function initDB()
@@ -169,7 +169,7 @@ class Scale implements hasDBFields
 
     public function delete()
     {
-        $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = '.$this->getId());
+        $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ' . $this->getId());
     }
 
     public function update()
@@ -182,7 +182,7 @@ class Scale implements hasDBFields
 
     public static function _getInstanceByObjId(ilDBInterface $db, int $parent_obj_id): self
     {
-        $set = $db->query("SELECT * FROM " . self::TABLE_NAME . " " . " WHERE parent_id = ".$parent_obj_id);
+        $set = $db->query("SELECT * FROM " . self::TABLE_NAME . " " . " WHERE parent_id = " . $parent_obj_id);
         while ($rec = $db->fetchObject($set)) {
             return new self($db, (int) $rec->id);
         }

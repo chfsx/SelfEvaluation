@@ -30,6 +30,7 @@ class TinyMceTextAreaInputGUI extends ilTextAreaInputGUI
             'pastetext',
             'pasteword',
             'imgupload',
-            'ilimgupload']);
+            'ilimgupload'
+        ]);
     }
 }

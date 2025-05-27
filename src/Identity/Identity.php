@@ -34,13 +34,14 @@ class Identity implements hasDBFields
 
     public function read()
     {
-        $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        $set = $this->db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
         while ($rec = $this->db->fetchObject($set)) {
             $this->setObjectValuesFromRecord($this, $rec);
         }
     }
-
 
     final public function initDB()
     {
@@ -78,7 +79,7 @@ class Identity implements hasDBFields
 
     public function delete(): int
     {
-        return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = '.$this->getId());
+        return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ' . $this->getId());
     }
 
     public function update()
@@ -100,11 +101,15 @@ class Identity implements hasDBFields
     {
         $return = [];
         if ($identifier != "") {
-            $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
-                . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text'));
+            $set = $db->query(
+                'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
+                . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text')
+            );
         } else {
-            $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
-                . $db->quote($obj_id, 'integer'));
+            $set = $db->query(
+                'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
+                . $db->quote($obj_id, 'integer')
+            );
         }
 
         while ($rec = $db->fetchObject($set)) {
@@ -114,10 +119,15 @@ class Identity implements hasDBFields
         return $return;
     }
 
-    public static function _getInstanceForObjIdAndIdentifier(ilDBInterface $db, int $obj_id, string $identifier): Identity
-    {
-        $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
-            . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text'));
+    public static function _getInstanceForObjIdAndIdentifier(
+        ilDBInterface $db,
+        int $obj_id,
+        string $identifier
+    ): Identity {
+        $set = $db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
+            . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text')
+        );
 
         while ($rec = $db->fetchObject($set)) {
             return new self($db, (int) $rec->id);
@@ -131,15 +141,18 @@ class Identity implements hasDBFields
      * @param ilDBInterface $db
      * @return array
      */
-    public static function _getAllInstancesForObjIdAndIdentifier(ilDBInterface $db, int $obj_id, string $identifier): array
-    {
+    public static function _getAllInstancesForObjIdAndIdentifier(
+        ilDBInterface $db,
+        int $obj_id,
+        string $identifier
+    ): array {
         return self::_getAllInstancesByObjId($db, $obj_id, $identifier);
     }
 
     public static function _getNewHashInstanceForObjId(ilDBInterface $db, int $obj_id): Identity
     {
         do {
-            $identifier = strtoupper(substr(md5((string)rand(1, 99999)), 0, self::LENGTH));
+            $identifier = strtoupper(substr(md5((string) rand(1, 99999)), 0, self::LENGTH));
         } while (self::_identityExists($db, $obj_id, $identifier));
 
         $obj = new self($db);
@@ -171,8 +184,10 @@ class Identity implements hasDBFields
 
     public static function _identityExists(ilDBInterface $db, int $obj_id, string $identifier): bool
     {
-        $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
-            . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text'));
+        $set = $db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
+            . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text')
+        );
         while ($db->fetchObject($set)) {
             return true;
         }
@@ -182,9 +197,9 @@ class Identity implements hasDBFields
 
     public static function _getObjIdForIdentityId(ilDBInterface $db, string $identity_id): int
     {
-        $set = $db->query('SELECT obj_id FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '.$identity_id);
+        $set = $db->query('SELECT obj_id FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = ' . $identity_id);
         while ($rec = $db->fetchObject($set)) {
-            return (int)$rec->obj_id;
+            return (int) $rec->obj_id;
         }
 
         return 0;

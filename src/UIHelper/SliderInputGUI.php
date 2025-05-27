@@ -77,15 +77,29 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
         global $lng;
 
         $this->check[$this->getPostVar()] = [
-            $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_from', $this->refinery->kindlyTo()->string()),
-            $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_to', $this->refinery->kindlyTo()->string())
+            $this->http->wrapper()->post()->retrieve(
+                self::PREFIX . $this->getPostVar() . '_from',
+                $this->refinery->kindlyTo()->string()
+            ),
+            $this->http->wrapper()->post()->retrieve(
+                self::PREFIX . $this->getPostVar() . '_to',
+                $this->refinery->kindlyTo()->string()
+            )
         ];
 
         if ($this->getRequired() and
-            trim($this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . '_from', $this->refinery->kindlyTo()->string()))
- == '' and
             trim(
-                $this->http->wrapper()->post()->retrieve(self::PREFIX . $this->getPostVar() . 'to', $this->refinery->kindlyTo()->string()),
+                $this->http->wrapper()->post()->retrieve(
+                    self::PREFIX . $this->getPostVar() . '_from',
+                    $this->refinery->kindlyTo()->string()
+                )
+            )
+            == '' and
+            trim(
+                $this->http->wrapper()->post()->retrieve(
+                    self::PREFIX . $this->getPostVar() . 'to',
+                    $this->refinery->kindlyTo()->string()
+                ),
             ) == ''
         ) {
             $this->setAlert($lng->txt('msg_input_is_required'));
@@ -98,7 +112,6 @@ class SliderInputGUI extends ilSubEnabledFormPropertyGUI
 
     public function setValueByArray(array $array)
     {
-
         foreach ($this->getSubItems() as $item) {
             /**
              * @var SliderInputGUI $item

@@ -55,8 +55,10 @@ class Dataset implements hasDBFields
 
     public function read()
     {
-        $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        $set = $this->db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
         while ($rec = $this->db->fetchObject($set)) {
             $this->setObjectValuesFromRecord($this, $rec);
         }
@@ -64,7 +66,14 @@ class Dataset implements hasDBFields
 
     protected function getNonDbFields(): array
     {
-        return ['db', 'percentage_per_block', 'question_blocks','questions_data_for_blocks','highest_scale','statistics'];
+        return [
+            'db',
+            'percentage_per_block',
+            'question_blocks',
+            'questions_data_for_blocks',
+            'highest_scale',
+            'statistics'
+        ];
     }
 
     final public function initDB()
@@ -90,11 +99,15 @@ class Dataset implements hasDBFields
 
     public function delete(): int
     {
-        $this->db->manipulate('DELETE FROM ' . Data::TABLE_NAME . ' WHERE dataset_id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        $this->db->manipulate(
+            'DELETE FROM ' . Data::TABLE_NAME . ' WHERE dataset_id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
 
-        return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        return $this->db->manipulate(
+            'DELETE FROM ' . self::TABLE_NAME . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
     }
 
     public function update()
@@ -117,9 +130,7 @@ class Dataset implements hasDBFields
      */
     protected function updateValuesByArray(array $array)
     {
-
         if ($this->getId() == 0) {
-
             $this->create();
         }
 
@@ -145,9 +156,7 @@ class Dataset implements hasDBFields
                 $qid = $this->getQuestionId($type, $k);
 
                 $data[] = ['qid' => $qid, 'value' => $v, 'type' => $type];
-
             }
-
         }
 
         return $data;
@@ -162,7 +171,6 @@ class Dataset implements hasDBFields
             return Data::META_QUESTION_TYPE;
         }
         return "";
-
     }
 
     protected function getQuestionId(string $question_type, string $postvar_key): int
@@ -184,16 +192,15 @@ class Dataset implements hasDBFields
             foreach ($this->getQuestionBlocks() as $block) {
                 $values = [];
                 foreach ($this->getQuestionsDataPerBlock($block->getId()) as $data) {
-                    $values[] = (int)$data->getValue();
+                    $values[] = (int) $data->getValue();
                 }
-                $fraction =  $this->statistics->arraySumFractionOfMaxSumPossible($values, $highest);
+                $fraction = $this->statistics->arraySumFractionOfMaxSumPossible($values, $highest);
                 $this->percentage_per_block[$block->getId()] = $this->statistics->valueToPercentage($fraction);
             }
         }
 
         return $this->percentage_per_block;
     }
-
 
     public function getPercentageForBlock(int $block_id): ?float
     {
@@ -207,13 +214,13 @@ class Dataset implements hasDBFields
     public function getMinPercentageBlockAndMin(): array
     {
         [$key, $min] = $this->statistics->getMinKeyAndValueFromArray($this->getPercentagePerBlock());
-        return [$this->getBlockById($key),$min];
+        return [$this->getBlockById($key), $min];
     }
 
     public function getMaxPercentageBlockAndMax(): array
     {
         [$key, $max] = $this->statistics->getMaxKeyAndValueFromArray($this->getPercentagePerBlock());
-        return [$this->getBlockById($key),$max];
+        return [$this->getBlockById($key), $max];
     }
 
     public function getBlockById(int $block_id): QuestionBlock
@@ -245,7 +252,7 @@ class Dataset implements hasDBFields
             $data_as_percentage = [];
             $answer_data = $this->getQuestionsDataPerBlock($block->getId());
             foreach ($answer_data as $data) {
-                $data_as_percentage[] = $this->statistics->percentageOf((int)$data->getValue(), $highest);
+                $data_as_percentage[] = $this->statistics->percentageOf((int) $data->getValue(), $highest);
             }
             $return[$block->getId()] = $this->statistics->getStandardDeviation($data_as_percentage);
         }
@@ -311,10 +318,13 @@ class Dataset implements hasDBFields
      */
     public function getQuestionBlocks(): array
     {
-
         if (count($this->question_blocks) == 0) {
-
-            foreach (QuestionBlock::_getAllInstancesByIdentifierId($this->db, (string) $this->getIdentifierId()) as $block) {
+            foreach (
+                QuestionBlock::_getAllInstancesByIdentifierId(
+                    $this->db,
+                    (string) $this->getIdentifierId()
+                ) as $block
+            ) {
                 $this->question_blocks[$block->getId()] = $block;
             }
         }
@@ -333,8 +343,9 @@ class Dataset implements hasDBFields
      */
     public function getQuestionsDataPerBlock(int $block_id): array
     {
-
-        if (!array_key_exists($block_id, $this->questions_data_for_blocks) || !is_array($this->questions_data_for_blocks[$block_id])) {
+        if (!array_key_exists($block_id, $this->questions_data_for_blocks) || !is_array(
+            $this->questions_data_for_blocks[$block_id]
+        )) {
             foreach (Question::_getAllInstancesForParentId($this->db, $block_id) as $qst) {
                 $data = Data::_getInstanceForQuestionId($this->db, $this->getId(), $qst->getId());
                 $this->questions_data_for_blocks[$block_id][$qst->getId()] = $data;
@@ -343,8 +354,6 @@ class Dataset implements hasDBFields
 
         return $this->questions_data_for_blocks[$block_id] ?? [];
     }
-
-
 
     /**
      * @param int $highest_scale
@@ -389,8 +398,10 @@ class Dataset implements hasDBFields
     public static function _getAllInstancesByIdentifierId(ilDBInterface $db, int $identifier_id): array
     {
         $return = [];
-        $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
-            . $identifier_id . ' ORDER BY creation_date ASC');
+        $set = $db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
+            . $identifier_id . ' ORDER BY creation_date ASC'
+        );
         while ($rec = $db->fetchObject($set)) {
             $data_set = new Dataset($db);
             $data_set->setObjectValuesFromRecord($data_set, $rec);
@@ -417,8 +428,10 @@ class Dataset implements hasDBFields
         }
 
         foreach ($identities as $identity) {
-            $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
-                . $db->quote($identity->getId(), 'integer') . ' ORDER BY creation_date ASC');
+            $set = $db->query(
+                'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
+                . $db->quote($identity->getId(), 'integer') . ' ORDER BY creation_date ASC'
+            );
             while ($rec = $db->fetchObject($set)) {
                 if ($as_array) {
                     $return[] = (array) $rec;
@@ -433,7 +446,6 @@ class Dataset implements hasDBFields
         return $return;
     }
 
-
     public static function _deleteAllInstancesByObjectId(ilDBInterface $db, int $obj_id): bool
     {
         foreach (self::_getAllInstancesByObjectId($db, $obj_id) as $obj) {
@@ -445,8 +457,10 @@ class Dataset implements hasDBFields
 
     public static function _getInstanceByIdentifierId(ilDBInterface $db, int $identifier_id): Dataset|bool
     {
-        $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
-            . $db->quote($identifier_id, 'integer'). " ORDER BY id DESC");
+        $set = $db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
+            . $db->quote($identifier_id, 'integer') . " ORDER BY id DESC"
+        );
         while ($rec = $db->fetchObject($set)) {
             $data_set = new Dataset($db);
             $data_set->setObjectValuesFromRecord($data_set, $rec);
@@ -466,8 +480,10 @@ class Dataset implements hasDBFields
 
     public static function _datasetExists(ilDBInterface $db, int $identifier_id): bool
     {
-        $set = $db->query('SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
-            . $db->quote($identifier_id, 'integer'));
+        $set = $db->query(
+            'SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE identifier_id = '
+            . $db->quote($identifier_id, 'integer')
+        );
         while ($db->fetchObject($set)) {
             return true;
         }

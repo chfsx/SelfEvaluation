@@ -50,8 +50,12 @@ class MetaTypeSelect extends MetaQuestionType
         return $form->getInput('value_' . $this->getId());
     }
 
-    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values): mixed
-    {
+    public function getPresentationInputGUI(
+        ilSelfEvaluationPlugin $plugin,
+        string $title,
+        string $postvar,
+        array $values
+    ): mixed {
         $select = new ilSelectInputGUI($title, $postvar);
 
         $options = [null => $plugin->txt('select_one')];

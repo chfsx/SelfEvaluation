@@ -75,7 +75,6 @@ class csvExportColumns
             } else {
                 $this->addColumn(new csvExportColumn($column));
             }
-
         }
     }
 
@@ -113,7 +112,6 @@ class csvExportColumns
         } else {
             throw new csvExportException(csvExportException::COLUMN_DOES_NOT_EXIST);
         }
-
     }
 
     public function count(): int

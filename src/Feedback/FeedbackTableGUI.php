@@ -43,13 +43,17 @@ class FeedbackTableGUI extends ilTable2GUI
         $this->setFormAction($this->ctrl->getFormAction($a_parent_obj));
         $this->addMultiCommand("deleteFeedbacks", $this->plugin->txt("delete_feedback"));
 
-        $this->setRowTemplate($this->plugin->getDirectory() . '/templates/default/Feedback/tpl.template_feedback_row.html');
-        $this->setData(Feedback::_getAllInstancesForParentId(
-            $this->db,
-            $a_parent_obj->getBlock()->getId(),
-            true,
-            $is_ovarall
-        ));
+        $this->setRowTemplate(
+            $this->plugin->getDirectory() . '/templates/default/Feedback/tpl.template_feedback_row.html'
+        );
+        $this->setData(
+            Feedback::_getAllInstancesForParentId(
+                $this->db,
+                $a_parent_obj->getBlock()->getId(),
+                true,
+                $is_ovarall
+            )
+        );
     }
 
     protected function fillRow($a_set): void

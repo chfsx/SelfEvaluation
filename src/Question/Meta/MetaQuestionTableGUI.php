@@ -18,8 +18,15 @@ class MetaQuestionTableGUI extends ilTable2GUI
     protected ilSelfEvaluationPlugin $plugin;
     protected bool $sortable;
 
-    public function __construct(MetaQuestionGUI $a_parent_obj, ilSelfEvaluationPlugin $plugin, ilGlobalTemplateInterface $global_template, string $a_parent_cmd, array $types, bool $sortable, Block $block)
-    {
+    public function __construct(
+        MetaQuestionGUI $a_parent_obj,
+        ilSelfEvaluationPlugin $plugin,
+        ilGlobalTemplateInterface $global_template,
+        string $a_parent_cmd,
+        array $types,
+        bool $sortable,
+        Block $block
+    ) {
         $this->types = $types;
         $this->sortable = $sortable;
 
@@ -38,7 +45,9 @@ class MetaQuestionTableGUI extends ilTable2GUI
         $this->setEnableHeader(true);
         $this->setEnableNumInfo(true);
 
-        $this->setRowTemplate($this->plugin->getDirectory().'/templates/default/Question/tpl.template_meta_question_row.html');
+        $this->setRowTemplate(
+            $this->plugin->getDirectory() . '/templates/default/Question/tpl.template_meta_question_row.html'
+        );
 
         $this->initColumns($global_template);
     }
@@ -67,7 +76,7 @@ class MetaQuestionTableGUI extends ilTable2GUI
 
         if ($this->sortable) {
             $this->tpl->setCurrentBlock('sortable');
-            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getDirectory()."/templates/images/move.png");
+            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getDirectory() . "/templates/images/move.png");
             $this->tpl->setVariable('ID', $a_set['id']);
             $this->tpl->parseCurrentBlock();
         }
@@ -79,13 +88,16 @@ class MetaQuestionTableGUI extends ilTable2GUI
         $this->tpl->setVariable('VAL_NAME', $a_set['name']);
         $this->tpl->setVariable('VAL_SHORT_TITLE', $a_set['short_title']);
         $type_factory = new MetaTypeFactory();
-        $this->tpl->setVariable('VAL_TYPE', $this->plugin->txt($type_factory->getTypeByTypeId($a_set['type_id'])->getTypeName()));
+        $this->tpl->setVariable(
+            'VAL_TYPE',
+            $this->plugin->txt($type_factory->getTypeByTypeId($a_set['type_id'])->getTypeName())
+        );
 
         $this->tpl->setVariable('REQUIRED_CHECKED', $a_set['required'] ? 'checked="checked"' : '');
 
         // actions
         $ac = new ilAdvancedSelectionListGUI();
-        $ac->setId((string)$a_set['id']);
+        $ac->setId((string) $a_set['id']);
         $ac->setListTitle($this->lng->txt('actions'));
 
         $edit_link = $this->ctrl->getLinkTarget($this->getParentObject(), 'editQuestion');

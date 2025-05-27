@@ -20,7 +20,6 @@ class MetaQuestion extends BaseQuestion
     protected array $values = [];
     protected int $required = 0;
 
-
     public function cloneTo(int $parent_id): BaseQuestion
     {
         $clone = new self($this->db);
@@ -41,7 +40,7 @@ class MetaQuestion extends BaseQuestion
         $child_xml->addAttribute("containerId", (string) $this->getParentId());
         $child_xml->addAttribute("name", $this->getName());
         $child_xml->addAttribute("shortTitle", $this->getShortTitle());
-        $child_xml->addAttribute("typeId", (string)$this->getTypeId());
+        $child_xml->addAttribute("typeId", (string) $this->getTypeId());
         $child_xml->addAttribute("values", serialize($this->getValues()));
         $child_xml->addAttribute("enableRequired", (string) $this->isRequired());
         $child_xml->addAttribute("position", (string) $this->getPosition());
@@ -65,7 +64,6 @@ class MetaQuestion extends BaseQuestion
 
     public function getTypeId(): int
     {
-
         return $this->type_id;
     }
 
@@ -131,13 +129,13 @@ class MetaQuestion extends BaseQuestion
         while ($rec = $db->fetchObject($stmt)) {
             $question = new self($db);
             $question->setId((int) $rec->id);
-            $question->setParentId((int)$rec->parent_id);
-            $question->setName((string)$rec->name);
-            $question->setShortTitle((string)$rec->short_title);
-            $question->setTypeId((int)$rec->type_id);
-            $question->setValues((array)unserialize($rec->values));
-            $question->enableRequired((int)$rec->required);
-            $question->setPosition((int)$rec->position);
+            $question->setParentId((int) $rec->parent_id);
+            $question->setName((string) $rec->name);
+            $question->setShortTitle((string) $rec->short_title);
+            $question->setTypeId((int) $rec->type_id);
+            $question->setValues((array) unserialize($rec->values));
+            $question->enableRequired((int) $rec->required);
+            $question->setPosition((int) $rec->position);
             $questions[$question->getId()] = $question;
         }
         return $questions;

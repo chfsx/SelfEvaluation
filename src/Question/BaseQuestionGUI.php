@@ -53,7 +53,6 @@ abstract class BaseQuestionGUI
         $this->db = $db;
         $this->block = $block;
         $this->question = $question;
-
     }
 
     public function executeCommand()
@@ -93,7 +92,6 @@ abstract class BaseQuestionGUI
                 $this->showContent();
                 break;
         }
-
     }
 
     protected function showContent()
@@ -120,7 +118,6 @@ abstract class BaseQuestionGUI
 
     protected function saveSorting()
     {
-
         if ($this->parent->http->post()->has('position')) {
             $post_array = $this->parent->http->post()->retrieve(
                 'position',
@@ -134,10 +131,13 @@ abstract class BaseQuestionGUI
                 $this->question->update();
             }
         }
-        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt("sorting_saved"), true);
+        $this->tpl->setOnScreenMessage(
+            ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+            $this->plugin->txt("sorting_saved"),
+            true
+        );
         $this->ctrl->redirect($this, 'showContent');
     }
-
 
     public function addQuestion()
     {
@@ -155,7 +155,6 @@ abstract class BaseQuestionGUI
 
     abstract public function setQuestionFormValues();
 
-
     public function initQuestionForm(string $mode = 'create')
     {
         $this->form = new ilPropertyFormGUI();
@@ -163,7 +162,6 @@ abstract class BaseQuestionGUI
         $this->form->setFormAction($this->ctrl->getFormAction($this));
         $this->form->addCommandButton($mode . 'Question', $this->plugin->txt($mode . '_question_button'));
         $this->form->addCommandButton('cancel', $this->plugin->txt('cancel'));
-
     }
 
     protected function createQuestion()
@@ -183,7 +181,11 @@ abstract class BaseQuestionGUI
             $this->createQuestionSetFields();
             $this->question->setParentId($this->block->getId());
             $this->question->update();
-            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_question_updated'), true);
+            $this->tpl->setOnScreenMessage(
+                ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+                $this->plugin->txt('msg_question_updated'),
+                true
+            );
             $this->cancel();
         }
 
@@ -194,7 +196,10 @@ abstract class BaseQuestionGUI
 
     public function confirmDeleteQuestion()
     {
-        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_QUESTION, $this->plugin->txt('qst_delete_question'));
+        $this->tpl->setOnScreenMessage(
+            ilGlobalTemplateInterface::MESSAGE_TYPE_QUESTION,
+            $this->plugin->txt('qst_delete_question')
+        );
         $conf = new ilConfirmationGUI();
         $conf->setHeaderText($this->plugin->txt('qst_delete_question'));
         $conf->setFormAction($this->ctrl->getFormAction($this));
@@ -202,19 +207,25 @@ abstract class BaseQuestionGUI
         $conf->setConfirm($this->plugin->txt('delete_question'), 'deleteQuestion');
         $title = $this->question->getTitle();
         if ($title == "") {
-            $title = $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $this->question->getPosition();
+            $title = $this->plugin->txt('question') . ' ' . $this->block->getPosition(
+            ) . '.' . $this->question->getPosition();
         }
 
-        $conf->addItem('question_id', (string)$this->question->getId(), $title);
+        $conf->addItem('question_id', (string) $this->question->getId(), $title);
         $this->tpl->setContent($conf->getHTML());
     }
 
     public function deleteQuestion()
     {
-        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_question_deleted'), true);
+        $this->tpl->setOnScreenMessage(
+            ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+            $this->plugin->txt('msg_question_deleted'),
+            true
+        );
         $this->question->delete();
         $this->cancel();
     }
+
     public function enableSorting(bool $enable_sorting)
     {
         $this->enable_sorting = $enable_sorting;

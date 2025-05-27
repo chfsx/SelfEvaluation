@@ -33,7 +33,6 @@ class PlayerGUI
     protected WrapperFactory $http;
     protected Factory $refinery;
 
-
     public function __construct(
         ilDBInterface $db,
         ilObjSelfEvaluationGUI $parent,
@@ -56,14 +55,24 @@ class PlayerGUI
     public function executeCommand()
     {
         if (!$this->http->query()->has('uid')) {
-            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('uid_not_given'), true);
+            $this->tpl->setOnScreenMessage(
+                ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE,
+                $this->plugin->txt('uid_not_given'),
+                true
+            );
             $this->ctrl->redirect($this->parent);
         } else {
-            $this->identity = new Identity($this->db, $this->http->query()->retrieve('uid', $this->refinery->kindlyTo()->int()));
+            $this->identity = new Identity(
+                $this->db,
+                $this->http->query()->retrieve('uid', $this->refinery->kindlyTo()->int())
+            );
         }
 
         if ($this->http->query()->has('dataset_id')) {
-            $this->dataset = new Dataset($this->db, (int) $this->http->query()->retrieve('dataset_id', $this->refinery->kindlyTo()->string()));
+            $this->dataset = new Dataset(
+                $this->db,
+                (int) $this->http->query()->retrieve('dataset_id', $this->refinery->kindlyTo()->string())
+            );
             $this->ctrl->setParameter($this, "dataset_id", $this->dataset->getId());
         } else {
             $this->dataset = new Dataset($this->db);
@@ -112,7 +121,6 @@ class PlayerGUI
      */
     public function startScreen()
     {
-
         $this->tpl->addCss($this->plugin->getStyleSheetLocation("css/player.css"));
         $content = $this->plugin->getTemplate('default/Dataset/tpl.dataset_presentation.html');
         $content->setVariable('INTRO_HEADER', $this->plugin->txt('intro_header'));
@@ -130,7 +138,10 @@ class PlayerGUI
             }
             $content->parseCurrentBlock();
         } else {
-            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_INFO, $this->plugin->txt('not_active'));
+            $this->tpl->setOnScreenMessage(
+                ilGlobalTemplateInterface::MESSAGE_TYPE_INFO,
+                $this->plugin->txt('not_active')
+            );
         }
         $this->tpl->setContent($content->get());
     }
@@ -164,7 +175,6 @@ class PlayerGUI
         $this->initPresentationForm();
 
         if ($this->form->checkInput()) {
-
             $post_data = $this->getDataFromPost();
             $this->dataset->updateValuesByPost($post_data);
 
@@ -175,7 +185,6 @@ class PlayerGUI
         $this->form->setValuesByPost();
         $this->tpl->setContent($this->form->getHTML());
     }
-
 
     private function getDataFromPost(): array
     {
@@ -197,15 +206,19 @@ class PlayerGUI
                 try {
                     $value = $this->http->post()->retrieve($qid, $this->refinery->kindlyTo()->string());
                 } catch (Exception) {
-                    $value = $this->http->post()->retrieve($qid, $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()));
+                    $value = $this->http->post()->retrieve(
+                        $qid,
+                        $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string())
+                    );
                 }
-                $data[$qid] =   $value;
+                $data[$qid] = $value;
                 $found_question++;
             }
             $i++;
         }
         return $data;
     }
+
     public function finishEvaluation()
     {
         $this->initPresentationForm();
@@ -281,7 +294,9 @@ class PlayerGUI
 
         //Order is just a completely random array same length as question. $val*123%13 is completely random, but will
         //alway return the same order.
-        $order = array_map(function ($val) {return $val * 123 % 13;}, range(1, count($questions)));
+        $order = array_map(function ($val) {
+            return $val * 123 % 13;
+        }, range(1, count($questions)));
         array_multisort($order, $questions);
 
         $questions_in_block = 0;
@@ -315,7 +330,10 @@ class PlayerGUI
 
     protected function displaySingleBlock($blocks, $mode = 'new')
     {
-        $page = $this->http->query()->has('page') ? $this->http->query()->retrieve('page', $this->refinery->kindlyTo()->int()) : 1;
+        $page = $this->http->query()->has('page') ? $this->http->query()->retrieve(
+            'page',
+            $this->refinery->kindlyTo()->int()
+        ) : 1;
         $last_page = count($blocks);
 
         if ($last_page > 1) {
@@ -330,8 +348,6 @@ class PlayerGUI
         if (array_key_exists($page - 1, $blocks)) {
             $this->addBlockHtmlToForm($blocks[$page - 1]);
         }
-
-
     }
 
     protected function displayAllBlocks($blocks, $mode = 'new')
@@ -370,12 +386,10 @@ class PlayerGUI
             if ($question_data->getQuestionType() == Data::QUESTION_TYPE) {
                 $values[MatrixQuestion::POSTVAR_PREFIX . $question_data->getQuestionId()] = $question_data->getValue();
             } else {
-
                 $values[MetaQuestion::POSTVAR_PREFIX . $question_data->getQuestionId()] = $question_data->getValue();
             }
         }
         if (!empty($values)) {
-
             $this->form->setValuesByArray($values);
         }
     }

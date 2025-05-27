@@ -158,7 +158,6 @@ class csvExportTable
                 } else {
                     $values[1 + $row_id][] = "";
                 }
-
             }
         }
         return $values;
@@ -179,9 +178,13 @@ class csvExportTable
                     return 1;
                 }
                 if (is_string($row_a->getValue($sort_column))) {
-                    return strcmp($row_a->getValue($sort_column)->getValue(), $row_b->getValue($sort_column)->getValue());
+                    return strcmp(
+                        $row_a->getValue($sort_column)->getValue(),
+                        $row_b->getValue($sort_column)->getValue()
+                    );
                 } else {
-                    return $row_a->getValue($sort_column)->getValue() > $row_b->getValue($sort_column)->getValue() ? 1 : -1;
+                    return $row_a->getValue($sort_column)->getValue() > $row_b->getValue($sort_column)->getValue(
+                    ) ? 1 : -1;
                 }
             });
         }

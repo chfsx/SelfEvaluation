@@ -72,7 +72,7 @@ class QuestionBlock extends Block implements QuestionBlockInterface
         $block->setTitle($attributes["title"]->__toString());
         $block->setAbbreviation($attributes["abbreviation"]->__toString());
         $block->setDescription($attributes["description"]->__toString());
-        $block->setPosition((int)$attributes["position"]);
+        $block->setPosition((int) $attributes["position"]);
         $block->create();
 
         foreach ($xml->question as $question) {

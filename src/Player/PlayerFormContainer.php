@@ -31,7 +31,6 @@ class PlayerFormContainer extends ilPropertyFormGUI
      */
     public function addCommandButton(string $a_cmd, string $a_text, string $a_id = ''): void
     {
-
         $this->copy_of_buttons[] = ["cmd" => $a_cmd, "text" => $a_text];
         parent::addCommandButton($a_cmd, $a_text);
     }
@@ -50,7 +49,6 @@ class PlayerFormContainer extends ilPropertyFormGUI
         $this->knob = new KnobGUI();
         $this->knob->setValue($page);
         $this->knob->setMax($last_page);
-
     }
 
     /**
@@ -63,8 +61,8 @@ class PlayerFormContainer extends ilPropertyFormGUI
         $this->global_tpl->addJavaScript("./Services/JavaScript/js/Basic.js");
         $this->global_tpl->addJavaScript("Services/Form/js/Form.js");
         $this->global_tpl->addJavaScript("./Services/UIComponent/Tooltip/js/ilTooltip.js");
-        $this->global_tpl->addJavaScript($this->plugin->getDirectory()."/templates/js/scale_units.js");
-        $this->global_tpl->addJavaScript($this->plugin->getDirectory()."/templates/js/jquery.knob.js");
+        $this->global_tpl->addJavaScript($this->plugin->getDirectory() . "/templates/js/scale_units.js");
+        $this->global_tpl->addJavaScript($this->plugin->getDirectory() . "/templates/js/jquery.knob.js");
         $this->global_tpl->addOnLoadCode('il.Tooltip.init();', 3);
 
         $required_text = false;

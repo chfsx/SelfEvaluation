@@ -87,7 +87,10 @@ class MultipleFieldInputGUI extends ilSubEnabledFormPropertyGUI
         $lng = $this->lng;
 
         if ($this->http->wrapper()->post()->has($this->getPostVar())) {
-            $post = $this->http->wrapper()->post()->retrieve($this->getPostVar(), $this->refinery->kindlyTo()->string());
+            $post = $this->http->wrapper()->post()->retrieve(
+                $this->getPostVar(),
+                $this->refinery->kindlyTo()->string()
+            );
             $_POST[$this->getPostVar()] = ilUtil::stripSlashes($post);
 
             if ($this->getRequired() && trim($post) == "") {

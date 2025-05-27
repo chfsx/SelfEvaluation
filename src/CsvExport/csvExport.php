@@ -28,16 +28,14 @@ class csvExport
         $output = fopen('php://output', 'w');
 
         foreach ($this->getTable()->getTableAsArray() as $row) {
-
             /**
-            $utf8_row = [];
-            foreach ($row as $entry) {
-                $utf8_row[] = $this->convertExcelUtf8($entry);
-            }
-            **/
+             * $utf8_row = [];
+             * foreach ($row as $entry) {
+             * $utf8_row[] = $this->convertExcelUtf8($entry);
+             * }
+             **/
             fputcsv($output, $row, $delimiter, $enclosure);
         }
-
     }
 
     protected function convertExcelUtf8(string $string): array|string

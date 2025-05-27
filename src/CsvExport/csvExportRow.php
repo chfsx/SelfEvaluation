@@ -63,7 +63,6 @@ class csvExportRow
         return $this->columns;
     }
 
-
     public function addValuesFromArray(array $column_names, array $values)
     {
         foreach ($values as $value) {

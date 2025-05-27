@@ -1,17 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 class ilSelfEvaluationExporter extends ilXmlExporter
 {
-
     public function init(): void
     {
-
     }
 
     public function getXmlRepresentation(string $a_entity, string $a_schema_version, string $a_id): string
     {
-        if (ilObject::_lookupType((int)$a_id) != "xsev") {
+        if (ilObject::_lookupType((int) $a_id) != "xsev") {
             throw new Exception("Wrong type " . true . " for selfevaluation export.");
         }
 
@@ -35,4 +34,3 @@ class ilSelfEvaluationExporter extends ilXmlExporter
         ];
     }
 }
-

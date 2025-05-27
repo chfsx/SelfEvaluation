@@ -20,7 +20,6 @@ class BlockTableGUI extends ilTable2GUI
         ilObjSelfEvaluationGUI $parent,
         $a_parent_cmd
     ) {
-
         $this->plugin = $plugin;
         $this->ctrl = $ilCtrl;
         $this->setId('');
@@ -83,9 +82,9 @@ class BlockTableGUI extends ilTable2GUI
         $actions = unserialize($a_set['actions']);
 
         usort($actions, function (BlockTableAction $action_a, BlockTableAction $action_b) {
-            $value =  $action_a->getPosition() > $action_b->getPosition();
+            $value = $action_a->getPosition() > $action_b->getPosition();
             if ($value) {
-                return 1 ;
+                return 1;
             } else {
                 return -1;
             }

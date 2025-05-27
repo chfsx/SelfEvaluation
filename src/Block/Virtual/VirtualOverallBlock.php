@@ -14,6 +14,5 @@ class VirtualOverallBlock extends VirtualQuestionBlock
         $this->setId($parent_obj_id);
         $this->setTitle($plugin->txt("overall_feedback_block"));
         $this->setDescription($plugin->txt("overall_feedback_block_description"));
-
     }
 }

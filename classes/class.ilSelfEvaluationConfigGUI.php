@@ -1,10 +1,10 @@
 <?php
 
 declare(strict_types=1);
-/**
- @ilCtrl_IsCalledBy ilSelfEvaluationConfigGUI: ilObjComponentSettingsGUI
- */
 
+/**
+ * @ilCtrl_IsCalledBy ilSelfEvaluationConfigGUI: ilObjComponentSettingsGUI
+ */
 class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
 {
     public const TYPE_TEXT = 'ilTextInputGUI';
@@ -25,7 +25,7 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         global $DIC;
 
         $this->ctrl = $DIC->ctrl();
-        $this->tpl =  $DIC["tpl"];
+        $this->tpl = $DIC["tpl"];
         $this->tabs = $DIC->tabs();
 
         $this->plugin = new ilSelfEvaluationPlugin();
@@ -141,7 +141,10 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
                     }
                 }
             }
-            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('conf_saved'));
+            $this->tpl->setOnScreenMessage(
+                ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+                $this->plugin->txt('conf_saved')
+            );
             $this->ctrl->redirect($this, 'configure');
         } else {
             $this->form->setValuesByPost();

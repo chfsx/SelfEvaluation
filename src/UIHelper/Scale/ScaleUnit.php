@@ -42,7 +42,6 @@ class ScaleUnit implements hasDBFields
         return $clone;
     }
 
-
     public function toXml(int $parent_id, SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("scaleUnit");
@@ -59,22 +58,23 @@ class ScaleUnit implements hasDBFields
         $unit = new self($db);
         $unit->setParentId($parent_id);
         $unit->setTitle($attributes["title"]->__toString());
-        $unit->setValue((int)$attributes["value"]);
-        $unit->setPosition((int)$attributes["position"]);
+        $unit->setValue((int) $attributes["value"]);
+        $unit->setPosition((int) $attributes["position"]);
         $unit->create();
         return $xml;
     }
 
     public function read()
     {
-        $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        $set = $this->db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
         $set = $this->db->fetchObject($set);
         if (!is_null($set)) {
             $this->setObjectValuesFromRecord($this, ($set));
         }
     }
-
 
     final public function initDB()
     {
@@ -132,7 +132,9 @@ class ScaleUnit implements hasDBFields
     public static function _getAllInstancesByParentId(ilDBInterface $db, int $parent_id): array
     {
         $return = [];
-        $set = $db->query('SELECT * FROM '.self::TABLE_NAME.' '.' WHERE parent_id = '.$parent_id.' ORDER BY position ASC');
+        $set = $db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE parent_id = ' . $parent_id . ' ORDER BY position ASC'
+        );
         while ($rec = $db->fetchObject($set)) {
             $return[] = new self($db, $rec->id);
         }

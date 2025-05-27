@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 use ilub\plugin\SelfEvaluation\Feedback\FeedbackChartGUI;
 use ilub\plugin\SelfEvaluation\Identity\Identity;
 use ilub\plugin\SelfEvaluation\Dataset\Dataset;
@@ -46,8 +45,13 @@ class DatasetGUI
         $this->http = $http;
         $this->refinery = $refinery;
 
-
-        $this->dataset = new Dataset($this->db, $this->http->query()->has('dataset_id') ? $this->http->query()->retrieve('dataset_id', $this->refinery->kindlyTo()->int()) : 0);
+        $this->dataset = new Dataset(
+            $this->db,
+            $this->http->query()->has('dataset_id') ? $this->http->query()->retrieve(
+                'dataset_id',
+                $this->refinery->kindlyTo()->int()
+            ) : 0
+        );
     }
 
     public function executeCommand()
@@ -86,10 +90,29 @@ class DatasetGUI
                 $this->plugin->txt('export_csv'),
                 $this->ctrl->getLinkTargetByClass('DatasetGUI', 'exportCSV')
             );
-            $table = new DatasetTableGUI($this->db, $this->ctrl, $this, 'index', $this->plugin, $this->parent->object->getId());
+            $table = new DatasetTableGUI(
+                $this->db,
+                $this->ctrl,
+                $this,
+                'index',
+                $this->plugin,
+                $this->parent->object->getId()
+            );
         } else {
-            $id = Identity::_getInstanceForObjIdAndIdentifier($this->db, (int)$this->plugin->getId(), (string)$DIC->user()->getId());
-            $table = new DatasetTableGUI($this->db, $this->ctrl, $this, 'index', $this->plugin, $this->parent->object->getId(), $id->getIdentifier());
+            $id = Identity::_getInstanceForObjIdAndIdentifier(
+                $this->db,
+                (int) $this->plugin->getId(),
+                (string) $DIC->user()->getId()
+            );
+            $table = new DatasetTableGUI(
+                $this->db,
+                $this->ctrl,
+                $this,
+                'index',
+                $this->plugin,
+                $this->parent->object->getId(),
+                $id->getIdentifier()
+            );
         }
 
         $this->tpl->setContent($table->getHTML());
@@ -107,7 +130,6 @@ class DatasetGUI
             $feedback = $charts->getPresentationOfFeedback($this->dataset);
         }
 
-
         $this->tpl->setContent($content->get() . $feedback);
     }
 
@@ -119,11 +141,16 @@ class DatasetGUI
     public function deleteDatasets()
     {
         if (!$this->http->post()->has('id')) {
-            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->plugin->txt('no_dataset_selected'));
+            $this->tpl->setOnScreenMessage(
+                ilGlobalTemplateInterface::MESSAGE_TYPE_FAILURE,
+                $this->plugin->txt('no_dataset_selected')
+            );
             $this->index();
             return;
         }
-        $this->confirmDelete($this->http->post()->retrieve('id', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int())));
+        $this->confirmDelete(
+            $this->http->post()->retrieve('id', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()))
+        );
     }
 
     /**
@@ -137,21 +164,32 @@ class DatasetGUI
         $conf->setCancel($this->plugin->txt('cancel'), 'index');
         $conf->setConfirm($this->plugin->txt('delete_dataset'), 'delete');
         foreach ($ids as $id) {
-            $dataset = new Dataset($this->db, (int)$id);
+            $dataset = new Dataset($this->db, (int) $id);
             $identifier = new Identity($this->db, $dataset->getIdentifierId());
             $user = $identifier->getIdentifier();
             if ($identifier->getType() == $identifier::TYPE_LOGIN) {
-                $user = (new ilObjUser((int)$identifier->getIdentifier()))->getPublicName();
+                $user = (new ilObjUser((int) $identifier->getIdentifier()))->getPublicName();
             }
-            $conf->addItem('dataset_ids[]', (string) $id, $user . " " . date('d.m.Y - H:i:s', $dataset->getCreationDate()));
+            $conf->addItem(
+                'dataset_ids[]',
+                (string) $id,
+                $user . " " . date('d.m.Y - H:i:s', $dataset->getCreationDate())
+            );
         }
         $this->tpl->setContent($conf->getHTML());
     }
 
     public function delete()
     {
-        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_dataset_deleted'), true);
-        $post = $this->http->post()->retrieve('dataset_ids', $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int()));
+        $this->tpl->setOnScreenMessage(
+            ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+            $this->plugin->txt('msg_dataset_deleted'),
+            true
+        );
+        $post = $this->http->post()->retrieve(
+            'dataset_ids',
+            $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int())
+        );
         foreach ($post as $id) {
             $dataset = new Dataset($this->db, $id);
             $dataset->delete();
@@ -173,14 +211,25 @@ class DatasetGUI
 
     public function deleteAll()
     {
-        Dataset::_deleteAllInstancesByObjectId($this->db, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int())));
-        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('all_datasets_deleted'));
+        Dataset::_deleteAllInstancesByObjectId(
+            $this->db,
+            ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int()))
+        );
+        $this->tpl->setOnScreenMessage(
+            ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+            $this->plugin->txt('all_datasets_deleted')
+        );
         $this->ctrl->redirect($this, 'index');
     }
 
-    #[NoReturn] public function exportCsv()
+    #[NoReturn]
+    public function exportCsv()
     {
-        $csvExport = new DatasetCsvExport($this->db, $this->plugin, ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int())));
+        $csvExport = new DatasetCsvExport(
+            $this->db,
+            $this->plugin,
+            ilObject2::_lookupObjectId($this->http->query()->retrieve('ref_id', $this->refinery->kindlyTo()->int()))
+        );
         $csvExport->getCsvExport();
         exit;
     }

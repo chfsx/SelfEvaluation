@@ -19,8 +19,12 @@ abstract class BlockPlayerGUI
     protected ilDBInterface $db;
     protected ilSelfEvaluationPlugin $plugin;
 
-    public function __construct(ilDBInterface $db, ilSelfEvaluationPlugin $plugin, ilObjSelfEvaluationGUI $parent, BlockType $block)
-    {
+    public function __construct(
+        ilDBInterface $db,
+        ilSelfEvaluationPlugin $plugin,
+        ilObjSelfEvaluationGUI $parent,
+        BlockType $block
+    ) {
         $this->db = $db;
         $this->block = $block;
         $this->parent = $parent;

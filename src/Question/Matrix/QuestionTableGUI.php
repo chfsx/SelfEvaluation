@@ -18,10 +18,14 @@ class QuestionTableGUI extends ilTable2GUI
     protected Block $block;
     protected bool $sortable;
 
-
-
-    public function __construct(QuestionGUI $a_parent_obj, ilSelfEvaluationPlugin $plugin, ilGlobalTemplateInterface $global_template, string $a_parent_cmd, Block $block, bool $sortable)
-    {
+    public function __construct(
+        QuestionGUI $a_parent_obj,
+        ilSelfEvaluationPlugin $plugin,
+        ilGlobalTemplateInterface $global_template,
+        string $a_parent_cmd,
+        Block $block,
+        bool $sortable
+    ) {
         $this->setId('sev_feedbacks');
         parent::__construct($a_parent_obj, $a_parent_cmd);
 
@@ -33,7 +37,9 @@ class QuestionTableGUI extends ilTable2GUI
         $this->setFormAction($this->ctrl->getFormAction($a_parent_obj));
         $this->ctrl->setParameterByClass('QuestionGUI', 'question_id', null);
         $this->ctrl->setParameterByClass('QuestionGUI', 'block_id', $block->getId());
-        $this->setRowTemplate($this->plugin->getDirectory() . '/templates/default/Question/tpl.template_question_row.html');
+        $this->setRowTemplate(
+            $this->plugin->getDirectory() . '/templates/default/Question/tpl.template_question_row.html'
+        );
         $this->initColumns($global_template);
     }
 
@@ -57,7 +63,7 @@ class QuestionTableGUI extends ilTable2GUI
 
         if ($this->sortable) {
             $this->tpl->setCurrentBlock("sortable");
-            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getDirectory()."/templates/images/move.png");
+            $this->tpl->setVariable('MOVE_IMG_SRC', $this->plugin->getDirectory() . "/templates/images/move.png");
             $this->tpl->setVariable('ID', $a_set['id']);
             $this->tpl->parseCurrentBlock();
         }
@@ -66,11 +72,15 @@ class QuestionTableGUI extends ilTable2GUI
             'EDIT_LINK',
             $this->ctrl->getLinkTargetByClass('QuestionGUI', 'editQuestion')
         );
-        $this->tpl->setVariable('BODY', $a_set['title'] ?:
-            $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $a_set['position']);
+        $this->tpl->setVariable(
+            'BODY',
+            $a_set['title'] ?:
+            $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $a_set['position']
+        );
         $this->tpl->setVariable(
             'IS_INVERTED',
-            $a_set['is_inverse'] ? ilUtil::getImagePath('standard/icon_not_ok.svg') : $this->plugin->getDirectory().'/templates/images/empty.png'
+            $a_set['is_inverse'] ? ilUtil::getImagePath('standard/icon_not_ok.svg') : $this->plugin->getDirectory(
+            ) . '/templates/images/empty.png'
         );
         // Actions
         $ac = new ilAdvancedSelectionListGUI();

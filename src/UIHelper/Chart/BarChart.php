@@ -28,7 +28,6 @@ class BarChart extends ilChartGrid
         $this->setAutoResize(true);
 
         $this->setYAxisToInteger(true);
-
     }
 
     public function getDataInstance($a_type = null): ilChartDataBars

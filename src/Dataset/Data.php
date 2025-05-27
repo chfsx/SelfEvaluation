@@ -33,7 +33,6 @@ class Data implements hasDBFields
     protected $value = '';
     protected ilDBInterface $db;
 
-
     public function __construct(ilDBInterface $db, int $id = 0)
     {
         $this->id = $id;
@@ -45,8 +44,10 @@ class Data implements hasDBFields
 
     public function read()
     {
-        $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        $set = $this->db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
         while ($rec = $this->db->fetchObject($set)) {
             $this->setObjectValuesFromRecord($this, $rec);
         }
@@ -75,8 +76,10 @@ class Data implements hasDBFields
 
     public function delete(): int
     {
-        return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        return $this->db->manipulate(
+            'DELETE FROM ' . self::TABLE_NAME . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
     }
 
     public function update()
@@ -89,15 +92,13 @@ class Data implements hasDBFields
         $this->db->update(self::TABLE_NAME, $this->getArrayForDb(), $this->getIdForDb());
     }
 
-
-
     /**
      * @return Data[]
      */
     public static function _getAllInstancesByDatasetId(ilDBInterface $db, int $dataset_id): array
     {
         $return = [];
-        $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE dataset_id = ' .$dataset_id);
+        $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE dataset_id = ' . $dataset_id);
         while ($rec = $db->fetchObject($set)) {
             $data = new self($db);
             $data->setObjectValuesFromRecord($data, $rec);
@@ -109,7 +110,9 @@ class Data implements hasDBFields
 
     public static function _getLatestInstanceByDatasetId(ilDBInterface $db, int $dataset_id): ?Data
     {
-        $set = $db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE dataset_id = '.$dataset_id. ' ORDER BY creation_date DESC LIMIT 1');
+        $set = $db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE dataset_id = ' . $dataset_id . ' ORDER BY creation_date DESC LIMIT 1'
+        );
         while ($rec = $db->fetchObject($set)) {
             $data = new Data($db);
             return $data->setObjectValuesFromRecord($data, $rec);
@@ -124,9 +127,11 @@ class Data implements hasDBFields
         int $question_id,
         string $question_type = Data::QUESTION_TYPE
     ): Data {
-
-        $stmt = $db->prepare('SELECT * FROM ' . self::TABLE_NAME .
-            ' WHERE dataset_id = ? AND question_id = ? AND question_type = ?;', ['integer', 'integer', 'text']);
+        $stmt = $db->prepare(
+            'SELECT * FROM ' . self::TABLE_NAME .
+            ' WHERE dataset_id = ? AND question_id = ? AND question_type = ?;',
+            ['integer', 'integer', 'text']
+        );
         $db->execute($stmt, [$dataset_id, $question_id, $question_type]);
 
         while ($rec = $db->fetchObject($stmt)) {

@@ -24,7 +24,12 @@ abstract class MetaQuestionType
 
     abstract public function getValues(ilPropertyFormGUI $form);
 
-    abstract public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values);
+    abstract public function getPresentationInputGUI(
+        ilSelfEvaluationPlugin $plugin,
+        string $title,
+        string $postvar,
+        array $values
+    );
 
     public function __toString(): string
     {

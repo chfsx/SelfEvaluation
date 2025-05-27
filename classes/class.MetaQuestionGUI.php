@@ -22,10 +22,17 @@ class MetaQuestionGUI extends BaseQuestionGUI
     protected Question $question;
     protected bool $enable_sorting = true;
 
-
     protected function createTableGUI(): ilTable2GUI
     {
-        return new MetaQuestionTableGUI($this, $this->plugin, $this->tpl, 'showContent', $this->getTypes(), $this->hasSorting(), $this->block);
+        return new MetaQuestionTableGUI(
+            $this,
+            $this->plugin,
+            $this->tpl,
+            'showContent',
+            $this->getTypes(),
+            $this->hasSorting(),
+            $this->block
+        );
     }
 
     public function initQuestionForm(string $mode = 'create')
@@ -54,7 +61,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
              * @var MetaTypeOption $option
              */
             $option->setTitle($this->plugin->txt($type->getTypeName()));
-            $option->setValue((string)$type->getId());
+            $option->setValue((string) $type->getId());
             $ty->addOption($option);
         }
 
@@ -73,16 +80,16 @@ class MetaQuestionGUI extends BaseQuestionGUI
         $item = $this->form->getItemByPostVar('short_title');
         $item->setValue($this->question->getShortTitle());
         $item = $this->form->getItemByPostVar('type');
-        $item->setValue((string)$this->question->getTypeId());
+        $item->setValue((string) $this->question->getTypeId());
         $item = $this->form->getItemByPostVar('required');
         /**
          * @var ilCheckboxInputGUI $item
          */
-        $item->setChecked((bool)$this->question->isRequired());
+        $item->setChecked((bool) $this->question->isRequired());
 
         /** @var ilRadioGroupInputGUI $group */
         $group = $this->form->getItemByPostVar('type');
-        $option = $this->getValueDefinitionInputGuiByTypeId($group, (int)$this->question->getTypeId());
+        $option = $this->getValueDefinitionInputGuiByTypeId($group, (int) $this->question->getTypeId());
         $type = $this->getTypes()[$this->question->getTypeId()];
         $type->setValues($option, $this->question->getValues());
     }
@@ -103,9 +110,9 @@ class MetaQuestionGUI extends BaseQuestionGUI
     {
         $this->question->setName($this->form->getInput('question'));
         $this->question->setShortTitle($this->form->getInput('short_title'));
-        $this->question->setTypeId((int)$this->form->getInput('type'));
-        $this->question->setValues($this->getFormValuesByTypeId((int)$this->form->getInput('type')));
-        $this->question->enableRequired((int)$this->form->getInput('required'));
+        $this->question->setTypeId((int) $this->form->getInput('type'));
+        $this->question->setValues($this->getFormValuesByTypeId((int) $this->form->getInput('type')));
+        $this->question->enableRequired((int) $this->form->getInput('required'));
     }
 
     protected function getFormValuesByTypeId(int $type_id): array
@@ -113,13 +120,11 @@ class MetaQuestionGUI extends BaseQuestionGUI
         $type = $this->getTypes()[$type_id];
 
         if (!$type instanceof MetaQuestionType) {
-
             return [];
         }
 
         $post_values = $type->getValues($this->form);
         if (!is_array($post_values)) {
-
             return [];
         }
 
@@ -132,7 +137,6 @@ class MetaQuestionGUI extends BaseQuestionGUI
         }
 
         return $values;
-
     }
 
     protected function saveRequired()
@@ -150,7 +154,11 @@ class MetaQuestionGUI extends BaseQuestionGUI
             $question->update();
         }
 
-        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_question_updated'), true);
+        $this->tpl->setOnScreenMessage(
+            ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+            $this->plugin->txt('msg_question_updated'),
+            true
+        );
         $this->cancel();
     }
 
@@ -161,6 +169,5 @@ class MetaQuestionGUI extends BaseQuestionGUI
     {
         return (new MetaTypeFactory())->getTypes();
     }
-
 
 }

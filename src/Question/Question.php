@@ -43,7 +43,9 @@ abstract class Question implements hasDBFields
 
     public function read()
     {
-        $set = $this->db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId());
+        $set = $this->db->query(
+            'SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId()
+        );
 
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
@@ -84,7 +86,9 @@ abstract class Question implements hasDBFields
 
     public function delete(): int
     {
-        return $this->db->manipulate('DELETE FROM ' . static::TABLE_NAME . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId());
+        return $this->db->manipulate(
+            'DELETE FROM ' . static::TABLE_NAME . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId()
+        );
     }
 
     public function update()
@@ -108,14 +112,18 @@ abstract class Question implements hasDBFields
 
     protected static function _getAllInstancesForParentIdGetQuery(ilDBInterface $db, int $parent_id): \ilDBStatement
     {
-        return $db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
-            . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC');
+        return $db->query(
+            'SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
+            . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC'
+        );
     }
 
     protected function getNextPosition(): int
     {
-        $set = $this->db->query('SELECT MAX(position) next_pos FROM ' . static::TABLE_NAME
-            . ' ' . ' WHERE parent_id = ' . $this->parent_id);
+        $set = $this->db->query(
+            'SELECT MAX(position) next_pos FROM ' . static::TABLE_NAME
+            . ' ' . ' WHERE parent_id = ' . $this->parent_id
+        );
         while ($rec = $this->db->fetchObject($set)) {
             return $rec->next_pos + 1;
         }
@@ -140,8 +148,10 @@ abstract class Question implements hasDBFields
      */
     public static function _getAllInstancesForParentIdQuery(ilDBInterface $db, int $parent_id): \ilDBStatement
     {
-        return $db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
-            . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC');
+        return $db->query(
+            'SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
+            . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC'
+        );
     }
 
     abstract public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id): array;

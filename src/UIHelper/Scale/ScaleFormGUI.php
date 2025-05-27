@@ -96,10 +96,14 @@ class ScaleFormGUI extends ilPropertyFormGUI
 
         $this->scale->update();
         if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_new')) {
-            if (!is_array($this->http->wrapper()->post()->retrieve(
-                self::FIELD_NAME . '_new',
-                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string()))
-            ))) {
+            if (!is_array(
+                $this->http->wrapper()->post()->retrieve(
+                    self::FIELD_NAME . '_new',
+                    $this->refinery->kindlyTo()->listOf(
+                        $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string())
+                    )
+                )
+            )) {
                 return;
             }
         }
@@ -130,7 +134,7 @@ class ScaleFormGUI extends ilPropertyFormGUI
                     if ($v !== false and $v !== null and $v !== '') {
                         $obj->setTitle($old['title'][$k]);
                         $obj->setValue((int) $v);
-                        $obj->setPosition((int)$positions[str_replace('id_', '', (string)$k)]);
+                        $obj->setPosition((int) $positions[str_replace('id_', '', (string) $k)]);
                         $obj->update();
                     } else {
                         $obj->delete();
@@ -150,7 +154,6 @@ class ScaleFormGUI extends ilPropertyFormGUI
         } catch (\Exception) {
             return null;
         }
-
     }
 
     public function getArrayFromPostComplex(string $string): ?array
@@ -158,7 +161,9 @@ class ScaleFormGUI extends ilPropertyFormGUI
         try {
             return $this->http->wrapper()->post()->retrieve(
                 $string,
-                $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()))
+                $this->refinery->kindlyTo()->dictOf(
+                    $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string())
+                )
             );
         } catch (\Exception) {
             return null;

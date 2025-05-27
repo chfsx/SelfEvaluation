@@ -36,8 +36,12 @@ class MetaTypeText extends MetaQuestionType
         return [];
     }
 
-    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values): ilTextInputGUI
-    {
+    public function getPresentationInputGUI(
+        ilSelfEvaluationPlugin $plugin,
+        string $title,
+        string $postvar,
+        array $values
+    ): ilTextInputGUI {
         $text = new ilTextInputGUI($title, $postvar);
         $text->setSize(32);
         $text->setMaxLength(255);

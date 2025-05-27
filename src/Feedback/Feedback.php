@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ilub\plugin\SelfEvaluation\Feedback;
 
 use ilDBInterface;
-
 use SimpleXMLElement;
 use ilub\plugin\SelfEvaluation\DatabaseHelper\ArrayForDB;
 use ilub\plugin\SelfEvaluation\DatabaseHelper\hasDBFields;
@@ -69,18 +68,20 @@ class Feedback implements hasDBFields
         $question->setParentId($parent_id);
         $question->setTitle($attributes["title"]->__toString());
         $question->setDescription($attributes["description"]->__toString());
-        $question->setStartValue((int)$attributes["startValue"]);
-        $question->setEndValue((int)$attributes["endValue"]);
+        $question->setStartValue((int) $attributes["startValue"]);
+        $question->setEndValue((int) $attributes["endValue"]);
         $question->setFeedbackText($attributes["feedbackText"]->__toString());
-        $question->setParentTypeOverall((bool)$attributes["parentTypeOverall"]);
+        $question->setParentTypeOverall((bool) $attributes["parentTypeOverall"]);
         $question->create();
         return $xml;
     }
 
     public function read()
     {
-        $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        $set = $this->db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
 
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
@@ -162,7 +163,7 @@ class Feedback implements hasDBFields
             $feedback->setObjectValuesFromRecord($feedback, $rec);
 
             if ($as_array) {
-                $return[] =  $feedback->getArray();
+                $return[] = $feedback->getArray();
             } else {
                 $return[] = $feedback;
             }
@@ -190,7 +191,6 @@ class Feedback implements hasDBFields
             $feedback = new self($db);
             $feedback->setObjectValuesFromRecord($feedback, $rec);
             $return[] = $feedback;
-
         }
 
         return $return;
@@ -224,7 +224,6 @@ class Feedback implements hasDBFields
         bool $is_overall = false
     ): int {
         for ($return = $value; $return < 100; $return++) {
-
             $q =
                 'SELECT id FROM ' . self::TABLE_NAME . ' ' . ' WHERE parent_id = ' . $db->quote($parent_id, 'integer')
                 . ' AND start_value <= ' . $db->quote($return, 'integer')
@@ -268,7 +267,6 @@ class Feedback implements hasDBFields
             if ($res && $res->id) {
                 return $return;
             }
-
         }
 
         return 100;

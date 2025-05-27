@@ -74,8 +74,10 @@ class ilSelfEvaluationConfig
 
     public function getValue(string $key): string
     {
-        $result = $this->db->query("SELECT config_value FROM " . $this->getTableName() . " WHERE config_key = "
-            . $this->db->quote($key, "text"));
+        $result = $this->db->query(
+            "SELECT config_value FROM " . $this->getTableName() . " WHERE config_key = "
+            . $this->db->quote($key, "text")
+        );
         if ($result->numRows() == 0) {
             return '';
         }

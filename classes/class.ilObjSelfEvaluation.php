@@ -115,7 +115,6 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         foreach ($old_feedbacks as $feedback) {
             $feedback->cloneTo($new_obj->getId());
         }
-
     }
 
     protected function initType(): void
@@ -521,47 +520,45 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $this->block_option_random_desc = $block_option_random_desc;
     }
 
-
-
     protected function doRead(): void
     {
-        $set = $this->db->query('SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        $set = $this->db->query(
+            'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
         while ($rec = $this->db->fetchObject($set)) {
-            $this->setOnline((bool)$rec->is_online);
-            $this->setIdentitySelection((bool)$rec->identity_selection);
-            $this->setEvaluationType((int)$rec->evaluation_type);
-            $this->setSortType((int)$rec->sort_type);
-            $this->setDisplayType((int)$rec->display_type);
-            $this->setIntro((string)$rec->intro);
-            $this->setOutro((string)$rec->outro);
-            $this->setOutroTitle((string)$rec->outro_title);
-            $this->setIdentitySelectionInfoText((string)$rec->identity_selection_info);
-            $this->setShowFeedbacks((bool)$rec->show_fbs);
-            $this->setShowFeedbacksCharts((bool)$rec->show_fbs_charts);
-            $this->setShowFeedbacksOverview((bool)$rec->show_fbs_overview);
-            $this->setShowFbsOverviewText((bool)$rec->show_fbs_overview_text);
-            $this->setShowFbsOverviewStatistics((bool)$rec->show_fbs_overview_statistics);
-            $this->setShowBlockTitlesDuringEvaluation((bool)$rec->show_block_titles_sev);
-            $this->setShowBlockDescriptionsDuringEvaluation((bool)$rec->show_block_desc_sev);
-            $this->setShowBlockTitlesDuringFeedback((bool)$rec->show_block_titles_fb);
-            $this->setShowBlockDescriptionsDuringFeedback((bool)$rec->show_block_desc_fb);
-            $this->setSortRandomNrItemBlock((int)$rec->sort_random_nr_items_block);
-            $this->setBlockOptionRandomDesc((string)$rec->block_option_random_desc);
-            $this->setShowFbsOverviewBar((bool)$rec->show_fbs_overview_bar);
-            $this->setOverviewBarShowLabelAsPercentage((bool)$rec->bar_show_label_as_percentage);
-            $this->setShowFbsOverviewSpider((bool)$rec->show_fbs_overview_spider);
-            $this->setShowFbsOverviewLeftRight((bool)$rec->show_fbs_overview_left_right);
-            $this->setShowFbsChartBar((bool)$rec->show_fbs_chart_bar);
-            $this->setShowFbsChartSpider((bool)$rec->show_fbs_chart_spider);
-            $this->setShowFbsChartLeftRight((bool)$rec->show_fbs_chart_left_right);
-
+            $this->setOnline((bool) $rec->is_online);
+            $this->setIdentitySelection((bool) $rec->identity_selection);
+            $this->setEvaluationType((int) $rec->evaluation_type);
+            $this->setSortType((int) $rec->sort_type);
+            $this->setDisplayType((int) $rec->display_type);
+            $this->setIntro((string) $rec->intro);
+            $this->setOutro((string) $rec->outro);
+            $this->setOutroTitle((string) $rec->outro_title);
+            $this->setIdentitySelectionInfoText((string) $rec->identity_selection_info);
+            $this->setShowFeedbacks((bool) $rec->show_fbs);
+            $this->setShowFeedbacksCharts((bool) $rec->show_fbs_charts);
+            $this->setShowFeedbacksOverview((bool) $rec->show_fbs_overview);
+            $this->setShowFbsOverviewText((bool) $rec->show_fbs_overview_text);
+            $this->setShowFbsOverviewStatistics((bool) $rec->show_fbs_overview_statistics);
+            $this->setShowBlockTitlesDuringEvaluation((bool) $rec->show_block_titles_sev);
+            $this->setShowBlockDescriptionsDuringEvaluation((bool) $rec->show_block_desc_sev);
+            $this->setShowBlockTitlesDuringFeedback((bool) $rec->show_block_titles_fb);
+            $this->setShowBlockDescriptionsDuringFeedback((bool) $rec->show_block_desc_fb);
+            $this->setSortRandomNrItemBlock((int) $rec->sort_random_nr_items_block);
+            $this->setBlockOptionRandomDesc((string) $rec->block_option_random_desc);
+            $this->setShowFbsOverviewBar((bool) $rec->show_fbs_overview_bar);
+            $this->setOverviewBarShowLabelAsPercentage((bool) $rec->bar_show_label_as_percentage);
+            $this->setShowFbsOverviewSpider((bool) $rec->show_fbs_overview_spider);
+            $this->setShowFbsOverviewLeftRight((bool) $rec->show_fbs_overview_left_right);
+            $this->setShowFbsChartBar((bool) $rec->show_fbs_chart_bar);
+            $this->setShowFbsChartSpider((bool) $rec->show_fbs_chart_spider);
+            $this->setShowFbsChartLeftRight((bool) $rec->show_fbs_chart_left_right);
         }
     }
 
     protected function doUpdate(): void
     {
-
         $this->db->update(self::TABLE_NAME, $this->getArrayForDb(), $this->getIdForDb());
     }
 
@@ -593,9 +590,10 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         foreach (MetaBlock::_getAllInstancesByParentId($this->db, $this->getId()) as $block) {
             $block->delete();
         }
-        $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . ' id = '
-            . $this->db->quote($this->getId(), 'integer'));
-
+        $this->db->manipulate(
+            'DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . ' id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
     }
 
     public function toXML(): SimpleXMLElement
@@ -606,9 +604,9 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $xml->addAttribute("description", $this->getDescription());
         $xml->addAttribute("online", $this->isOnline() ? 'true' : 'false');
         $xml->addAttribute("identitySelection", $this->isIdentitySelection() ? 'true' : 'false');
-        $xml->addAttribute("evaluationType", (string)$this->getEvaluationType());
-        $xml->addAttribute("sortType", (string)$this->getSortType());
-        $xml->addAttribute("displayType", (string)$this->getDisplayType());
+        $xml->addAttribute("evaluationType", (string) $this->getEvaluationType());
+        $xml->addAttribute("sortType", (string) $this->getSortType());
+        $xml->addAttribute("displayType", (string) $this->getDisplayType());
         $xml->addAttribute("intro", $this->getIntro());
         $xml->addAttribute("outro", $this->getOutro());
         $xml->addAttribute("outroTitle", $this->getOutroTitle());
@@ -617,15 +615,30 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $xml->addAttribute("showFeedbacksCharts", $this->isShowFeedbacksCharts() ? 'true' : 'false');
         $xml->addAttribute("showFeedbacksOverview", $this->isShowFeedbacksOverview() ? 'true' : 'false');
         $xml->addAttribute("showFbsOverviewStatistics", $this->isShowFbsOverviewStatistics() ? 'true' : 'false');
-        $xml->addAttribute("showBlockTitlesDuringEvaluation", $this->isShowBlockTitlesDuringEvaluation() ? 'true' : 'false');
-        $xml->addAttribute("showBlockDescriptionsDuringEvaluation", $this->isShowBlockDescriptionsDuringEvaluation() ? 'true' : 'false');
-        $xml->addAttribute("showBlockTitlesDuringFeedback", $this->isShowBlockTitlesDuringFeedback() ? 'true' : 'false');
-        $xml->addAttribute("showBlockDescriptionsDuringFeedback", $this->isShowBlockDescriptionsDuringFeedback() ? 'true' : 'false');
-        $xml->addAttribute("sortRandomNrItemBlock", (string)$this->getSortRandomNrItemBlock());
+        $xml->addAttribute(
+            "showBlockTitlesDuringEvaluation",
+            $this->isShowBlockTitlesDuringEvaluation() ? 'true' : 'false'
+        );
+        $xml->addAttribute(
+            "showBlockDescriptionsDuringEvaluation",
+            $this->isShowBlockDescriptionsDuringEvaluation() ? 'true' : 'false'
+        );
+        $xml->addAttribute(
+            "showBlockTitlesDuringFeedback",
+            $this->isShowBlockTitlesDuringFeedback() ? 'true' : 'false'
+        );
+        $xml->addAttribute(
+            "showBlockDescriptionsDuringFeedback",
+            $this->isShowBlockDescriptionsDuringFeedback() ? 'true' : 'false'
+        );
+        $xml->addAttribute("sortRandomNrItemBlock", (string) $this->getSortRandomNrItemBlock());
         $xml->addAttribute("blockOptionRandomDesc", $this->getBlockOptionRandomDesc());
         $xml->addAttribute("showFbsOverviewBar", $this->isShowFbsOverviewBar() ? 'true' : 'false');
         $xml->addAttribute("showFbsOverviewText", $this->isShowFbsOverviewText() ? 'true' : 'false');
-        $xml->addAttribute("overviewBarShowLabelAsPercentage", $this->isOverviewBarShowLabelAsPercentage() ? 'true' : 'false');
+        $xml->addAttribute(
+            "overviewBarShowLabelAsPercentage",
+            $this->isOverviewBarShowLabelAsPercentage() ? 'true' : 'false'
+        );
         $xml->addAttribute("showFbsOverviewSpider", $this->isShowFbsOverviewSpider() ? 'true' : 'false');
         $xml->addAttribute("showFbsOverviewLeftRight", $this->isShowFbsOverviewLeftRight() ? 'true' : 'false');
         $xml->addAttribute("showFbsChartBar", $this->isShowFbsChartBar() ? 'true' : 'false');
@@ -648,12 +661,10 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
             $xml = $feedback->toXml($xml);
         }
         return $xml;
-
     }
 
     public function fromXML(string $xml): static
     {
-
         if (!$this->getId()) {
             $this->create();
             $this->createReference();
@@ -678,11 +689,13 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
         $this->setShowFeedbacksOverview($xml_attributes["showFeedbacksOverview"] == "true");
         $this->setShowFbsOverviewStatistics($xml_attributes["showFbsOverviewStatistics"] == "true");
         $this->setShowBlockTitlesDuringEvaluation($xml_attributes["showBlockTitlesDuringEvaluation"] == "true");
-        $this->setShowBlockDescriptionsDuringEvaluation($xml_attributes["showBlockDescriptionsDuringEvaluation"] == "true");
+        $this->setShowBlockDescriptionsDuringEvaluation(
+            $xml_attributes["showBlockDescriptionsDuringEvaluation"] == "true"
+        );
         $this->setShowBlockTitlesDuringFeedback($xml_attributes["showBlockTitlesDuringFeedback"] == "true");
         $this->setShowBlockDescriptionsDuringFeedback($xml_attributes["showBlockDescriptionsDuringFeedback"] == "true");
-        $this->setSortRandomNrItemBlock((int)$xml_attributes["sortRandomNrItemBlock"]);
-        $this->setBlockOptionRandomDesc((string)$xml_attributes["blockOptionRandomDesc"]);
+        $this->setSortRandomNrItemBlock((int) $xml_attributes["sortRandomNrItemBlock"]);
+        $this->setBlockOptionRandomDesc((string) $xml_attributes["blockOptionRandomDesc"]);
         $this->setShowFbsOverviewBar($xml_attributes["showFbsOverviewBar"] == "true");
         $this->setShowFbsOverviewText($xml_attributes["showFbsOverviewText"] == "true");
         $this->setOverviewBarShowLabelAsPercentage($xml_attributes["overviewBarShowLabelAsPercentage"] == "true");

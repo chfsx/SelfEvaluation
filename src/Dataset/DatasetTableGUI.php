@@ -47,7 +47,9 @@ class DatasetTableGUI extends ilTable2GUI
         $this->addColumn($this->plugin->txt('actions'), '', 'auto');
         $this->ctrl->setParameterByClass('DatasetGUI', 'dataset_id', null);
         $this->setFormAction($this->ctrl->getFormActionByClass('DatasetGUI'));
-        $this->setRowTemplate($this->plugin->getDirectory() . '/templates/default/Dataset/tpl.template_dataset_row.html');
+        $this->setRowTemplate(
+            $this->plugin->getDirectory() . '/templates/default/Dataset/tpl.template_dataset_row.html'
+        );
         $this->addMultiCommand("deleteDatasets", $this->plugin->txt("delete_dataset"));
 
         if ($identifier != "") {
@@ -59,27 +61,38 @@ class DatasetTableGUI extends ilTable2GUI
 
     public function fillRow(array $a_set): void
     {
-        $obj = new Dataset($this->db, (int)$a_set['id']);
+        $obj = new Dataset($this->db, (int) $a_set['id']);
         $identifier = new Identity($this->db, $obj->getIdentifierId());
         $this->ctrl->setParameterByClass('DatasetGUI', 'dataset_id', $obj->getId());
         // Row
         $this->tpl->setVariable("ID", $obj->getId());
         $this->tpl->setVariable(
             'COMPLETE',
-            $obj->isComplete() ? ilUtil::getImagePath('standard/icon_not_ok.svg') : $this->plugin->getDirectory().'/templates/images/empty.png'
+            $obj->isComplete() ? ilUtil::getImagePath('standard/icon_not_ok.svg') : $this->plugin->getDirectory(
+            ) . '/templates/images/empty.png'
         );
         $this->tpl->setVariable('DATE', date('d.m.Y - H:i:s', $obj->getCreationDate()));
         $this->tpl->setVariable('EDIT_LINK', $this->ctrl->getLinkTargetByClass('DatasetGUI', 'show'));
         switch ($identifier->getType()) {
             case Identity::TYPE_EXTERNAL:
-                $this->tpl->setVariable('TYPE', $this->plugin->txt('identity_type_'
-                    . Identity::TYPE_EXTERNAL));
+                $this->tpl->setVariable(
+                    'TYPE',
+                    $this->plugin->txt(
+                        'identity_type_'
+                    . Identity::TYPE_EXTERNAL
+                    )
+                );
                 $this->tpl->setVariable('IDENTITY', $identifier->getIdentifier());
                 break;
             case Identity::TYPE_LOGIN:
-                $this->tpl->setVariable('TYPE', $this->plugin->txt('identity_type_'
-                    . Identity::TYPE_LOGIN));
-                $username = ilObjUser::_lookupName((int)$identifier->getIdentifier());
+                $this->tpl->setVariable(
+                    'TYPE',
+                    $this->plugin->txt(
+                        'identity_type_'
+                    . Identity::TYPE_LOGIN
+                    )
+                );
+                $username = ilObjUser::_lookupName((int) $identifier->getIdentifier());
                 $this->tpl->setVariable('IDENTITY', $username['login']);
                 break;
         }
@@ -92,7 +105,6 @@ class DatasetTableGUI extends ilTable2GUI
             $this->plugin->txt('show_feedback'),
             'show_dataset',
             $this->ctrl->getLinkTargetByClass('DatasetGUI', 'show')
-
         );
         $ac->addItem(
             $this->plugin->txt('delete_dataset'),
