@@ -10,25 +10,15 @@ use ilub\plugin\SelfEvaluation\UIHelper\FormSectionHeaderGUIFixed;
 use ilub\plugin\SelfEvaluation\Player\PlayerFormContainer;
 use ilDBInterface;
 use ilSelfEvaluationPlugin;
-use ilub\plugin\SelfEvaluation\Block\BlockType;
 
 abstract class BlockPlayerGUI
 {
-    protected Block $block;
-    protected ilObjSelfEvaluationGUI $parent;
-    protected ilDBInterface $db;
-    protected ilSelfEvaluationPlugin $plugin;
-
     public function __construct(
-        ilDBInterface $db,
-        ilSelfEvaluationPlugin $plugin,
-        ilObjSelfEvaluationGUI $parent,
-        BlockType $block
+        protected ilDBInterface $db,
+        protected ilSelfEvaluationPlugin $plugin,
+        protected ilObjSelfEvaluationGUI $parent,
+        protected Block $block
     ) {
-        $this->db = $db;
-        $this->block = $block;
-        $this->parent = $parent;
-        $this->plugin = $plugin;
     }
 
     public function getBlockForm(PlayerFormContainer $parent_form): PlayerFormContainer

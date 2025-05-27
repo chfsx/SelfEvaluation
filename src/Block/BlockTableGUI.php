@@ -12,15 +12,12 @@ use ilAdvancedSelectionListGUI;
 
 class BlockTableGUI extends ilTable2GUI
 {
-    protected ilSelfEvaluationPlugin $plugin;
-
     public function __construct(
         ilCtrl $ilCtrl,
-        ilSelfEvaluationPlugin $plugin,
+        protected ilSelfEvaluationPlugin $plugin,
         ilObjSelfEvaluationGUI $parent,
-        $a_parent_cmd
+        string $a_parent_cmd
     ) {
-        $this->plugin = $plugin;
         $this->ctrl = $ilCtrl;
         $this->setId('');
         parent::__construct($parent, $a_parent_cmd);
@@ -81,13 +78,12 @@ class BlockTableGUI extends ilTable2GUI
          */
         $actions = unserialize($a_set['actions']);
 
-        usort($actions, function (BlockTableAction $action_a, BlockTableAction $action_b) {
+        usort($actions, function (BlockTableAction $action_a, BlockTableAction $action_b): int {
             $value = $action_a->getPosition() > $action_b->getPosition();
             if ($value) {
                 return 1;
-            } else {
-                return -1;
             }
+            return -1;
         });
         foreach ($actions as $action) {
             $ac->addItem($action->getTitle(), $action->getCmd(), $action->getLink());

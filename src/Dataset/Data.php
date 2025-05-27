@@ -21,8 +21,6 @@ class Data implements hasDBFields
     public const TABLE_NAME = 'rep_robj_xsev_d';
     public const QUESTION_TYPE = 'qst';
     public const META_QUESTION_TYPE = 'mqst';
-
-    protected int $id = 0;
     protected int $dataset_id = 0;
     protected int $question_id = 0;
     protected string $question_type = '';
@@ -31,18 +29,15 @@ class Data implements hasDBFields
      * @var string|array
      */
     protected $value = '';
-    protected ilDBInterface $db;
 
-    public function __construct(ilDBInterface $db, int $id = 0)
+    public function __construct(protected ilDBInterface $db, protected int $id = 0)
     {
-        $this->id = $id;
-        $this->db = $db;
-        if ($id != 0) {
+        if ($this->id != 0) {
             $this->read();
         }
     }
 
-    public function read()
+    public function read(): void
     {
         $set = $this->db->query(
             'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
@@ -53,7 +48,7 @@ class Data implements hasDBFields
         }
     }
 
-    final public function initDB()
+    final public function initDB(): void
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->db->createTable(self::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -62,7 +57,7 @@ class Data implements hasDBFields
         }
     }
 
-    public function create()
+    public function create(): void
     {
         if ($this->getId() != 0) {
             $this->update();
@@ -82,7 +77,7 @@ class Data implements hasDBFields
         );
     }
 
-    public function update()
+    public function update(): void
     {
         if ($this->getId() == 0) {
             $this->create();
@@ -148,7 +143,7 @@ class Data implements hasDBFields
         return $obj;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -158,7 +153,7 @@ class Data implements hasDBFields
         return $this->id;
     }
 
-    public function setDatasetId(int $dataset_id)
+    public function setDatasetId(int $dataset_id): void
     {
         $this->dataset_id = $dataset_id;
     }
@@ -168,7 +163,7 @@ class Data implements hasDBFields
         return $this->dataset_id;
     }
 
-    public function setQuestionId(int $question_id)
+    public function setQuestionId(int $question_id): void
     {
         $this->question_id = $question_id;
     }
@@ -178,7 +173,7 @@ class Data implements hasDBFields
         return $this->question_id;
     }
 
-    public function setQuestionType(string $question_type)
+    public function setQuestionType(string $question_type): void
     {
         $this->question_type = $question_type;
     }
@@ -188,7 +183,7 @@ class Data implements hasDBFields
         return $this->question_type;
     }
 
-    public function setValue(string $value)
+    public function setValue(string $value): void
     {
         $this->value = $value;
     }
@@ -207,7 +202,7 @@ class Data implements hasDBFields
         return $this->value;
     }
 
-    public function setCreationDate(int $creation_date)
+    public function setCreationDate(int $creation_date): void
     {
         $this->creation_date = $creation_date;
     }

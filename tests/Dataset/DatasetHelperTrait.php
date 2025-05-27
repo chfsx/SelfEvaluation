@@ -144,9 +144,9 @@ trait DatasetHelperTrait
     protected function getOverallPercentageVarianz(): float|int
     {
         $op = ($this->getBlock1Percentage() + $this->getBlock2Percentage() + $this->getBlock3Percentage()) / 3;
-        return pow($this->getBlock1Percentage() - $op, 2) / 3
-            + pow($this->getBlock2Percentage() - $op, 2) / 3
-            + pow($this->getBlock3Percentage() - $op, 2) / 3;
+        return ($this->getBlock1Percentage() - $op) ** 2 / 3
+            + ($this->getBlock2Percentage() - $op) ** 2 / 3
+            + ($this->getBlock3Percentage() - $op) ** 2 / 3;
     }
 
     protected function getSdPerBlock(): array
@@ -155,12 +155,9 @@ trait DatasetHelperTrait
         $perc2 = $this->getBlock2Percentage();
         $perc3 = $this->getBlock3Percentage();
 
-        $varianz1 = pow((1 / 5 * 100 - $perc1), 2) / 3 + pow((2 / 5 * 100 - $perc1), 2) / 3 + pow(
-            (100 - $perc1),
-            2
-        ) / 3;
-        $varianz2 = pow((1 / 5 * 100 - $perc2), 2) / 1;
-        $varianz3 = pow((1 / 5 * 100 - $perc3), 2) / 2 + pow((2 / 5 * 100 - $perc3), 2) / 2;
+        $varianz1 = (1 / 5 * 100 - $perc1) ** 2 / 3 + (2 / 5 * 100 - $perc1) ** 2 / 3 + (100 - $perc1) ** 2 / 3;
+        $varianz2 = (1 / 5 * 100 - $perc2) ** 2;
+        $varianz3 = (1 / 5 * 100 - $perc3) ** 2 / 2 + (2 / 5 * 100 - $perc3) ** 2 / 2;
 
         return [
             $this->getBlock1()->getId() => sqrt($varianz1),

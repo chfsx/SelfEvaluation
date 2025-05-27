@@ -13,20 +13,14 @@ use FeedbackGUI;
 
 class FeedbackTableGUI extends ilTable2GUI
 {
-    protected ilRepositoryObjectPlugin $plugin;
-    protected ilDBInterface $db;
-
     public function __construct(
-        ilDBInterface $db,
+        protected ilDBInterface $db,
         FeedbackGUI $a_parent_obj,
-        ilRepositoryObjectPlugin $plugin,
+        protected ilRepositoryObjectPlugin $plugin,
         string $a_parent_cmd,
         QuestionBlockInterface $block,
         bool $is_ovarall = false
     ) {
-        $this->db = $db;
-        $this->plugin = $plugin;
-
         $this->setId('');
 
         parent::__construct($a_parent_obj, $a_parent_cmd);

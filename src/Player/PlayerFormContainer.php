@@ -14,12 +14,10 @@ class PlayerFormContainer extends ilPropertyFormGUI
     protected array $copy_of_buttons = [];
     protected ?KnobGUI $knob = null;
     protected int $question_field_size = 6;
-    protected ilRepositoryObjectPlugin $plugin;
 
-    public function __construct(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin)
+    public function __construct(ilGlobalTemplateInterface $tpl, protected ilRepositoryObjectPlugin $plugin)
     {
         $this->global_tpl = $tpl;
-        $this->plugin = $plugin;
 
         parent::__construct();
     }
@@ -27,7 +25,6 @@ class PlayerFormContainer extends ilPropertyFormGUI
     /**
      * @param        $a_cmd
      * @param        $a_text
-     * @param string $a_id
      */
     public function addCommandButton(string $a_cmd, string $a_text, string $a_id = ''): void
     {
@@ -44,7 +41,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
         parent::clearCommandButtons();
     }
 
-    public function addKnob($page, $last_page)
+    public function addKnob(int $page, int $last_page): void
     {
         $this->knob = new KnobGUI();
         $this->knob->setValue($page);
@@ -89,7 +86,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
             }
         }
 
-        if ($required_text && $this->getMode() == "std") {
+        if ($required_text && $this->getMode() === "std") {
             $this->tpl->setCurrentBlock("required_text");
             $this->tpl->setVariable("TXT_REQUIRED", $this->plugin->txt("required_field"));
             $this->tpl->parseCurrentBlock();
@@ -123,7 +120,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
         return $this->tpl->get();
     }
 
-    public function setQuestionFieldSize(int $question_field_size)
+    public function setQuestionFieldSize(int $question_field_size): void
     {
         $this->question_field_size = $question_field_size;
     }

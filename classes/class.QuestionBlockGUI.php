@@ -30,7 +30,7 @@ class QuestionBlockGUI extends BlockGUI
         $this->object->setParentId($this->parent->getObjId());
     }
 
-    public function initForm(string $mode = 'create')
+    public function initForm(string $mode = 'create'): void
     {
         parent::initForm($mode);
 

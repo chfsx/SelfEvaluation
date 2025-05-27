@@ -35,7 +35,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
         );
     }
 
-    public function initQuestionForm(string $mode = 'create')
+    public function initQuestionForm(string $mode = 'create'): void
     {
         parent::initQuestionForm($mode);
 
@@ -70,7 +70,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
         $this->form->addItem($re);
     }
 
-    public function setQuestionFormValues()
+    public function setQuestionFormValues(): void
     {
         $item = $this->form->getItemByPostVar('question');
         /**
@@ -106,7 +106,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
         return null;
     }
 
-    public function createQuestionSetFields()
+    public function createQuestionSetFields(): void
     {
         $this->question->setName($this->form->getInput('question'));
         $this->question->setShortTitle($this->form->getInput('short_title'));
@@ -131,7 +131,7 @@ class MetaQuestionGUI extends BaseQuestionGUI
         $values = [];
         foreach ($post_values as $key => $value) {
             $value = trim(ilUtil::stripSlashes($value));
-            if (strlen($value)) {
+            if (strlen($value) !== 0) {
                 $values[$key] = $value;
             }
         }

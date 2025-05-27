@@ -25,13 +25,11 @@ class Dataset implements hasDBFields
     use ArrayForDB;
 
     public const TABLE_NAME = 'rep_robj_xsev_ds';
-    public int $id = 0;
     protected int $identifier_id = 0;
     protected int $creation_date = 0;
     protected int $highest_scale = 0;
     protected bool $complete = false;
     protected array $percentage_per_block = [];
-    protected ilDBInterface $db;
     /**
      * @var QuestionBlock[]
      */
@@ -42,18 +40,16 @@ class Dataset implements hasDBFields
     protected array $questions_data_for_blocks = [];
     protected Statistics $statistics;
 
-    public function __construct(ilDBInterface $db, int $id = 0)
+    public function __construct(protected ilDBInterface $db, public int $id = 0)
     {
-        $this->id = $id;
-        $this->db = $db;
-        if ($id != 0) {
+        if ($this->id != 0) {
             $this->read();
         }
 
         $this->statistics = new Statistics();
     }
 
-    public function read()
+    public function read(): void
     {
         $set = $this->db->query(
             'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
@@ -76,7 +72,7 @@ class Dataset implements hasDBFields
         ];
     }
 
-    final public function initDB()
+    final public function initDB(): void
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->db->createTable(self::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -85,7 +81,7 @@ class Dataset implements hasDBFields
         }
     }
 
-    public function create()
+    public function create(): void
     {
         if ($this->getId() != 0) {
             $this->update();
@@ -110,7 +106,7 @@ class Dataset implements hasDBFields
         );
     }
 
-    public function update()
+    public function update(): void
     {
         if ($this->getId() == 0) {
             $this->create();
@@ -120,7 +116,7 @@ class Dataset implements hasDBFields
         $this->db->update(self::TABLE_NAME, $this->getArrayForDb(), $this->getIdForDb());
     }
 
-    public function updateValuesByPost(array $post)
+    public function updateValuesByPost(array $post): void
     {
         $this->updateValuesByArray($this->getDataFromPost($post));
     }
@@ -164,10 +160,10 @@ class Dataset implements hasDBFields
 
     protected function determineQuestionType(string $postvar_key): string
     {
-        if (strncmp($postvar_key, Question::POSTVAR_PREFIX, strlen(Question::POSTVAR_PREFIX)) === 0) {
+        if (str_starts_with($postvar_key, Question::POSTVAR_PREFIX)) {
             return Data::QUESTION_TYPE;
         }
-        if (strncmp($postvar_key, MetaQuestion::POSTVAR_PREFIX, strlen(MetaQuestion::POSTVAR_PREFIX)) === 0) {
+        if (str_starts_with($postvar_key, MetaQuestion::POSTVAR_PREFIX)) {
             return Data::META_QUESTION_TYPE;
         }
         return "";
@@ -175,10 +171,10 @@ class Dataset implements hasDBFields
 
     protected function getQuestionId(string $question_type, string $postvar_key): int
     {
-        if ($question_type == Data::QUESTION_TYPE) {
+        if ($question_type === Data::QUESTION_TYPE) {
             return (int) str_replace(Question::POSTVAR_PREFIX, '', $postvar_key);
         }
-        if ($question_type == Data::META_QUESTION_TYPE) {
+        if ($question_type === Data::META_QUESTION_TYPE) {
             return (int) str_replace(MetaQuestion::POSTVAR_PREFIX, '', $postvar_key);
         }
         return 0;
@@ -259,7 +255,7 @@ class Dataset implements hasDBFields
         return $return;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -269,7 +265,7 @@ class Dataset implements hasDBFields
         return $this->id;
     }
 
-    public function setIdentifierId(int $identifier_id)
+    public function setIdentifierId(int $identifier_id): void
     {
         $this->identifier_id = $identifier_id;
     }
@@ -279,7 +275,7 @@ class Dataset implements hasDBFields
         return $this->identifier_id;
     }
 
-    public function setCreationDate(int $creation_date)
+    public function setCreationDate(int $creation_date): void
     {
         $this->creation_date = $creation_date;
     }
@@ -292,22 +288,16 @@ class Dataset implements hasDBFields
     /**
      * @param QuestionBlock[] $blocks
      */
-    public function setQuestionBlocks(array $blocks)
+    public function setQuestionBlocks(array $blocks): void
     {
         $this->question_blocks = $blocks;
     }
 
-    /**
-     * @return bool
-     */
     public function isComplete(): bool
     {
         return $this->complete;
     }
 
-    /**
-     * @param bool $complete
-     */
     public function setComplete(bool $complete): void
     {
         $this->complete = $complete;
@@ -332,13 +322,12 @@ class Dataset implements hasDBFields
         return $this->question_blocks;
     }
 
-    public function setQuestionsDataForBlocks(array $questions_data_for_blocks)
+    public function setQuestionsDataForBlocks(array $questions_data_for_blocks): void
     {
         $this->questions_data_for_blocks = $questions_data_for_blocks;
     }
 
     /**
-     * @param int $block_id
      * @return Data[]
      */
     public function getQuestionsDataPerBlock(int $block_id): array
@@ -355,9 +344,6 @@ class Dataset implements hasDBFields
         return $this->questions_data_for_blocks[$block_id] ?? [];
     }
 
-    /**
-     * @param int $highest_scale
-     */
     public function setHighestScale(int $highest_scale): void
     {
         $this->highest_scale = $highest_scale;
@@ -365,7 +351,7 @@ class Dataset implements hasDBFields
 
     public function getHighestValueFromScale(): int
     {
-        if (!$this->highest_scale) {
+        if ($this->highest_scale === 0) {
             $obj_id = Identity::_getObjIdForIdentityId($this->db, (string) $this->getIdentifierId());
             $this->highest_scale = Scale::_getHighestScaleByObjId($this->db, $obj_id);
         }
@@ -375,21 +361,19 @@ class Dataset implements hasDBFields
     public function getSubmitDate(): int
     {
         $latest_entry = Data::_getLatestInstanceByDatasetId($this->db, $this->getId());
-        if ($latest_entry) {
+        if ($latest_entry !== null) {
             return $latest_entry->getCreationDate();
-        } else {
-            throw new Exception("Invalid Entry");
         }
+        throw new Exception("Invalid Entry");
     }
 
     public function getDuration(): int
     {
         $latest_entry = Data::_getLatestInstanceByDatasetId($this->db, $this->getId());
-        if ($latest_entry) {
+        if ($latest_entry !== null) {
             return $latest_entry->getCreationDate() - $this->getCreationDate();
-        } else {
-            throw new Exception("Invalid Entry");
         }
+        throw new Exception("Invalid Entry");
     }
 
     /**
@@ -421,7 +405,7 @@ class Dataset implements hasDBFields
         string $identifier = ""
     ): array {
         $return = [];
-        if ($identifier == "") {
+        if ($identifier === "") {
             $identities = Identity::_getAllInstancesByObjId($db, $obj_id);
         } else {
             $identities = Identity::_getAllInstancesForObjIdAndIdentifier($db, $obj_id, $identifier);

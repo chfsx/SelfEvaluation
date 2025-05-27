@@ -9,19 +9,13 @@ use ilub\plugin\SelfEvaluation\CsvExport\Exceptions\csvExportException;
 class csvExportColumns
 {
     /**
-     * @var csvExportColumn[]
-     */
-    protected array $columns = [];
-
-    /**
      * @param csvExportColumn[] $columns
      */
-    public function __construct(array $columns = [])
+    public function __construct(protected array $columns = [])
     {
-        $this->columns = $columns;
     }
 
-    public function setColumns(array $columns = [])
+    public function setColumns(array $columns = []): void
     {
         $this->columns = $columns;
     }
@@ -31,14 +25,14 @@ class csvExportColumns
         return $this->columns;
     }
 
-    public function addColumns(csvExportColumns $columns)
+    public function addColumns(csvExportColumns $columns): void
     {
         foreach ($columns->getColumns() as $column) {
             $this->addColumn($column);
         }
     }
 
-    public function addColumn(csvExportColumn $column)
+    public function addColumn(csvExportColumn $column): void
     {
         if (!$this->columnExists($column)) {
             $this->columns[$column->getColumnId()] = $column;
@@ -55,7 +49,7 @@ class csvExportColumns
         return array_key_exists($column_id, $this->getColumns());
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->setColumns(null);
     }
@@ -63,7 +57,7 @@ class csvExportColumns
     /**
      * @throws csvExportException
      */
-    public function addColumnsFromArray(array $columns)
+    public function addColumnsFromArray(array $columns): void
     {
         foreach ($columns as $column) {
             if (is_array($column) && array_key_exists("position", $column) && array_key_exists("name", $column)) {
@@ -92,10 +86,10 @@ class csvExportColumns
         return empty($this->columns);
     }
 
-    public function sortColumns()
+    public function sortColumns(): void
     {
-        uasort($this->columns, function (csvExportColumn $column_a, csvExportColumn $column_b) {
-            if ($column_a->getPosition() == $column_b->getPosition()) {
+        uasort($this->columns, function (csvExportColumn $column_a, csvExportColumn $column_b): int {
+            if ($column_a->getPosition() === $column_b->getPosition()) {
                 return strcmp($column_a->getColumnId(), $column_b->getColumnId());
             }
             return $column_a->getPosition() > $column_b->getPosition() ? 1 : -1;
@@ -109,9 +103,8 @@ class csvExportColumns
     {
         if (array_key_exists($id, $this->getColumns())) {
             return $this->columns[$id];
-        } else {
-            throw new csvExportException(csvExportException::COLUMN_DOES_NOT_EXIST);
         }
+        throw new csvExportException(csvExportException::COLUMN_DOES_NOT_EXIST);
     }
 
     public function count(): int

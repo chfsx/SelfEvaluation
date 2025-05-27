@@ -31,7 +31,7 @@ class KnobGUI
     protected bool $display_input = true;
     protected bool $display_previous = false;
 
-    public function render(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin)
+    public function render(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin): void
     {
         self::$num++;
         $tpl->addJavaScript($plugin->getDirectory() . '/templates/js/jquery.knob.js');
@@ -55,7 +55,7 @@ class KnobGUI
         $this->setHtml($knob->get());
     }
 
-    public function setHtml(string $html)
+    public function setHtml(string $html): void
     {
         $this->html = $html;
     }
@@ -67,7 +67,7 @@ class KnobGUI
         return $this->html;
     }
 
-    public function setMax(int $max)
+    public function setMax(int $max): void
     {
         $this->max = $max;
     }
@@ -77,7 +77,7 @@ class KnobGUI
         return $this->max;
     }
 
-    public function setMin(int $min)
+    public function setMin(int $min): void
     {
         $this->min = $min;
     }
@@ -87,7 +87,7 @@ class KnobGUI
         return $this->min;
     }
 
-    public static function setNum(int $num)
+    public static function setNum(int $num): void
     {
         self::$num = $num;
     }
@@ -97,7 +97,7 @@ class KnobGUI
         return self::$num;
     }
 
-    public function setValue(int $value)
+    public function setValue(int $value): void
     {
         $this->value = $value;
     }
@@ -107,7 +107,7 @@ class KnobGUI
         return $this->value;
     }
 
-    public function setFgColor(array $fg_color)
+    public function setFgColor(array $fg_color): void
     {
         $this->fg_color = $fg_color;
     }
@@ -117,7 +117,7 @@ class KnobGUI
         return $this->fg_color;
     }
 
-    public function setInputColor(array $in_color)
+    public function setInputColor(array $in_color): void
     {
         $this->input_color = $in_color;
     }
@@ -127,7 +127,7 @@ class KnobGUI
         return $this->input_color;
     }
 
-    public function setReadOnly(bool $read_only)
+    public function setReadOnly(bool $read_only): void
     {
         $this->read_only = $read_only;
     }
@@ -137,7 +137,7 @@ class KnobGUI
         return $this->read_only;
     }
 
-    public function setAngleArc(int $angle_arc)
+    public function setAngleArc(int $angle_arc): void
     {
         $this->angle_arc = $angle_arc;
     }
@@ -147,7 +147,7 @@ class KnobGUI
         return $this->angle_arc;
     }
 
-    public function setAngleOffset(int $angle_offset)
+    public function setAngleOffset(int $angle_offset): void
     {
         $this->angle_offset = $angle_offset;
     }
@@ -157,7 +157,7 @@ class KnobGUI
         return $this->angle_offset;
     }
 
-    public function setBgColor(array $bg_color)
+    public function setBgColor(array $bg_color): void
     {
         $this->bg_color = $bg_color;
     }
@@ -167,7 +167,7 @@ class KnobGUI
         return $this->bg_color;
     }
 
-    public function setDisplayInput(bool $display_input)
+    public function setDisplayInput(bool $display_input): void
     {
         $this->display_input = $display_input;
     }
@@ -177,7 +177,7 @@ class KnobGUI
         return $this->display_input;
     }
 
-    public function setDisplayPrevious(bool $display_previous)
+    public function setDisplayPrevious(bool $display_previous): void
     {
         $this->display_previous = $display_previous;
     }
@@ -187,7 +187,7 @@ class KnobGUI
         return $this->display_previous;
     }
 
-    public function setLineCap(string $line_cap)
+    public function setLineCap(string $line_cap): void
     {
         $this->line_cap = $line_cap;
     }
@@ -197,7 +197,7 @@ class KnobGUI
         return $this->line_cap;
     }
 
-    public function setStopper(bool $stopper)
+    public function setStopper(bool $stopper): void
     {
         $this->stopper = $stopper;
     }
@@ -207,7 +207,7 @@ class KnobGUI
         return $this->stopper;
     }
 
-    public function setThickness(float $thickness)
+    public function setThickness(float $thickness): void
     {
         $this->thickness = $thickness;
     }
@@ -217,7 +217,7 @@ class KnobGUI
         return $this->thickness;
     }
 
-    public function setHeight(int $height)
+    public function setHeight(int $height): void
     {
         $this->height = $height;
     }

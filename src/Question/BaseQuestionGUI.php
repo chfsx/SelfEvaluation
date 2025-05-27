@@ -20,48 +20,29 @@ abstract class BaseQuestionGUI
 {
     public const MODE_CREATE = 1;
     public const MODE_UPDATE = 2;
-
-    protected ilSelfEvaluationPlugin $plugin;
-    protected Block $block;
     protected ilPropertyFormGUI $form;
-    protected ilGlobalTemplateInterface $tpl;
-    protected ilCtrl $ctrl;
-    protected ilToolbarGUI $toolbar;
-    protected ilObjSelfEvaluationGUI $parent;
-    protected ilAccessHandler $access;
-    protected ilDBInterface $db;
-    protected Question $question;
     protected bool $enable_sorting = true;
 
     public function __construct(
-        ilDBInterface $db,
-        ilObjSelfEvaluationGUI $parent,
-        ilGlobalTemplateInterface $tpl,
-        ilCtrl $ilCtrl,
-        ilToolbarGUI $ilToolbar,
-        ilAccessHandler $access,
-        ilSelfEvaluationPlugin $plugin,
-        Block $block,
-        Question $question
+        protected ilDBInterface $db,
+        protected ilObjSelfEvaluationGUI $parent,
+        protected ilGlobalTemplateInterface $tpl,
+        protected ilCtrl $ctrl,
+        protected ilToolbarGUI $toolbar,
+        protected ilAccessHandler $access,
+        protected ilSelfEvaluationPlugin $plugin,
+        protected Block $block,
+        protected Question $question
     ) {
-        $this->tpl = $tpl;
-        $this->toolbar = $ilToolbar;
-        $this->ctrl = $ilCtrl;
-        $this->parent = $parent;
-        $this->plugin = $plugin;
-        $this->access = $access;
-        $this->db = $db;
-        $this->block = $block;
-        $this->question = $question;
     }
 
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $this->ctrl->saveParameter($this, 'block_id');
         $this->performCommand();
     }
 
-    public function performCommand()
+    public function performCommand(): void
     {
         $cmd = $this->ctrl->getCmd();
 
@@ -75,23 +56,11 @@ abstract class BaseQuestionGUI
             throw new \ilObjectException($this->plugin->txt("permission_denied"));
         }
 
-        switch ($cmd) {
-            case 'showContent':
-            case 'cancel':
-            case 'addQuestion':
-            case 'saveSorting':
-            case 'createQuestion':
-            case 'saveRequired':
-            case 'editQuestion':
-            case 'updateQuestion':
-            case 'confirmDeleteQuestion':
-            case 'deleteQuestion':
-                $this->$cmd();
-                break;
-            default:
-                $this->showContent();
-                break;
-        }
+        match ($cmd) {
+            'showContent', 'cancel', 'addQuestion', 'saveSorting', 'createQuestion', 'saveRequired', 'editQuestion', 'updateQuestion', 'confirmDeleteQuestion', 'deleteQuestion' => $this->$cmd(
+            ),
+            default => $this->showContent(),
+        };
     }
 
     protected function showContent()
@@ -110,7 +79,7 @@ abstract class BaseQuestionGUI
 
     abstract protected function createTableGUI(): ilTable2GUI;
 
-    public function cancel()
+    public function cancel(): void
     {
         $this->ctrl->setParameterByClass(static::class, 'question_id', null);
         $this->ctrl->redirectByClass(static::class);
@@ -139,13 +108,13 @@ abstract class BaseQuestionGUI
         $this->ctrl->redirect($this, 'showContent');
     }
 
-    public function addQuestion()
+    public function addQuestion(): void
     {
         $this->initQuestionForm();
         $this->tpl->setContent($this->form->getHTML());
     }
 
-    public function editQuestion()
+    public function editQuestion(): void
     {
         $this->ctrl->saveParameter($this, 'question_id');
         $this->initQuestionForm('update');
@@ -155,7 +124,7 @@ abstract class BaseQuestionGUI
 
     abstract public function setQuestionFormValues();
 
-    public function initQuestionForm(string $mode = 'create')
+    public function initQuestionForm(string $mode = 'create'): void
     {
         $this->form = new ilPropertyFormGUI();
         $this->form->setTitle($this->plugin->txt($mode . '_question'));
@@ -171,7 +140,7 @@ abstract class BaseQuestionGUI
 
     protected function updateQuestion(string $mode = "update")
     {
-        if ($mode == "update") {
+        if ($mode === "update") {
             $this->ctrl->saveParameter($this, 'question_id');
         }
         $this->initQuestionForm($mode);
@@ -194,7 +163,7 @@ abstract class BaseQuestionGUI
 
     abstract public function createQuestionSetFields();
 
-    public function confirmDeleteQuestion()
+    public function confirmDeleteQuestion(): void
     {
         $this->tpl->setOnScreenMessage(
             ilGlobalTemplateInterface::MESSAGE_TYPE_QUESTION,
@@ -206,7 +175,7 @@ abstract class BaseQuestionGUI
         $conf->setCancel($this->plugin->txt('cancel'), 'cancel');
         $conf->setConfirm($this->plugin->txt('delete_question'), 'deleteQuestion');
         $title = $this->question->getTitle();
-        if ($title == "") {
+        if ($title === "") {
             $title = $this->plugin->txt('question') . ' ' . $this->block->getPosition(
             ) . '.' . $this->question->getPosition();
         }
@@ -215,7 +184,7 @@ abstract class BaseQuestionGUI
         $this->tpl->setContent($conf->getHTML());
     }
 
-    public function deleteQuestion()
+    public function deleteQuestion(): void
     {
         $this->tpl->setOnScreenMessage(
             ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
@@ -226,7 +195,7 @@ abstract class BaseQuestionGUI
         $this->cancel();
     }
 
-    public function enableSorting(bool $enable_sorting)
+    public function enableSorting(bool $enable_sorting): void
     {
         $this->enable_sorting = $enable_sorting;
     }

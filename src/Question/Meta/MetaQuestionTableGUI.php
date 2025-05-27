@@ -14,27 +14,16 @@ use ilub\plugin\SelfEvaluation\Block\Block;
 
 class MetaQuestionTableGUI extends ilTable2GUI
 {
-    protected array $types;
-    protected ilSelfEvaluationPlugin $plugin;
-    protected bool $sortable;
-
     public function __construct(
         MetaQuestionGUI $a_parent_obj,
-        ilSelfEvaluationPlugin $plugin,
+        protected ilSelfEvaluationPlugin $plugin,
         ilGlobalTemplateInterface $global_template,
         string $a_parent_cmd,
-        array $types,
-        bool $sortable,
+        protected array $types,
+        protected bool $sortable,
         Block $block
     ) {
-        $this->types = $types;
-        $this->sortable = $sortable;
-
         parent::__construct($a_parent_obj, $a_parent_cmd);
-
-        $this->plugin = $plugin;
-        $this->sortable = $sortable;
-        $this->types = $types;
 
         $this->setTitle($block->getTitle() . ': ' . $this->plugin->txt('question_table_title'));
 

@@ -16,23 +16,18 @@ class Identity implements hasDBFields
     public const LENGTH = 6;
     public const TYPE_LOGIN = 1;
     public const TYPE_EXTERNAL = 2;
-
-    protected int $id = 0;
     protected string $identifier = '';
     protected int $obj_id = 0;
     protected int $type = self::TYPE_LOGIN;
-    protected ilDBInterface $db;
 
-    public function __construct(ilDBInterface $db, int $id = 0)
+    public function __construct(protected ilDBInterface $db, protected int $id = 0)
     {
-        $this->id = $id;
-        $this->db = $db;
-        if ($id != 0) {
+        if ($this->id != 0) {
             $this->read();
         }
     }
 
-    public function read()
+    public function read(): void
     {
         $set = $this->db->query(
             'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE id = '
@@ -43,7 +38,7 @@ class Identity implements hasDBFields
         }
     }
 
-    final public function initDB()
+    final public function initDB(): void
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->db->createTable(self::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -52,7 +47,7 @@ class Identity implements hasDBFields
         }
     }
 
-    final public function updateDB()
+    final public function updateDB(): void
     {
         if (!$this->db->tableExists(self::TABLE_NAME)) {
             $this->initDB();
@@ -66,7 +61,7 @@ class Identity implements hasDBFields
         }
     }
 
-    public function create()
+    public function create(): void
     {
         if ($this->getId() != 0) {
             $this->update();
@@ -82,7 +77,7 @@ class Identity implements hasDBFields
         return $this->db->manipulate('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ' . $this->getId());
     }
 
-    public function update()
+    public function update(): void
     {
         $this->db->update(self::TABLE_NAME, $this->getArrayForDb(), $this->getIdForDb());
     }
@@ -92,15 +87,12 @@ class Identity implements hasDBFields
     // Static
     //
     /**
-     * @param int           $obj_id
-     * @param ilDBInterface $db
-     * @param string        $identifier
      * @return Identity[]
      */
     public static function _getAllInstancesByObjId(ilDBInterface $db, int $obj_id, string $identifier = ""): array
     {
         $return = [];
-        if ($identifier != "") {
+        if ($identifier !== "") {
             $set = $db->query(
                 'SELECT * FROM ' . self::TABLE_NAME . ' ' . ' WHERE obj_id = '
                 . $obj_id . ' AND identifier = ' . $db->quote($identifier, 'text')
@@ -135,12 +127,6 @@ class Identity implements hasDBFields
         return self::_getNewInstanceForObjIdAndUserId($db, $obj_id, $identifier);
     }
 
-    /**
-     * @param int           $obj_id
-     * @param string        $identifier
-     * @param ilDBInterface $db
-     * @return array
-     */
     public static function _getAllInstancesForObjIdAndIdentifier(
         ilDBInterface $db,
         int $obj_id,
@@ -152,7 +138,7 @@ class Identity implements hasDBFields
     public static function _getNewHashInstanceForObjId(ilDBInterface $db, int $obj_id): Identity
     {
         do {
-            $identifier = strtoupper(substr(md5((string) rand(1, 99999)), 0, self::LENGTH));
+            $identifier = strtoupper(substr(md5((string) random_int(1, 99999)), 0, self::LENGTH));
         } while (self::_identityExists($db, $obj_id, $identifier));
 
         $obj = new self($db);
@@ -205,7 +191,7 @@ class Identity implements hasDBFields
         return 0;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -215,7 +201,7 @@ class Identity implements hasDBFields
         return $this->id;
     }
 
-    public function setObjId(int $obj_id)
+    public function setObjId(int $obj_id): void
     {
         $this->obj_id = $obj_id;
     }
@@ -225,7 +211,7 @@ class Identity implements hasDBFields
         return $this->obj_id;
     }
 
-    public function setIdentifier(string $identifier)
+    public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
     }
@@ -235,7 +221,7 @@ class Identity implements hasDBFields
         return $this->identifier;
     }
 
-    public function setType(int $type)
+    public function setType(int $type): void
     {
         $this->type = $type;
     }

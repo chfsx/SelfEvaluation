@@ -70,20 +70,20 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this->initConfigurationForm();
         $this->getValues();
         $this->tpl->setContent($this->form->getHTML());
     }
 
-    public function getValues()
+    public function getValues(): void
     {
         $values = [];
         foreach ($this->getFields() as $key => $item) {
             $values[$key] = $this->object->getValue($key);
             if (is_array($item['subelements'])) {
-                foreach ($item['subelements'] as $subkey => $subitem) {
+                foreach (array_keys($item['subelements']) as $subkey) {
                     $values[$key . '_' . $subkey] = $this->object->getValue($key . '_' . $subkey);
                 }
             }
@@ -129,14 +129,14 @@ class ilSelfEvaluationConfigGUI extends ilPluginConfigGUI
         return $this->form;
     }
 
-    public function save()
+    public function save(): void
     {
         $this->initConfigurationForm();
         if ($this->form->checkInput()) {
             foreach ($this->getFields() as $key => $item) {
                 $this->object->setValue($key, $this->form->getInput($key));
                 if (is_array($item['subelements'])) {
-                    foreach ($item['subelements'] as $subkey => $subitem) {
+                    foreach (array_keys($item['subelements']) as $subkey) {
                         $this->object->setValue($key . '_' . $subkey, $this->form->getInput($key . '_' . $subkey));
                     }
                 }

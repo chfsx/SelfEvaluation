@@ -665,7 +665,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
     public function fromXML(string $xml): static
     {
-        if (!$this->getId()) {
+        if ($this->getId() === 0) {
             $this->create();
             $this->createReference();
         }
@@ -752,7 +752,7 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
     {
         $return = true;
         foreach (QuestionBlock::_getAllInstancesByParentId($this->db, $this->getId()) as $block) {
-            $return = Feedback::_isComplete($this->db, $block->getId()) ? $return : false;
+            $return = Feedback::_isComplete($this->db, $block->getId()) && $return;
         }
         return $return;
     }
@@ -775,12 +775,10 @@ class ilObjSelfEvaluation extends ilObjectPlugin implements hasDBFields
 
     public function areBlocksSortable(): bool
     {
-        switch ($this->getSortType()) {
-            case self::SHUFFLE_OFF:
-                return true;
-            default:
-                return false;
-        }
+        return match ($this->getSortType()) {
+            self::SHUFFLE_OFF => true,
+            default => false,
+        };
     }
 
     public function isShowCharts(): bool

@@ -10,14 +10,10 @@ class csvExport
 
     public function __construct(csvExportTable $table = null)
     {
-        if ($table) {
-            $this->table = $table;
-        } else {
-            $this->table = new csvExportTable();
-        }
+        $this->table = $table ?: new csvExportTable();
     }
 
-    public function getCsvExport(string $delimiter = ";", string $enclosure = '"')
+    public function getCsvExport(string $delimiter = ";", string $enclosure = '"'): void
     {
         // output headers so that the file is downloaded rather than displayed
         header('Content-Encoding: UTF-8');
@@ -48,7 +44,7 @@ class csvExport
         return str_replace("ö", mb_convert_encoding("ö", 'UTF-16LE', 'UTF-8'), $string);
     }
 
-    public function setTable(csvExportTable $table)
+    public function setTable(csvExportTable $table): void
     {
         $this->table = $table;
     }

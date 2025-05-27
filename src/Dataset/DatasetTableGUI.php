@@ -16,23 +16,15 @@ use ilUtil;
 
 class DatasetTableGUI extends ilTable2GUI
 {
-    protected ilSelfEvaluationPlugin $plugin;
-    protected ilDBInterface $db;
-    protected ilCtrl $ctrl;
-
     public function __construct(
-        ilDBInterface $db,
-        ilCtrl $ilCtrl,
+        protected ilDBInterface $db,
+        protected ilCtrl $ctrl,
         DatasetGUI $a_parent_obj,
         string $a_parent_cmd,
-        ilSelfEvaluationPlugin $plugin,
+        protected ilSelfEvaluationPlugin $plugin,
         int $obj_id = 0,
         string $identifier = ""
     ) {
-        $this->plugin = $plugin;
-        $this->ctrl = $ilCtrl;
-        $this->db = $db;
-
         $this->setId('');
         parent::__construct($a_parent_obj, $a_parent_cmd);
         $this->setTitle($this->plugin->txt('dataset_table_title'));
@@ -52,7 +44,7 @@ class DatasetTableGUI extends ilTable2GUI
         );
         $this->addMultiCommand("deleteDatasets", $this->plugin->txt("delete_dataset"));
 
-        if ($identifier != "") {
+        if ($identifier !== "") {
             $this->setData(Dataset::_getAllInstancesByObjectId($this->db, $obj_id, true, $identifier));
         } else {
             $this->setData(Dataset::_getAllInstancesByObjectId($this->db, $obj_id, true));
@@ -79,7 +71,7 @@ class DatasetTableGUI extends ilTable2GUI
                     'TYPE',
                     $this->plugin->txt(
                         'identity_type_'
-                    . Identity::TYPE_EXTERNAL
+                        . Identity::TYPE_EXTERNAL
                     )
                 );
                 $this->tpl->setVariable('IDENTITY', $identifier->getIdentifier());
@@ -89,7 +81,7 @@ class DatasetTableGUI extends ilTable2GUI
                     'TYPE',
                     $this->plugin->txt(
                         'identity_type_'
-                    . Identity::TYPE_LOGIN
+                        . Identity::TYPE_LOGIN
                     )
                 );
                 $username = ilObjUser::_lookupName((int) $identifier->getIdentifier());

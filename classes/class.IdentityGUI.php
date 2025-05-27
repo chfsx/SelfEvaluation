@@ -8,27 +8,17 @@ class IdentityGUI
 {
     protected ilPropertyFormGUI $ex;
     protected ilPropertyFormGUI $new;
-    protected ilSelfEvaluationPlugin $plugin;
-    protected ilGlobalPageTemplate $tpl;
-    protected ilCtrl $ctrl;
-    protected ilDBInterface $db;
-    protected ilObjSelfEvaluationGUI $parent;
 
     public function __construct(
-        ilDBInterface $db,
-        ilObjSelfEvaluationGUI $parent,
-        ilGlobalPageTemplate $tpl,
-        ilCtrl $ilCtrl,
-        ilSelfEvaluationPlugin $plugin
+        protected ilDBInterface $db,
+        protected ilObjSelfEvaluationGUI $parent,
+        protected ilGlobalPageTemplate $tpl,
+        protected ilCtrl $ctrl,
+        protected ilSelfEvaluationPlugin $plugin
     ) {
-        $this->tpl = $tpl;
-        $this->ctrl = $ilCtrl;
-        $this->parent = $parent;
-        $this->plugin = $plugin;
-        $this->db = $db;
     }
 
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $this->performCommand();
     }
@@ -38,13 +28,13 @@ class IdentityGUI
         return 'show';
     }
 
-    public function performCommand()
+    public function performCommand(): void
     {
         if (!$this->parent->object->isIdentitySelection()) {
             $this->startWithNewUid();
         }
 
-        $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
+        $cmd = $this->ctrl->getCmd() ?: $this->getStandardCommand();
 
         switch ($cmd) {
             case 'show':
@@ -57,7 +47,7 @@ class IdentityGUI
         }
     }
 
-    public function show()
+    public function show(): void
     {
         $this->initExistingForm();
         $this->initNewForm();
@@ -71,7 +61,7 @@ class IdentityGUI
         $this->tpl->setContent($template->get());
     }
 
-    public function initExistingForm()
+    public function initExistingForm(): void
     {
         $this->ex = new ilPropertyFormGUI();
         $this->ex->setFormAction($this->ctrl->getFormAction($this));
@@ -81,7 +71,7 @@ class IdentityGUI
         $this->ex->addCommandButton('startWithExistingUid', $this->plugin->txt('start'));
     }
 
-    public function initNewForm()
+    public function initNewForm(): void
     {
         $this->new = new ilPropertyFormGUI();
         $this->new->setFormAction($this->ctrl->getFormAction($this));
@@ -91,7 +81,7 @@ class IdentityGUI
         $this->new->addCommandButton('startWithNewUid', $this->plugin->txt('start'));
     }
 
-    public function startWithExistingUid()
+    public function startWithExistingUid(): void
     {
         $this->initExistingForm();
         if ($this->ex->checkInput()) {
@@ -117,14 +107,14 @@ class IdentityGUI
         $this->tpl->setContent($this->ex->getHTML());
     }
 
-    public function startWithNewUid()
+    public function startWithNewUid(): void
     {
         $id = Identity::_getNewHashInstanceForObjId($this->db, $this->parent->object->getId());
         $this->ctrl->setParameterByClass('PlayerGUI', 'uid', $id->getId());
         $this->ctrl->redirectByClass('PlayerGUI', 'startScreen');
     }
 
-    public function cancel()
+    public function cancel(): void
     {
         $this->ctrl->redirect($this);
     }

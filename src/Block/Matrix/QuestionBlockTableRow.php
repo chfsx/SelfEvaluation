@@ -15,12 +15,12 @@ use ilSelfEvaluationPlugin;
 
 class QuestionBlockTableRow extends BlockTableRow
 {
-    protected ilDBInterface $db;
-
-    public function __construct(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin, QuestionBlock $block)
-    {
-        $this->db = $db;
-
+    public function __construct(
+        protected ilDBInterface $db,
+        ilCtrl $ilCtrl,
+        ilSelfEvaluationPlugin $plugin,
+        QuestionBlock $block
+    ) {
         parent::__construct($ilCtrl, $plugin, $block);
 
         $questions = Question::_getAllInstancesForParentId($this->db, $block->getId());

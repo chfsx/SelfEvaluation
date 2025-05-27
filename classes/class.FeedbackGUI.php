@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\Refinery\Factory;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlockInterface;
 use ilub\plugin\SelfEvaluation\Block\Virtual\VirtualOverallBlock;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
@@ -13,44 +15,26 @@ use JetBrains\PhpStorm\NoReturn;
 
 class FeedbackGUI
 {
-    private \ILIAS\HTTP\Wrapper\WrapperFactory $http;
-    private \ILIAS\Refinery\Factory $refinery;
     protected ilPropertyFormGUI $form;
     protected ilTemplate $overview;
     protected int $total = 0;
     protected QuestionBlockInterface $block;
     protected Feedback $feedback;
-    protected ilDBInterface $db;
-    protected ilGlobalTemplateInterface $tpl;
-    protected ilCtrl $ctrl;
-    protected ilObjSelfEvaluationGUI $parent;
-    protected ilToolbarGUI $toolbar;
-    protected ilAccessHandler $access;
-    protected ilSelfEvaluationPlugin $plugin;
 
     public function __construct(
-        ilDBInterface $db,
-        ilObjSelfEvaluationGUI $parent,
-        ilGlobalTemplateInterface $tpl,
-        ilCtrl $ilCtrl,
-        ilToolbarGUI $ilToolbar,
-        ilAccessHandler $access,
-        \ILIAS\HTTP\Wrapper\WrapperFactory $http,
-        \ILIAS\Refinery\Factory $refinery,
-        ilSelfEvaluationPlugin $plugin
+        protected ilDBInterface $db,
+        protected ilObjSelfEvaluationGUI $parent,
+        protected ilGlobalTemplateInterface $tpl,
+        protected ilCtrl $ctrl,
+        protected ilToolbarGUI $toolbar,
+        protected ilAccessHandler $access,
+        private WrapperFactory $http,
+        private Factory $refinery,
+        protected ilSelfEvaluationPlugin $plugin
     ) {
-        $this->db = $db;
-        $this->tpl = $tpl;
-        $this->ctrl = $ilCtrl;
-        $this->parent = $parent;
-        $this->toolbar = $ilToolbar;
-        $this->access = $access;
-        $this->plugin = $plugin;
-        $this->refinery = $refinery;
-        $this->http = $http;
     }
 
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $parent_overall = $this->http->query()->has('parent_overall') ? $this->http->query()->retrieve(
             'parent_overall',
@@ -92,7 +76,7 @@ class FeedbackGUI
         $this->ctrl->saveParameter($this, 'feedback_id');
         $this->ctrl->saveParameterByClass('BlockGUI', 'block_id');
 
-        $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
+        $cmd = $this->ctrl->getCmd() ?: $this->getStandardCommand();
 
         switch ($cmd) {
             case 'listObjects':
@@ -167,7 +151,7 @@ class FeedbackGUI
     }
 
     #[NoReturn]
-    protected function checkNextValue()
+    protected function checkNextValue(): never
     {
         header('Cache-Control: no-cache, must-revalidate');
         header('Content-type: application/json');
@@ -202,7 +186,7 @@ class FeedbackGUI
             'to',
             $this->refinery->kindlyTo()->int()
         ) : 0;
-        $state = !((($from < $start) or ($to > $end)));
+        $state = $from >= $start && $to <= $end;
         echo json_encode([
             'check' => $state,
             'start_value' => $start_value,
@@ -213,7 +197,7 @@ class FeedbackGUI
         exit;
     }
 
-    protected function initForm($mode = 'create')
+    protected function initForm(string $mode = 'create')
     {
         $this->form = new ilPropertyFormGUI();
         $this->form->setTitle($this->plugin->txt($mode . '_feedback_form'));
@@ -232,7 +216,7 @@ class FeedbackGUI
         $te = new ilTextInputGUI($this->plugin->txt('description'), 'description');
         $this->form->addItem($te);
 
-        if ($mode == 'create') {
+        if ($mode === 'create') {
             $radio_options = new ilRadioGroupInputGUI($this->plugin->txt('feedback_range_type'), 'feedback_range_type');
             $option_auto = new ilRadioOption($this->plugin->txt("option_auto"), 'option_auto');
             $option_auto->setInfo($this->plugin->txt("option_auto_info"));
@@ -452,8 +436,7 @@ class FeedbackGUI
         }
         $fb = null;
         foreach ($feedbacks as $fb) {
-            if ($min != false and $min <= $fb->getStartValue() && !($min == 100) && ($fb->getStartValue(
-            ) - $min != 0)) {
+            if ($min != false && ($min <= $fb->getStartValue() && $min != 100 && $fb->getStartValue() - $min != 0)) {
                 $this->parseOverviewBlock('blank', $fb->getStartValue() - $min, $min);
             }
             $this->parseOverviewBlock('fb', $fb->getEndValue() - $fb->getStartValue(), $fb->getId(), $fb->getTitle());
@@ -465,7 +448,7 @@ class FeedbackGUI
                 $this->feedback->isParentTypeOverall()
             );
         }
-        if (!($min == 100) and is_object($fb)) {
+        if ($min != 100 && is_object($fb)) {
             $this->parseOverviewBlock('blank', 100 - $min, $min);
         }
 
@@ -487,7 +470,7 @@ class FeedbackGUI
         }
     }
 
-    public function parseOverviewBlock(string $type, int $width, int $value, string $title = '')
+    public function parseOverviewBlock(string $type, int $width, int $value, string $title = ''): void
     {
         $href = '';
         $css = '';
@@ -513,9 +496,6 @@ class FeedbackGUI
         $this->overview->parseCurrentBlock();
     }
 
-    /**
-     * @return QuestionBlockInterface
-     */
     public function getBlock(): QuestionBlockInterface
     {
         return $this->block;

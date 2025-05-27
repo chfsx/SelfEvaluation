@@ -14,8 +14,7 @@ class ilObjSelfEvaluationAccess extends ilObjectPluginAccess
             case 'read':
             case 'visible':
                 $object = new ilObjSelfEvaluation($ref_id);
-                if (!$object->isOnline()
-                    and !$this->access->checkAccessOfUser($user_id, 'write', '', $ref_id)
+                if (!$object->isOnline() && !$this->access->checkAccessOfUser($user_id, 'write', '', $ref_id)
                 ) {
                     return false;
                 }

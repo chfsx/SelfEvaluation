@@ -9,7 +9,6 @@ use ilub\plugin\SelfEvaluation\Dataset\Data;
 use ilub\plugin\SelfEvaluation\Question\Matrix\Question as MatrixQuestion;
 use ilub\plugin\SelfEvaluation\Block\BlockFactory;
 use ilub\plugin\SelfEvaluation\Block\Virtual\VirtualQuestionBlock;
-use ilub\plugin\SelfEvaluation\Player\Block\BlockPlayerGUI;
 use ilub\plugin\SelfEvaluation\Player\PlayerFormContainer;
 use ilub\plugin\SelfEvaluation\Player\Block\QuestionBlockPlayerGUI;
 use ilub\plugin\SelfEvaluation\Player\Block\MetaBlockPlayerGUI;
@@ -23,36 +22,22 @@ class PlayerGUI
 {
     protected PlayerFormContainer $form;
     protected int $ref_id = 0;
-    protected ilGlobalTemplateInterface $tpl;
-    protected ilCtrl $ctrl;
-    protected ilObjSelfEvaluationGUI $parent;
-    protected ilSelfEvaluationPlugin $plugin;
-    protected ilDBInterface $db;
     protected Identity $identity;
     protected bool|Dataset $dataset;
-    protected WrapperFactory $http;
-    protected Factory $refinery;
 
     public function __construct(
-        ilDBInterface $db,
-        ilObjSelfEvaluationGUI $parent,
-        ilGlobalTemplateInterface $tpl,
-        ilCtrl $ilCtrl,
-        ilSelfEvaluationPlugin $plugin,
-        WrapperFactory $http,
-        Factory $refinery
+        protected ilDBInterface $db,
+        protected ilObjSelfEvaluationGUI $parent,
+        protected ilGlobalTemplateInterface $tpl,
+        protected ilCtrl $ctrl,
+        protected ilSelfEvaluationPlugin $plugin,
+        protected WrapperFactory $http,
+        protected Factory $refinery
     ) {
-        $this->db = $db;
-        $this->tpl = $tpl;
-        $this->ctrl = $ilCtrl;
-        $this->parent = $parent;
-        $this->plugin = $plugin;
-        $this->http = $http;
-        $this->refinery = $refinery;
         $this->ref_id = $this->parent->object->getRefId();
     }
 
-    public function executeCommand()
+    public function executeCommand(): void
     {
         if (!$this->http->query()->has('uid')) {
             $this->tpl->setOnScreenMessage(
@@ -83,17 +68,14 @@ class PlayerGUI
         $this->performCommand();
     }
 
-    /**
-     * @return string
-     */
     public function getStandardCommand(): string
     {
         return 'showContent';
     }
 
-    public function performCommand()
+    public function performCommand(): void
     {
-        $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
+        $cmd = $this->ctrl->getCmd() ?: $this->getStandardCommand();
 
         switch ($cmd) {
             case 'startScreen':
@@ -110,7 +92,7 @@ class PlayerGUI
         }
     }
 
-    public function cancel()
+    public function cancel(): void
     {
         $this->ctrl->redirect($this->parent);
     }
@@ -119,7 +101,7 @@ class PlayerGUI
      * @throws ilCtrlException
      * @throws ilTemplateException
      */
-    public function startScreen()
+    public function startScreen(): void
     {
         $this->tpl->addCss($this->plugin->getStyleSheetLocation("css/player.css"));
         $content = $this->plugin->getTemplate('default/Dataset/tpl.dataset_presentation.html');
@@ -146,7 +128,7 @@ class PlayerGUI
         $this->tpl->setContent($content->get());
     }
 
-    public function startNewEvaluation()
+    public function startNewEvaluation(): void
     {
         $this->dataset->setIdentifierId($this->identity->getId());
         $this->dataset->setCreationDate(time());
@@ -155,12 +137,12 @@ class PlayerGUI
         $this->ctrl->redirect($this, 'doEvaluationStep');
     }
 
-    public function resumeEvaluation()
+    public function resumeEvaluation(): void
     {
         $this->doEvaluationStep();
     }
 
-    public function doEvaluationStep()
+    public function doEvaluationStep(): void
     {
         $this->initPresentationForm();
         $this->fillForm();
@@ -170,7 +152,7 @@ class PlayerGUI
     /**
      * @throws ilCtrlException
      */
-    public function nextPage()
+    public function nextPage(): void
     {
         $this->initPresentationForm();
 
@@ -198,11 +180,7 @@ class PlayerGUI
         $i = 0;
         while ($found_question < $items) {
             if ($this->http->post()->has("qst_" . $i) || $this->http->post()->has("mqst_" . $i)) {
-                if ($this->http->post()->has("qst_" . $i)) {
-                    $qid = "qst_" . $i;
-                } else {
-                    $qid = "mqst_" . $i;
-                }
+                $qid = $this->http->post()->has("qst_" . $i) ? "qst_" . $i : "mqst_" . $i;
                 try {
                     $value = $this->http->post()->retrieve($qid, $this->refinery->kindlyTo()->string());
                 } catch (Exception) {
@@ -219,7 +197,7 @@ class PlayerGUI
         return $data;
     }
 
-    public function finishEvaluation()
+    public function finishEvaluation(): void
     {
         $this->initPresentationForm();
 
@@ -233,13 +211,13 @@ class PlayerGUI
         $this->tpl->setContent($this->form->getHTML());
     }
 
-    private function redirectToResults(Dataset $dataset)
+    private function redirectToResults(Dataset $dataset): void
     {
         $this->ctrl->setParameterByClass('DatasetGUI', 'dataset_id', $dataset->getId());
         $this->ctrl->redirectByClass('DatasetGUI', 'show');
     }
 
-    protected function initPresentationForm($mode = 'new')
+    protected function initPresentationForm(string $mode = 'new')
     {
         $this->form = new PlayerFormContainer($this->tpl, $this->plugin);
         $this->form->setId('evaluation_form');
@@ -263,7 +241,6 @@ class PlayerGUI
 
     /**
      * @param Block[] $blocks
-     * @return array
      */
     protected function orderMixedBlocks(array $blocks): array
     {
@@ -294,15 +271,13 @@ class PlayerGUI
 
         //Order is just a completely random array same length as question. $val*123%13 is completely random, but will
         //alway return the same order.
-        $order = array_map(function ($val) {
-            return $val * 123 % 13;
-        }, range(1, count($questions)));
+        $order = array_map(fn($val): int => $val * 123 % 13, range(1, count($questions)));
         array_multisort($order, $questions);
 
         $questions_in_block = 0;
         $block_nr = 0;
         $virtual_blocks[0] = new VirtualQuestionBlock($this->parent->object->getId());
-        $virtual_blocks[$block_nr]->setTitle($this->plugin->txt("mixed_block_title") . " " . ($block_nr + 1));
+        $virtual_blocks[$block_nr]->setTitle($this->plugin->txt("mixed_block_title") . " " . (1));
         $virtual_blocks[$block_nr]->setDescription($this->parent->object->getBlockOptionRandomDesc());
 
         foreach ($questions as $question) {
@@ -328,7 +303,7 @@ class PlayerGUI
         return $return_blocks;
     }
 
-    protected function displaySingleBlock($blocks, $mode = 'new')
+    protected function displaySingleBlock(array $blocks, string $mode = 'new')
     {
         $page = $this->http->query()->has('page') ? $this->http->query()->retrieve(
             'page',
@@ -350,7 +325,7 @@ class PlayerGUI
         }
     }
 
-    protected function displayAllBlocks($blocks, $mode = 'new')
+    protected function displayAllBlocks($blocks, string $mode = 'new')
     {
         foreach ($blocks as $block) {
             $this->addBlockHtmlToForm($block);
@@ -362,7 +337,7 @@ class PlayerGUI
     {
         $gui_class = "";
 
-        switch (get_class($block)) {
+        switch ($block::class) {
             case QuestionBlock::class:
             case VirtualQuestionBlock::class:
                 $gui_class = QuestionBlockPlayerGUI::class;

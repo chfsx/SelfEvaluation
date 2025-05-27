@@ -14,29 +14,21 @@ use ilUtil;
 
 class QuestionTableGUI extends ilTable2GUI
 {
-    protected ilSelfEvaluationPlugin $plugin;
-    protected Block $block;
-    protected bool $sortable;
-
     public function __construct(
         QuestionGUI $a_parent_obj,
-        ilSelfEvaluationPlugin $plugin,
+        protected ilSelfEvaluationPlugin $plugin,
         ilGlobalTemplateInterface $global_template,
         string $a_parent_cmd,
-        Block $block,
-        bool $sortable
+        protected Block $block,
+        protected bool $sortable
     ) {
         $this->setId('sev_feedbacks');
         parent::__construct($a_parent_obj, $a_parent_cmd);
 
-        $this->plugin = $plugin;
-        $this->block = $block;
-        $this->sortable = $sortable;
-
-        $this->setTitle($block->getTitle() . ': ' . $this->plugin->txt('question_table_title'));
+        $this->setTitle($this->block->getTitle() . ': ' . $this->plugin->txt('question_table_title'));
         $this->setFormAction($this->ctrl->getFormAction($a_parent_obj));
         $this->ctrl->setParameterByClass('QuestionGUI', 'question_id', null);
-        $this->ctrl->setParameterByClass('QuestionGUI', 'block_id', $block->getId());
+        $this->ctrl->setParameterByClass('QuestionGUI', 'block_id', $this->block->getId());
         $this->setRowTemplate(
             $this->plugin->getDirectory() . '/templates/default/Question/tpl.template_question_row.html'
         );
@@ -67,7 +59,7 @@ class QuestionTableGUI extends ilTable2GUI
             $this->tpl->setVariable('ID', $a_set['id']);
             $this->tpl->parseCurrentBlock();
         }
-        $this->tpl->setVariable('TITLE', strip_tags($a_set['question_body']));
+        $this->tpl->setVariable('TITLE', strip_tags((string) $a_set['question_body']));
         $this->tpl->setVariable(
             'EDIT_LINK',
             $this->ctrl->getLinkTargetByClass('QuestionGUI', 'editQuestion')
@@ -75,7 +67,7 @@ class QuestionTableGUI extends ilTable2GUI
         $this->tpl->setVariable(
             'BODY',
             $a_set['title'] ?:
-            $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $a_set['position']
+                $this->plugin->txt('question') . ' ' . $this->block->getPosition() . '.' . $a_set['position']
         );
         $this->tpl->setVariable(
             'IS_INVERTED',

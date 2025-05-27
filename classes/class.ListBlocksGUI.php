@@ -9,52 +9,32 @@ use ILIAS\Refinery\Factory;
 
 class ListBlocksGUI
 {
-    protected ilCtrl $ctrl;
-    protected ilObjSelfEvaluationGUI $parent;
-    protected ilToolbarGUI $toolbar;
-    protected ilGlobalTemplateInterface $tpl;
-    protected ilSelfEvaluationPlugin $plugin;
-    protected ilAccessHandler $access;
-    protected ilDBInterface $db;
-
-    protected WrapperFactory $http;
-    protected Factory $refinery;
-
     public function __construct(
-        ilDBInterface $db,
-        ilObjSelfEvaluationGUI $parent,
-        ilGlobalTemplateInterface $tpl,
-        ilCtrl $ilCtrl,
-        ilToolbarGUI $ilToolbar,
-        ilAccessHandler $access,
-        ilSelfEvaluationPlugin $plugin,
-        WrapperFactory $http,
-        Factory $refinery
+        protected ilDBInterface $db,
+        protected ilObjSelfEvaluationGUI $parent,
+        protected ilGlobalTemplateInterface $tpl,
+        protected ilCtrl $ctrl,
+        protected ilToolbarGUI $toolbar,
+        protected ilAccessHandler $access,
+        protected ilSelfEvaluationPlugin $plugin,
+        protected WrapperFactory $http,
+        protected Factory $refinery
     ) {
-        $this->db = $db;
-        $this->ctrl = $ilCtrl;
-        $this->tpl = $tpl;
-        $this->parent = $parent;
-        $this->toolbar = $ilToolbar;
-        $this->access = $access;
-        $this->plugin = $plugin;
-        $this->http = $http;
-        $this->refinery = $refinery;
     }
 
     /**
      * @throws ilObjectException
      * @throws ilCtrlException
      */
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $this->ctrl->saveParameter($this, 'block_id');
         $this->performCommand();
     }
 
-    public function performCommand()
+    public function performCommand(): void
     {
-        $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
+        $cmd = $this->ctrl->getCmd() ?: $this->getStandardCommand();
 
         switch ($cmd) {
             case 'showContent':
@@ -79,7 +59,7 @@ class ListBlocksGUI
         return 'showContent';
     }
 
-    public function showContent()
+    public function showContent(): void
     {
         $this->tpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
         $table = new BlockTableGUI($this->ctrl, $this->plugin, $this->parent, 'showContent');
@@ -116,7 +96,7 @@ class ListBlocksGUI
         $this->tpl->setContent($table->getHTML());
     }
 
-    public function saveSorting()
+    public function saveSorting(): void
     {
         $factory = new BlockFactory($this->db, $this->getSelfEvalId());
         $blocks = $factory->getAllBlocks();
@@ -126,7 +106,7 @@ class ListBlocksGUI
         );
         foreach ($blocks as $block) {
             $position = (int) array_search($block->getPositionId(), $positions) + 1;
-            if ($position) {
+            if ($position !== 0) {
                 $block->setPosition($position);
                 $block->update();
             }
@@ -140,7 +120,7 @@ class ListBlocksGUI
         $this->ctrl->redirect($this, 'showContent');
     }
 
-    public function editOverall()
+    public function editOverall(): void
     {
         $this->tpl->setContent("hello World");
     }
