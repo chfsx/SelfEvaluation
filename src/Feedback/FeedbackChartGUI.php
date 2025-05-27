@@ -197,7 +197,7 @@ class FeedbackChartGUI
     ) {
         if ($this->showAnyFeedback()) {
             $percentage = $dataset->getPercentageForBlock($block->getId());
-            $feedback = Feedback::_getFeedbackForPercentage($this->db, $block->getId(), $percentage);
+            $feedback = Feedback::_getFeedbackForPercentage($this->db, $block->getId(), $percentage ?? 0.0);
             if ($feedback === null) {
                 return;
             }
