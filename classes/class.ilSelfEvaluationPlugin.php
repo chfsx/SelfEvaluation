@@ -42,14 +42,10 @@ class ilSelfEvaluationPlugin extends ilRepositoryObjectPlugin
      */
     public function getTemplate(string $a_template, bool $a_par1 = true, bool $a_par2 = true): ilTemplate
     {
-        // remove the string 'default/' from the template path, otherwise it will be doubled
-        $a_template = str_replace('default/', '', $a_template);
-
         return new ilTemplate(
-            $a_template,
+            __DIR__ . '/../templates/'.$a_template,
             $a_par1,
-            $a_par2,
-            __DIR__ . '/../'
+            $a_par2
         );
     }
 
