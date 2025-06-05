@@ -69,4 +69,13 @@ class ilSelfEvaluationPlugin extends ilRepositoryObjectPlugin
         return $this->getRelativeDirectory() . '/templates/' . $a_css_file;
     }
 
+    /**
+     * @deprecated the core method is not working ATM.
+     */
+    public static function _getIcon(string $a_type): string
+    {
+        return 'Customizing/global/plugins/Services/Repository/RepositoryObject/SelfEvaluation/templates/images/icon_xsev.svg';
+    }
+
+
 }
