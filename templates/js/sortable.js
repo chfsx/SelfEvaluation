@@ -6,8 +6,8 @@ $(document).ready(function () {
         return ui;
     };
 
-    $("table tbody").sortable({
+    /*$("table tbody").sortable({
         helper: fixHelper,
         items: '.fsxSortable'
-    }).disableSelection();
+    }).disableSelection();*/
 });
