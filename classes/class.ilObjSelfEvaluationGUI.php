@@ -296,7 +296,7 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                     break;
                 case '':
                 default:
-                    $this->setTitleAndDescription();
+                    $this->initHeader();
                     parent::executeCommand();
                     break;
             }
