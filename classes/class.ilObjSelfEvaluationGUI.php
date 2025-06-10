@@ -71,25 +71,29 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
         }
     }
 
-    public function initHeader(): void
-    {
-        $this->setTitleAndDescription();
-        $this->displayIdentifier();
+    private function initAssets(): void {
         $this->tpl->addCss($this->getPlugin()->getStyleSheetLocation('css/content.css'));
         $this->tpl->addCss($this->getPlugin()->getStyleSheetLocation('css/print.css'), 'print');
 
-        $is_in_survey = $this->ctrl->getCmd() == "showContent" || $this->ctrl->getCmd(
-        ) == "show" || $this->ctrl->getNextClass($this) == "palyergui";
+        $is_in_survey = $this->ctrl->getCmd() === "showContent"
+            || $this->ctrl->getCmd() === "show"
+            || $this->ctrl->getNextClass($this) === "palyergui"; // Typo?
+
         $is_not_logged_in = $this->user->getLogin() === "anonymous";
 
         if ($is_in_survey && $is_not_logged_in) {
-            $this->tpl->addCss(
-                "Customizing/global/plugins/Services/Repository/RepositoryObject/SelfEvaluation/templates/css/anonymous.css"
-            );
+            $this->tpl->addCss($this->getPlugin()->getStyleSheetLocation('css/anonymous.css'));
         } else {
             $this->setLocator();
         }
         $this->tpl->addJavaScript($this->getPlugin()->getRelativeDirectory() . '/templates/js/scripts.js');
+    }
+
+    private function initHeader(): void
+    {
+        $this->setTitleAndDescription();
+        $this->displayIdentifier();
+        $this->initAssets();
         $this->setTabs();
     }
 
@@ -296,7 +300,8 @@ class ilObjSelfEvaluationGUI extends ilObjectPluginGUI
                     break;
                 case '':
                 default:
-                    $this->initHeader();
+                    $this->setTitleAndDescription();
+                    $this->initAssets();
                     parent::executeCommand();
                     break;
             }
