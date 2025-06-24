@@ -6,16 +6,14 @@ namespace ilub\plugin\SelfEvaluation\Block;
 
 class BlockTableAction
 {
-    protected string $title;
-    protected string $cmd;
-    protected string $link;
-    protected int  $position = 0;
+    protected int $position = 0;
 
-    public function __construct(string $title, string $cmd, string $link, int $position = 0)
-    {
-        $this->title = $title;
-        $this->cmd = $cmd;
-        $this->link = $link;
+    public function __construct(
+        protected string $title,
+        protected string $cmd,
+        protected string $link,
+        int $position = 0
+    ) {
         $this->setPosition($position);
     }
 
@@ -34,7 +32,7 @@ class BlockTableAction
         return $this->title;
     }
 
-    public function setPosition(int  $position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }

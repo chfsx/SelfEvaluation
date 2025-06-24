@@ -20,12 +20,9 @@ class csvExportException extends Exception
         self::INVALID_ARRAY => 'Invalid array: '
     ];
 
-    protected string $additional_info = '';
-
-    public function __construct(int $exception_code = self::UNKNONWN_EXCEPTION, string $additional_info = '')
+    public function __construct(int $exception_code = self::UNKNONWN_EXCEPTION, protected string $additional_info = '')
     {
         $this->code = $exception_code;
-        $this->additional_info = $additional_info;
         $this->assignMessageToCode();
         parent::__construct($this->message, $this->code);
     }
@@ -37,6 +34,6 @@ class csvExportException extends Exception
 
     public function __toString(): string
     {
-        return implode('<br>', [get_class($this), $this->message]);
+        return implode('<br>', [static::class, $this->message]);
     }
 }

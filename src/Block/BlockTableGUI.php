@@ -8,20 +8,18 @@ use ilObjSelfEvaluationGUI;
 use ilCtrl;
 use ilSelfEvaluationPlugin;
 use ilTable2GUI;
-use ilAdvancedSelectionListGUI;
+use ILIAS\DI\UIServices;
+use ILIAS\UI\Component\Link\Link;
 
 class BlockTableGUI extends ilTable2GUI
 {
-    protected ilSelfEvaluationPlugin $plugin;
-
     public function __construct(
         ilCtrl $ilCtrl,
-        ilSelfEvaluationPlugin $plugin,
+        protected UIServices $ui,
+        protected ilSelfEvaluationPlugin $plugin,
         ilObjSelfEvaluationGUI $parent,
-        $a_parent_cmd
+        string $a_parent_cmd
     ) {
-
-        $this->plugin = $plugin;
         $this->ctrl = $ilCtrl;
         $this->setId('');
         parent::__construct($parent, $a_parent_cmd);
@@ -38,7 +36,7 @@ class BlockTableGUI extends ilTable2GUI
         $this->addColumn($this->plugin->txt('actions'), '', 'auto');
         $this->setFormAction($ilCtrl->getFormActionByClass('ListBlocksGUI'));
         $this->addMultiCommand('saveSorting', $this->plugin->txt('save_sorting'));
-        $this->setRowTemplate($this->plugin->getDirectory() . '/templates/default/Block/tpl.template_block_row.html');
+        $this->setRowTemplate('Block/tpl.template_block_row.html', $this->plugin->getDirectory());
     }
 
     protected function fillRow(array $a_set): void
@@ -74,25 +72,19 @@ class BlockTableGUI extends ilTable2GUI
         }
         $this->tpl->parseCurrentBlock();
 
-        $ac = new ilAdvancedSelectionListGUI();
-        $ac->setId($a_set['position_id']);
-        $ac->setListTitle($this->plugin->txt('actions'));
-        /**
-         * @var BlockTableAction[] $actions
-         */
-        $actions = unserialize($a_set['actions']);
+        $actions = unserialize($a_set['actions'], ['allowed_classes' => [BlockTableAction::class]]);
 
-        usort($actions, function (BlockTableAction $action_a, BlockTableAction $action_b) {
-            $value =  $action_a->getPosition() > $action_b->getPosition();
-            if ($value) {
-                return 1 ;
-            } else {
-                return -1;
-            }
-        });
-        foreach ($actions as $action) {
-            $ac->addItem($action->getTitle(), $action->getCmd(), $action->getLink());
-        }
-        $this->tpl->setVariable('ACTIONS', $ac->getHTML());
+        usort($actions, static fn(BlockTableAction $action_a, BlockTableAction $action_b): int => $action_a->getPosition() - $action_b->getPosition());
+
+        $dropdown = $this->ui->factory()->dropdown()->standard(array_map(
+            fn(BlockTableAction $action): Link => $this->ui->factory()->link()->standard(
+                $action->getTitle(),
+                $action->getLink()
+            ),
+            $actions
+        ));
+
+
+        $this->tpl->setVariable('ACTIONS', $this->ui->renderer()->render($dropdown));
     }
 }

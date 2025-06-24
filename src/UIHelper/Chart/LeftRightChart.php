@@ -48,6 +48,5 @@ class LeftRightChart extends ilChartGrid
         $a_options->{"grid"}->{"markings"}[0]->{"xaxis"}->to = $middle;
         $a_options->{"grid"}->{"markings"}[0]->{"color"} = new stdClass();
         $a_options->{"grid"}->{"markings"}[0]->{"color"} = "#333333";
-
     }
 }

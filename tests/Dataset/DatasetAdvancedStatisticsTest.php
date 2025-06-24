@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 include_once "DatasetHelperTrait.php";
@@ -20,22 +21,25 @@ class DatasetAdvancedStatisticsTest extends TestCase
         $this->dataset = $this->setUpDatasetWithThreeBlocks($this->dataset);
     }
 
-    public function testGetOverallPercentage()
+    public function testGetOverallPercentage(): void
     {
         self::assertEquals($this->getOverallPercentage(), $this->dataset->getOverallPercentage());
     }
 
-    public function testGetOverallPercentageVarianz()
+    public function testGetOverallPercentageVarianz(): void
     {
         self::assertEquals($this->getOverallPercentageVarianz(), $this->dataset->getOverallPercentageVarianz());
     }
 
-    public function testGetOverallPercentageStandardabweichung()
+    public function testGetOverallPercentageStandardabweichung(): void
     {
-        self::assertEquals(sqrt($this->getOverallPercentageVarianz()), $this->dataset->getOverallPercentageStandardabweichung());
+        self::assertEquals(
+            sqrt($this->getOverallPercentageVarianz()),
+            $this->dataset->getOverallPercentageStandardabweichung()
+        );
     }
 
-    public function testGetPercentageStandardAbweichungPerBlock()
+    public function testGetPercentageStandardAbweichungPerBlock(): void
     {
         self::assertEquals($this->getSdPerBlock(), $this->dataset->getPercentageStandardabweichungPerBlock());
     }

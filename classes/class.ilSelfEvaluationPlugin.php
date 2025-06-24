@@ -35,4 +35,43 @@ class ilSelfEvaluationPlugin extends ilRepositoryObjectPlugin
     {
         return true;
     }
+
+    /**
+     * @description This is the easiest way to fix all locations which use a template.
+     * And this method most likely will work in ILIAS 9 and 10.
+     */
+    public function getTemplate(string $a_template, bool $a_par1 = true, bool $a_par2 = true): ilTemplate
+    {
+        return new ilTemplate(
+            __DIR__ . '/../templates/'.$a_template,
+            $a_par1,
+            $a_par2
+        );
+    }
+
+    public function getRelativeDirectory(): string
+    {
+        $ansolute_path = realpath(__DIR__ . '/../');
+        // cut everything before /Customizing/
+        $pos = strpos($ansolute_path, '/Customizing/');
+        if ($pos !== false) {
+            return '.' . substr($ansolute_path, $pos);
+        }
+        return '';
+    }
+
+    public function getStyleSheetLocation(string $a_css_file): string
+    {
+        return $this->getRelativeDirectory() . '/templates/' . $a_css_file;
+    }
+
+    /**
+     * @deprecated the core method is not working ATM.
+     */
+    public static function _getIcon(string $a_type): string
+    {
+        return 'Customizing/global/plugins/Services/Repository/RepositoryObject/SelfEvaluation/templates/images/icon_xsev.svg';
+    }
+
+
 }

@@ -19,30 +19,19 @@ class ScaleFormGUI extends ilPropertyFormGUI
     public const FIELD_NAME = 'scale';
 
     protected Scale $scale;
-    protected ilRepositoryObjectPlugin $plugin;
-    protected ilGlobalTemplateInterface $tmpl;
-    protected ilDBInterface $db;
-    protected bool $locked;
-    protected int $parent_id;
 
     public function __construct(
-        ilDBInterface $db,
-        ilGlobalTemplateInterface $tmpl,
-        \ilSelfEvaluationPlugin $plugin,
-        $parent_obj_id,
-        $locked = false
+        protected ilDBInterface $db,
+        protected ilGlobalTemplateInterface $tmpl,
+        protected ilRepositoryObjectPlugin $plugin,
+        protected int $parent_id,
+        protected bool $locked = false
     ) {
         parent::__construct();
 
-        $this->plugin = $plugin;
-        $this->tmpl = $tmpl;
-        $this->locked = $locked;
-        $this->parent_id = $parent_obj_id;
-        $this->db = $db;
-
-        $this->scale = Scale::_getInstanceByObjId($db, $this->parent_id);
+        $this->scale = Scale::_getInstanceByObjId($this->db, $this->parent_id);
         $this->initForm();
-        $this->tmpl->addJavaScript($this->plugin->getDirectory() . '/templates/js/sortable.js');
+        $this->tmpl->addJavaScript($this->plugin->getRelativeDirectory() . '/templates/js/sortable.js');
     }
 
     protected function initForm()
@@ -61,9 +50,6 @@ class ScaleFormGUI extends ilPropertyFormGUI
         $this->fillForm();
     }
 
-    /**
-     * @return array
-     */
     public function fillForm(): array
     {
         $array = [];
@@ -90,29 +76,31 @@ class ScaleFormGUI extends ilPropertyFormGUI
         return $form_gui;
     }
 
-    public function updateObject()
+    public function updateObject(): void
     {
         $positions = [];
 
         $this->scale->update();
-        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_new')) {
-            if (!is_array($this->http->wrapper()->post()->retrieve(
+        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_new') && !is_array(
+            $this->http->wrapper()->post()->retrieve(
                 self::FIELD_NAME . '_new',
-                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string()))
-            ))) {
-                return;
-            }
+                $this->refinery->kindlyTo()->listOf(
+                    $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string())
+                )
+            )
+        )) {
+            return;
         }
-        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_position')) {
-            if (is_array($this->getArrayFromPost(self::FIELD_NAME . '_position'))) {
-                $positions = array_flip($this->getArrayFromPost(self::FIELD_NAME . '_position'));
-            }
+        if ($this->http->wrapper()->post()->has(self::FIELD_NAME . '_position') && is_array(
+            $this->getArrayFromPost(self::FIELD_NAME . '_position')
+        )) {
+            $positions = array_flip($this->getArrayFromPost(self::FIELD_NAME . '_position'));
         }
 
         $new = $this->getArrayFromPostComplex(self::FIELD_NAME . '_new');
         if (!is_null($new) && is_array($new['value'])) {
             foreach ($new['value'] as $k => $v) {
-                if ($v !== false and $v !== null and $v !== '') {
+                if ($v !== false && $v !== null && $v !== '') {
                     $obj = new ScaleUnit($this->db);
                     $obj->setParentId($this->scale->getId());
                     $obj->setTitle($new['title'][$k]);
@@ -126,11 +114,11 @@ class ScaleFormGUI extends ilPropertyFormGUI
             $old = $this->getArrayFromPostComplex(self::FIELD_NAME . '_old');
             if (is_array($old['value'])) {
                 foreach ($old['value'] as $k => $v) {
-                    $obj = new ScaleUnit($this->db, str_replace('id_', '', (string) $k));
-                    if ($v !== false and $v !== null and $v !== '') {
+                    $obj = new ScaleUnit($this->db, (int) str_replace('id_', '', (string) $k));
+                    if ($v !== false && $v !== null && $v !== '') {
                         $obj->setTitle($old['title'][$k]);
                         $obj->setValue((int) $v);
-                        $obj->setPosition((int)$positions[str_replace('id_', '', (string)$k)]);
+                        $obj->setPosition((int) $positions[str_replace('id_', '', (string) $k)]);
                         $obj->update();
                     } else {
                         $obj->delete();
@@ -150,7 +138,6 @@ class ScaleFormGUI extends ilPropertyFormGUI
         } catch (\Exception) {
             return null;
         }
-
     }
 
     public function getArrayFromPostComplex(string $string): ?array
@@ -158,7 +145,9 @@ class ScaleFormGUI extends ilPropertyFormGUI
         try {
             return $this->http->wrapper()->post()->retrieve(
                 $string,
-                $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string()))
+                $this->refinery->kindlyTo()->dictOf(
+                    $this->refinery->kindlyTo()->dictOf($this->refinery->kindlyTo()->string())
+                )
             );
         } catch (\Exception) {
             return null;

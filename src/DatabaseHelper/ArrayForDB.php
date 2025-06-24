@@ -59,13 +59,8 @@ trait ArrayForDB
     public function fromArray(array $array): self
     {
         foreach ($array as $k => $v) {
-
             $serialized = unserialize($v);
-            if (is_array($serialized)) {
-                $this->{$k} = $serialized;
-            } else {
-                $this->{$k} = $v;
-            }
+            $this->{$k} = is_array($serialized) ? $serialized : $v;
         }
         return $this;
     }
@@ -83,7 +78,7 @@ trait ArrayForDB
     protected function setObjectValuesFromRecord(hasDBFields $data, stdClass $rec): static
     {
         //Problematisch
-        foreach ($data->getArrayForDb() as $k => $v) {
+        foreach (array_keys($data->getArrayForDb()) as $k) {
             try {
                 $serialized = unserialize((string) $rec->{$k});
             } catch (\ErrorException) {
@@ -92,7 +87,6 @@ trait ArrayForDB
             if (is_array($serialized)) {
                 $this->{$k} = $serialized;
             } else {
-
                 $type = gettype($this->{$k});
                 switch ($type) {
                     case 'string':
@@ -106,24 +100,17 @@ trait ArrayForDB
                         break;
                 }
             }
-
         }
         return $this;
     }
 
     protected function getDBFieldType($var): string
     {
-        switch (gettype($var)) {
-            case 'string':
-            case 'array':
-            case 'object':
-                return 'text';
-            case 'NULL':
-            case 'boolean':
-                return 'integer';
-            default:
-                return gettype($var);
-        }
+        return match (gettype($var)) {
+            'string', 'array', 'object' => 'text',
+            'NULL', 'boolean' => 'integer',
+            default => gettype($var),
+        };
     }
 
     public function serialize(): string

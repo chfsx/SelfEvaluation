@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ilub\plugin\SelfEvaluation\Question\Matrix;
 
 use ilub\plugin\SelfEvaluation\Question\Question as BaseQuestion;
-
 use SimpleXMLElement;
 use ilDBInterface;
 
@@ -37,11 +36,11 @@ class Question extends BaseQuestion
     public function toXml(SimpleXMLElement $xml): SimpleXMLElement
     {
         $child_xml = $xml->addChild("question");
-        $child_xml->addAttribute("parentId", (string)$this->getParentId());
+        $child_xml->addAttribute("parentId", (string) $this->getParentId());
         $child_xml->addAttribute("title", $this->getTitle());
         $child_xml->addAttribute("questionBody", $this->getQuestionBody());
-        $child_xml->addAttribute("position", (string)$this->getPosition());
-        $child_xml->addAttribute("inverse", (string)$this->getIsInverse());
+        $child_xml->addAttribute("position", (string) $this->getPosition());
+        $child_xml->addAttribute("inverse", (string) $this->getIsInverse());
         return $xml;
     }
 
@@ -54,14 +53,12 @@ class Question extends BaseQuestion
         $question->setQuestionBody((string) $attributes["questionBody"]);
         $question->setIsInverse($attributes["inverse"] == '1' || $attributes["inverse"] == 'true');
         $question->create();
-        $question->setPosition((int)$attributes["position"]);
+        $question->setPosition((int) $attributes["position"]);
         $question->update();
         return $xml;
     }
 
     /**
-     * @param ilDBInterface $db
-     * @param int           $parent_id
      * @return Question[]
      */
     public static function _getAllInstancesForParentId(ilDBInterface $db, int $parent_id): array
@@ -82,14 +79,11 @@ class Question extends BaseQuestion
             }
         }
         return self::$instances_for_parent_id[$parent_id];
-
     }
 
     public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id): array
     {
-
         if (!array_key_exists($parent_id, self::$instances_for_parent_id_array)) {
-
             self::$instances_for_parent_id_array[$parent_id] = [];
             foreach (self::_getAllInstancesForParentId($db, $parent_id) as $question) {
                 self::$instances_for_parent_id_array[$parent_id][$question->getId()] = $question->getArray();
@@ -98,7 +92,7 @@ class Question extends BaseQuestion
         return self::$instances_for_parent_id_array[$parent_id];
     }
 
-    public function setIsInverse(bool $is_inverse)
+    public function setIsInverse(bool $is_inverse): void
     {
         $this->is_inverse = $is_inverse;
     }
@@ -108,8 +102,7 @@ class Question extends BaseQuestion
         return $this->is_inverse;
     }
 
-
-    public function setQuestionBody(string $question_body)
+    public function setQuestionBody(string $question_body): void
     {
         $this->question_body = $question_body;
     }
@@ -119,7 +112,7 @@ class Question extends BaseQuestion
         return $this->question_body;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }

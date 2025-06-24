@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ilub\plugin\SelfEvaluation\Block;
 
+use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;
 use ilDBInterface;
 use ilGlobalTemplateInterface;
 use ilCtrl;
@@ -19,31 +20,19 @@ use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
 abstract class BlockGUI
 {
     protected ilPropertyFormGUI $form;
-    protected ilDBInterface $db;
-    protected ilGlobalTemplateInterface $tpl;
-    protected ilCtrl $ctrl;
-    protected ilObjSelfEvaluationGUI $parent;
-    protected ilAccessHandler $access;
-    protected ilSelfEvaluationPlugin $plugin;
-    protected \ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock|MetaBlock $object;
+    protected QuestionBlock|MetaBlock $object;
 
     public function __construct(
-        ilDBInterface $db,
-        ilGlobalTemplateInterface $tpl,
-        ilCtrl $ilCtrl,
-        ilAccessHandler $access,
-        ilSelfEvaluationPlugin $plugin,
-        ilObjSelfEvaluationGUI $parent
+        protected ilDBInterface $db,
+        protected ilGlobalTemplateInterface $tpl,
+        protected ilCtrl $ctrl,
+        protected ilAccessHandler $access,
+        protected ilSelfEvaluationPlugin $plugin,
+        protected ilObjSelfEvaluationGUI $parent
     ) {
-        $this->db = $db;
-        $this->tpl = $tpl;
-        $this->ctrl = $ilCtrl;
-        $this->access = $access;
-        $this->plugin = $plugin;
-        $this->parent = $parent;
     }
 
-    public function executeCommand()
+    public function executeCommand(): void
     {
         $this->ctrl->saveParameter($this, 'block_id');
         $this->performCommand();
@@ -56,7 +45,7 @@ abstract class BlockGUI
 
     protected function performCommand()
     {
-        $cmd = ($this->ctrl->getCmd()) ? $this->ctrl->getCmd() : $this->getStandardCommand();
+        $cmd = $this->ctrl->getCmd() ?: $this->getStandardCommand();
 
         switch ($cmd) {
             case 'addBlock':
@@ -80,7 +69,7 @@ abstract class BlockGUI
         }
     }
 
-    protected function checkAccess($permission, $cmd): bool
+    protected function checkAccess(string $permission, string $cmd): bool
     {
         return $this->access->checkAccess($permission, $cmd, $this->parent->getRefId(), $this->plugin->getId());
     }
@@ -96,7 +85,7 @@ abstract class BlockGUI
         $this->ctrl->redirectByClass('ListBlocksGUI', 'showContent');
     }
 
-    public function initForm(string $mode = 'create')
+    public function initForm(string $mode = 'create'): void
     {
         $this->form = new ilPropertyFormGUI();
         $this->form->setTitle($this->plugin->txt($mode . '_block'));
@@ -120,7 +109,11 @@ abstract class BlockGUI
         if ($this->form->checkInput()) {
             $this->setObjectValuesByPost();
             $this->object->create();
-            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_created'), true);
+            $this->tpl->setOnScreenMessage(
+                ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+                $this->plugin->txt('msg_block_created'),
+                true
+            );
             $this->cancel();
         }
         $this->tpl->setContent($this->form->getHTML());
@@ -132,7 +125,11 @@ abstract class BlockGUI
     protected function duplicateBlock()
     {
         $this->object->cloneTo($this->object->getParentId());
-        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_duplicated'), true);
+        $this->tpl->setOnScreenMessage(
+            ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+            $this->plugin->txt('msg_block_duplicated'),
+            true
+        );
         $this->cancel();
     }
 
@@ -165,7 +162,11 @@ abstract class BlockGUI
         if ($this->form->checkInput()) {
             $this->setObjectValuesByPost();
             $this->object->update();
-            $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_updated'), true);
+            $this->tpl->setOnScreenMessage(
+                ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+                $this->plugin->txt('msg_block_updated'),
+                true
+            );
             $this->cancel();
         }
         $this->tpl->setContent($this->form->getHTML());
@@ -184,7 +185,11 @@ abstract class BlockGUI
 
     protected function deleteObject()
     {
-        $this->tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin->txt('msg_block_deleted'), true);
+        $this->tpl->setOnScreenMessage(
+            ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS,
+            $this->plugin->txt('msg_block_deleted'),
+            true
+        );
         $this->object->delete();
         $this->cancel();
     }

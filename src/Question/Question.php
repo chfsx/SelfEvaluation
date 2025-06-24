@@ -15,18 +15,12 @@ abstract class Question implements hasDBFields
 
     public const TABLE_NAME = "";
     public const PRIMARY_KEY = 'id';
-
-    protected ilDBInterface $db;
-    protected int $id;
     protected int $position = 99;
     protected int $parent_id;
 
-    public function __construct(ilDBInterface $db, int $id = 0)
+    public function __construct(protected ilDBInterface $db, protected int $id = 0)
     {
-        $this->db = $db;
-        $this->id = $id;
-
-        if ($id != 0) {
+        if ($this->id != 0) {
             $this->read();
         }
     }
@@ -41,14 +35,16 @@ abstract class Question implements hasDBFields
         SimpleXMLElement $xml
     ): SimpleXMLElement;
 
-    public function read()
+    public function read(): void
     {
-        $set = $this->db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId());
+        $set = $this->db->query(
+            'SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId()
+        );
 
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
-    final public function initDB()
+    final public function initDB(): void
     {
         if (!$this->db->tableExists(static::TABLE_NAME)) {
             $this->db->createTable(static::TABLE_NAME, $this->getArrayForDbWithAttributes());
@@ -57,7 +53,7 @@ abstract class Question implements hasDBFields
         }
     }
 
-    final public function updateDB()
+    final public function updateDB(): void
     {
         if (!$this->db->tableExists(static::TABLE_NAME)) {
             $this->initDB();
@@ -70,7 +66,7 @@ abstract class Question implements hasDBFields
         }
     }
 
-    public function create()
+    public function create(): void
     {
         if ($this->getId() != 0) {
             $this->update();
@@ -84,10 +80,12 @@ abstract class Question implements hasDBFields
 
     public function delete(): int
     {
-        return $this->db->manipulate('DELETE FROM ' . static::TABLE_NAME . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId());
+        return $this->db->manipulate(
+            'DELETE FROM ' . static::TABLE_NAME . ' WHERE ' . static::PRIMARY_KEY . ' = ' . $this->getId()
+        );
     }
 
-    public function update()
+    public function update(): void
     {
         if ($this->getId() == 0) {
             $this->create();
@@ -96,7 +94,7 @@ abstract class Question implements hasDBFields
         $this->db->update(static::TABLE_NAME, $this->getArrayForDb(), $this->getIdForDb());
     }
 
-    public function setParentId(int $parent_id)
+    public function setParentId(int $parent_id): void
     {
         $this->parent_id = $parent_id;
     }
@@ -108,14 +106,18 @@ abstract class Question implements hasDBFields
 
     protected static function _getAllInstancesForParentIdGetQuery(ilDBInterface $db, int $parent_id): \ilDBStatement
     {
-        return $db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
-            . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC');
+        return $db->query(
+            'SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
+            . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC'
+        );
     }
 
     protected function getNextPosition(): int
     {
-        $set = $this->db->query('SELECT MAX(position) next_pos FROM ' . static::TABLE_NAME
-            . ' ' . ' WHERE parent_id = ' . $this->parent_id);
+        $set = $this->db->query(
+            'SELECT MAX(position) next_pos FROM ' . static::TABLE_NAME
+            . ' ' . ' WHERE parent_id = ' . $this->parent_id
+        );
         while ($rec = $this->db->fetchObject($set)) {
             return $rec->next_pos + 1;
         }
@@ -124,8 +126,6 @@ abstract class Question implements hasDBFields
     }
 
     /**
-     * @param ilDBInterface $db
-     * @param int           $parent_id
      * @return Question[]
      */
     abstract public static function _getAllInstancesForParentId(
@@ -133,15 +133,12 @@ abstract class Question implements hasDBFields
         int $parent_id
     ): array;
 
-    /**
-     * @param ilDBInterface $db
-     * @param int           $parent_id
-     * @return \ilDBStatement
-     */
     public static function _getAllInstancesForParentIdQuery(ilDBInterface $db, int $parent_id): \ilDBStatement
     {
-        return $db->query('SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
-            . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC');
+        return $db->query(
+            'SELECT * FROM ' . static::TABLE_NAME . ' ' . ' WHERE parent_id = '
+            . $db->quote($parent_id, 'integer') . ' ORDER BY position ASC'
+        );
     }
 
     abstract public static function _getAllInstancesForParentIdAsArray(ilDBInterface $db, int $parent_id): array;
@@ -157,7 +154,7 @@ abstract class Question implements hasDBFields
         return false;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -174,7 +171,7 @@ abstract class Question implements hasDBFields
         return $this->position;
     }
 
-    public function setPosition(int $position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }

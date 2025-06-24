@@ -14,12 +14,10 @@ class PlayerFormContainer extends ilPropertyFormGUI
     protected array $copy_of_buttons = [];
     protected ?KnobGUI $knob = null;
     protected int $question_field_size = 6;
-    protected ilRepositoryObjectPlugin $plugin;
 
-    public function __construct(ilGlobalTemplateInterface $tpl, ilRepositoryObjectPlugin $plugin)
+    public function __construct(ilGlobalTemplateInterface $tpl, protected ilRepositoryObjectPlugin $plugin)
     {
         $this->global_tpl = $tpl;
-        $this->plugin = $plugin;
 
         parent::__construct();
     }
@@ -27,11 +25,9 @@ class PlayerFormContainer extends ilPropertyFormGUI
     /**
      * @param        $a_cmd
      * @param        $a_text
-     * @param string $a_id
      */
     public function addCommandButton(string $a_cmd, string $a_text, string $a_id = ''): void
     {
-
         $this->copy_of_buttons[] = ["cmd" => $a_cmd, "text" => $a_text];
         parent::addCommandButton($a_cmd, $a_text);
     }
@@ -45,12 +41,11 @@ class PlayerFormContainer extends ilPropertyFormGUI
         parent::clearCommandButtons();
     }
 
-    public function addKnob($page, $last_page)
+    public function addKnob(int $page, int $last_page): void
     {
         $this->knob = new KnobGUI();
         $this->knob->setValue($page);
         $this->knob->setMax($last_page);
-
     }
 
     /**
@@ -63,8 +58,8 @@ class PlayerFormContainer extends ilPropertyFormGUI
         $this->global_tpl->addJavaScript("./Services/JavaScript/js/Basic.js");
         $this->global_tpl->addJavaScript("Services/Form/js/Form.js");
         $this->global_tpl->addJavaScript("./Services/UIComponent/Tooltip/js/ilTooltip.js");
-        $this->global_tpl->addJavaScript($this->plugin->getDirectory()."/templates/js/scale_units.js");
-        $this->global_tpl->addJavaScript($this->plugin->getDirectory()."/templates/js/jquery.knob.js");
+        $this->global_tpl->addJavaScript($this->plugin->getRelativeDirectory() . "/templates/js/scale_units.js");
+        $this->global_tpl->addJavaScript($this->plugin->getRelativeDirectory() . "/templates/js/jquery.knob.js");
         $this->global_tpl->addOnLoadCode('il.Tooltip.init();', 3);
 
         $required_text = false;
@@ -91,7 +86,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
             }
         }
 
-        if ($required_text && $this->getMode() == "std") {
+        if ($required_text && $this->getMode() === "std") {
             $this->tpl->setCurrentBlock("required_text");
             $this->tpl->setVariable("TXT_REQUIRED", $this->plugin->txt("required_field"));
             $this->tpl->parseCurrentBlock();
@@ -125,7 +120,7 @@ class PlayerFormContainer extends ilPropertyFormGUI
         return $this->tpl->get();
     }
 
-    public function setQuestionFieldSize(int $question_field_size)
+    public function setQuestionFieldSize(int $question_field_size): void
     {
         $this->question_field_size = $question_field_size;
     }

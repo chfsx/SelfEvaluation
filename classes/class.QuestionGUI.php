@@ -15,10 +15,18 @@ class QuestionGUI extends BaseQuestionGUI
 
     protected function createTableGUI(): ilTable2GUI
     {
-        return new QuestionTableGUI($this, $this->plugin, $this->tpl, 'showContent', $this->block, $this->hasSorting());
+        return new QuestionTableGUI(
+            $this,
+            $this->ui,
+            $this->plugin,
+            $this->tpl,
+            'showContent',
+            $this->block,
+            $this->hasSorting()
+        );
     }
 
-    public function initQuestionForm(string $mode = 'create')
+    public function initQuestionForm(string $mode = 'create'): void
     {
         parent::initQuestionForm($mode);
         $te = new ilTextAreaInputGUI($this->plugin->txt('question_body'), 'question_body');
@@ -35,7 +43,7 @@ class QuestionGUI extends BaseQuestionGUI
         $this->form->addItem($cb);
     }
 
-    public function setQuestionFormValues()
+    public function setQuestionFormValues(): void
     {
         $values['title'] = $this->question->getTitle();
         $values['question_body'] = $this->question->getQuestionBody();
@@ -43,11 +51,11 @@ class QuestionGUI extends BaseQuestionGUI
         $this->form->setValuesByArray($values);
     }
 
-    public function createQuestionSetFields()
+    public function createQuestionSetFields(): void
     {
         $this->question->setTitle($this->form->getInput('title'));
         $this->question->setQuestionBody($this->form->getInput('question_body'));
-        $this->question->setIsInverse((bool)$this->form->getInput('is_inverse'));
+        $this->question->setIsInverse((bool) $this->form->getInput('is_inverse'));
         $this->question->setParentId($this->block->getId());
     }
 }

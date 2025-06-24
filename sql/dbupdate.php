@@ -428,5 +428,5 @@ if (!$this->db->tableColumnExists(\ilub\plugin\SelfEvaluation\Dataset\Dataset::T
     ];
     $this->db->addTableColumn(\ilub\plugin\SelfEvaluation\Dataset\Dataset::TABLE_NAME, 'complete', $field);
 }
-$this->db->query("UPDATE ".\ilub\plugin\SelfEvaluation\Dataset\Dataset::TABLE_NAME." SET complete = 1 ");
+$this->db->query("UPDATE " . \ilub\plugin\SelfEvaluation\Dataset\Dataset::TABLE_NAME . " SET complete = 1 ");
 ?>

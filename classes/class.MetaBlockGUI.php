@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 use ilub\plugin\SelfEvaluation\Block\BlockGUI;
 use ilub\plugin\SelfEvaluation\Block\Meta\MetaBlock;
 use ilub\plugin\SelfEvaluation\Block\Matrix\QuestionBlock;

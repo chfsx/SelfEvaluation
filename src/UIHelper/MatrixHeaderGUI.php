@@ -13,14 +13,15 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
     protected string $html = '';
     protected array $scale = [];
     protected string $block_info = '';
-    protected ilRepositoryObjectPlugin $plugin;
 
-    public function __construct(ilRepositoryObjectPlugin $plugin, string $a_title = '', string $a_postvar = '')
-    {
+    public function __construct(
+        protected ilRepositoryObjectPlugin $plugin,
+        string $a_title = '',
+        string $a_postvar = ''
+    ) {
         parent::__construct($a_title, $a_postvar);
         $this->setType('matrix_header');
         $this->setPostvar('matrix_header');
-        $this->plugin = $plugin;
     }
 
     public function getHtml(): string
@@ -46,7 +47,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         return $tpl->get();
     }
 
-    public function setValueByArray(array $a_values)
+    public function setValueByArray(array $a_values): void
     {
         foreach ($this->getSubItems() as $item) {
             /**
@@ -56,7 +57,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         }
     }
 
-    public function insert(ilTemplate $a_tpl)
+    public function insert(ilTemplate $a_tpl): void
     {
         $a_tpl->setCurrentBlock('prop_custom');
         $a_tpl->setVariable('CUSTOM_CONTENT', $this->getHtml());
@@ -91,7 +92,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         return $this->postvar;
     }
 
-    public function setScale(array $scale)
+    public function setScale(array $scale): void
     {
         $this->scale = $scale;
     }
@@ -101,7 +102,7 @@ class MatrixHeaderGUI extends ilSubEnabledFormPropertyGUI
         return $this->scale;
     }
 
-    public function setBlockInfo(string $block_info)
+    public function setBlockInfo(string $block_info): void
     {
         $this->setTitle($block_info);
         $this->block_info = $block_info;

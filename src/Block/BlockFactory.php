@@ -10,13 +10,8 @@ use ilDBInterface;
 
 class BlockFactory
 {
-    protected int $id;
-    protected ilDBInterface $db;
-
-    public function __construct(ilDBInterface $db, $self_eval_id)
+    public function __construct(protected ilDBInterface $db, protected int $id)
     {
-        $this->db = $db;
-        $this->id = $self_eval_id;
     }
 
     /**
@@ -43,18 +38,14 @@ class BlockFactory
 
     protected function positionSort(Block $a, Block $b): int
     {
-        if ($a->getPosition() == $b->getPosition()) {
-
-            return 0; // a and b are equal
-
+        if ($a->getPosition() === $b->getPosition()) {
+            return 0;
+            // a and b are equal
+        } elseif ($a->getPosition() > $b->getPosition()) {
+            return 1;
+            // a is after b
         } else {
-            if ($a->getPosition() > $b->getPosition()) {
-
-                return 1; // a is after b
-            } else {
-
-                return -1; // a is before b
-            }
+            return -1; // a is before b
         }
     }
 

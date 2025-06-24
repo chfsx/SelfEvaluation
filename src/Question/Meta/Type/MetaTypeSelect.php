@@ -36,10 +36,10 @@ class MetaTypeSelect extends MetaQuestionType
         return $option;
     }
 
-    public function setValues(MetaTypeOption $item, array $values = [])
+    public function setValues(MetaTypeOption $item, array $values = []): void
     {
         foreach ($item->getSubItems() as $sub_item) {
-            if ($sub_item instanceof ilTextWizardInputGUI and $sub_item->getPostVar() == 'value_' . $this->getId()) {
+            if ($sub_item instanceof ilTextWizardInputGUI && $sub_item->getPostVar() === 'value_' . $this->getId()) {
                 $sub_item->setValue($values);
             }
         }
@@ -50,8 +50,12 @@ class MetaTypeSelect extends MetaQuestionType
         return $form->getInput('value_' . $this->getId());
     }
 
-    public function getPresentationInputGUI(ilSelfEvaluationPlugin $plugin, string $title, string $postvar, array $values): mixed
-    {
+    public function getPresentationInputGUI(
+        ilSelfEvaluationPlugin $plugin,
+        string $title,
+        string $postvar,
+        array $values
+    ): mixed {
         $select = new ilSelectInputGUI($title, $postvar);
 
         $options = [null => $plugin->txt('select_one')];

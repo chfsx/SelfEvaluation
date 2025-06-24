@@ -46,7 +46,7 @@ trait ChartHelper
         return $this->canvas_width;
     }
 
-    public function setCanvasWidth(string $canvas_width)
+    public function setCanvasWidth(string $canvas_width): void
     {
         $this->canvas_width = $canvas_width;
     }
@@ -56,7 +56,7 @@ trait ChartHelper
         return $this->canvas_height;
     }
 
-    public function setCanvasHeight(string $canvas_height)
+    public function setCanvasHeight(string $canvas_height): void
     {
         $this->canvas_height = $canvas_height;
     }

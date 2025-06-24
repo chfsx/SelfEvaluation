@@ -17,7 +17,7 @@ class csvExportColumn
         $this->setPosition($position);
     }
 
-    public function setColumnId(string $column_id)
+    public function setColumnId(string $column_id): void
     {
         $this->column_id = $column_id;
     }
@@ -27,21 +27,20 @@ class csvExportColumn
         return $this->column_id;
     }
 
-    public function setColumnTxt(string $column_txt)
+    public function setColumnTxt(string $column_txt): void
     {
         $this->column_txt = $column_txt;
     }
 
     public function getColumnTxt(): string
     {
-        if ($this->column_txt == "") {
+        if ($this->column_txt === "") {
             return $this->getColumnId();
-        } else {
-            return $this->column_txt;
         }
+        return $this->column_txt;
     }
 
-    public function setPosition($position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }

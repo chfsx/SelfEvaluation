@@ -12,13 +12,8 @@ use ilub\plugin\SelfEvaluation\UIHelper\MatrixFieldInputGUI;
 
 class QuestionPlayerGUI
 {
-    protected Question $question;
-    protected ilSelfEvaluationPlugin $plugin;
-
-    public function __construct(ilSelfEvaluationPlugin $plugin, Question $question)
+    public function __construct(protected ilSelfEvaluationPlugin $plugin, protected Question $question)
     {
-        $this->question = $question;
-        $this->plugin = $plugin;
     }
 
     public function getQuestionFormItem(Scale $scale): ilFormPropertyGUI

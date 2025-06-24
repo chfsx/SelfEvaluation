@@ -17,19 +17,14 @@ abstract class Block implements hasDBFields, BlockType
 {
     use ArrayForDB;
 
-    public int $id = 0;
     protected string $title = '';
     protected string $description = '';
     protected int $position = 99;
     protected int $parent_id = 0;
-    protected ilDBInterface $db;
 
-    public function __construct(ilDBInterface $db, $id = 0)
+    public function __construct(protected ilDBInterface $db, public int $id = 0)
     {
-        $this->db = $db;
-
-        $this->id = $id;
-        if ($id != 0) {
+        if ($this->id != 0) {
             $this->read();
         }
     }
@@ -45,16 +40,18 @@ abstract class Block implements hasDBFields, BlockType
      */
     abstract public function getQuestions(): array;
 
-    public function read()
+    public function read(): void
     {
-        $set = $this->db->query('SELECT * FROM ' . static::_getTableName() . ' ' . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        $set = $this->db->query(
+            'SELECT * FROM ' . static::_getTableName() . ' ' . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
         $this->setObjectValuesFromRecord($this, $this->db->fetchObject($set));
     }
 
     abstract public static function _getTableName(): string;
 
-    public function initDB()
+    public function initDB(): void
     {
         if (!$this->db->tableExists(static::_getTableName())) {
             $this->db->createTable(static::_getTableName(), $this->getArrayForDbWithAttributes());
@@ -63,7 +60,7 @@ abstract class Block implements hasDBFields, BlockType
         }
     }
 
-    final public function updateDB()
+    final public function updateDB(): void
     {
         if (!$this->db->tableExists(static::_getTableName())) {
             $this->initDB();
@@ -77,24 +74,22 @@ abstract class Block implements hasDBFields, BlockType
         }
     }
 
-    public function create()
+    public function create(): void
     {
         $this->setId($this->db->nextId(static::_getTableName()));
         $this->setPosition(BlockFactory::_getNextPositionAcrossBlocks($this->db, $this->getParentId()));
         $this->db->insert(static::_getTableName(), $this->getArrayForDb());
     }
 
-    /**
-     * @return int
-     */
     public function delete(): int
     {
-
-        return $this->db->manipulate('DELETE FROM ' . static::_getTableName() . ' WHERE id = '
-            . $this->db->quote($this->getId(), 'integer'));
+        return $this->db->manipulate(
+            'DELETE FROM ' . static::_getTableName() . ' WHERE id = '
+            . $this->db->quote($this->getId(), 'integer')
+        );
     }
 
-    public function update()
+    public function update(): void
     {
         if ($this->getId() == 0) {
             $this->create();
@@ -105,14 +100,15 @@ abstract class Block implements hasDBFields, BlockType
     }
 
     /**
-     * @param ilDBInterface $db
-     * @param int           $parent_id
      * @return Block[]
      */
     public static function _getAllInstancesByParentId(ilDBInterface $db, int $parent_id): array
     {
         $return = [];
-        $set = $db->query('SELECT * FROM ' . static::_getTableName() . ' ' . ' WHERE parent_id = '.$parent_id. ' ORDER BY position ASC');
+        $set = $db->query(
+            'SELECT * FROM ' . static::_getTableName(
+            ) . ' ' . ' WHERE parent_id = ' . $parent_id . ' ORDER BY position ASC'
+        );
         while ($rec = $db->fetchObject($set)) {
             $block = new static($db);
             $block->setObjectValuesFromRecord($block, $rec);
@@ -123,8 +119,6 @@ abstract class Block implements hasDBFields, BlockType
     }
 
     /**
-     * @param ilDBInterface $db
-     * @param int $identity_id
      * @return static[]
      */
     public static function _getAllInstancesByIdentifierId(ilDBInterface $db, string $identity_id): array
@@ -134,8 +128,10 @@ abstract class Block implements hasDBFields, BlockType
 
     public function getNextPosition(int $parent_id): int
     {
-        $set = $this->db->query('SELECT MAX(position) next_pos FROM ' . static::_getTableName() . ' ' . ' WHERE parent_id = '
-            . $this->db->quote($parent_id, 'integer'));
+        $set = $this->db->query(
+            'SELECT MAX(position) next_pos FROM ' . static::_getTableName() . ' ' . ' WHERE parent_id = '
+            . $this->db->quote($parent_id, 'integer')
+        );
         while ($rec = $this->db->fetchObject($set)) {
             return $rec->next_pos + 1;
         }
@@ -143,7 +139,7 @@ abstract class Block implements hasDBFields, BlockType
         return 1;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -153,7 +149,7 @@ abstract class Block implements hasDBFields, BlockType
         return $this->id;
     }
 
-    public function setDescription(string $description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -163,7 +159,7 @@ abstract class Block implements hasDBFields, BlockType
         return $this->description;
     }
 
-    public function setParentId(int $parent_id)
+    public function setParentId(int $parent_id): void
     {
         $this->parent_id = $parent_id;
     }
@@ -173,7 +169,7 @@ abstract class Block implements hasDBFields, BlockType
         return $this->parent_id;
     }
 
-    public function setPosition(int $position)
+    public function setPosition(int $position): void
     {
         $this->position = $position;
     }
@@ -183,7 +179,7 @@ abstract class Block implements hasDBFields, BlockType
         return $this->position;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -195,10 +191,14 @@ abstract class Block implements hasDBFields, BlockType
 
     public function getPositionId(): string
     {
-        return get_class($this) . '_' . $this->getId();
+        return static::class . '_' . $this->getId();
     }
 
-    abstract public function getBlockTableRow(ilDBInterface $db, ilCtrl $ilCtrl, ilSelfEvaluationPlugin $plugin): BlockTableRow;
+    abstract public function getBlockTableRow(
+        ilDBInterface $db,
+        ilCtrl $ilCtrl,
+        ilSelfEvaluationPlugin $plugin
+    ): BlockTableRow;
 
     public function unserialize($serialized): Block
     {
