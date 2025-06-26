@@ -41,8 +41,7 @@ class DatasetTableGUI extends ilTable2GUI
         $this->ctrl->setParameterByClass('DatasetGUI', 'dataset_id', null);
         $this->setFormAction($this->ctrl->getFormActionByClass('DatasetGUI'));
         $this->setRowTemplate(
-            'Dataset/tpl.template_dataset_row.html',
-            $this->plugin->getDirectory()
+            $this->plugin->getDirectory() . '/templates/default/Dataset/tpl.template_dataset_row.html'
         );
         $this->addMultiCommand("deleteDatasets", $this->plugin->txt("delete_dataset"));
 
